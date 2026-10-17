@@ -30,7 +30,7 @@ Este arquivo diz onde, na PRD, está cada fator da régua e como traduzi-lo para
 | `fluxos_comuns` | Módulos da seção 2 | **1 módulo = 1 fluxo.** Não contam: 2.1 Autenticação (vai para F2) e *Disponibilização do Produto* (vai para F5 e F6) |
 | `fluxos_rn_especifica` | Módulos com `### Regras de Negócio` + coluna *Fatores de complexidade* | O módulo sai de `fluxos_comuns` e entra aqui quando tem RN de cálculo, fórmula, regra clínica, legal ou de dinheiro, ou quando tem um dos fatores da tabela do Passo 3 que viram RN específica. Conta **uma vez por módulo**, mesmo com várias RNs |
 | `features_atipicas` | Coluna *Fatores de complexidade* | Só pelos fatores da tabela do Passo 3 que viram feature atípica. O "produto sem benchmark" não está na PRD: perguntar ao CN (Passo 4) |
-| `integracoes` | Itens `**SID** integrar com…` (Sentido, Dados, Meio) + coluna *Integrações* | Sentido `envia` ou `recebe` → unidirecional. `envia e recebe` → bidirecional. Meio `API do fornecedor` com link de documentação → `_doc`, sem link → `_sem_doc` (o link não está na PRD: perguntar). Meio `arquivo` → `_sem_doc` (o layout do arquivo ainda vai ser combinado). Bidirecional com sistema sem API → `"sem_api"` (🚩). Google, e-mail e upload de arquivo → `"template"` |
+| `integracoes` | Itens `**SID** integrar com…` (Sentido, Dados, Meio) + coluna *Integrações* | **Peso fixo, sem perguntar ao CN** (regra em `regua-dimensionamento.md`, F3). Sentido `envia` ou `recebe` → unidirecional. `envia e recebe` → bidirecional. Serviço de mercado (pagamento, mapa, push, IA, WhatsApp Business, NF-e…) → `_doc`. Sistema do cliente (ERP, legado, sob medida), meio `arquivo` ou dúvida → `_sem_doc`, com cláusula de contrato e plano B. `"sem_api"` (🚩) só se a PRD disser que o sistema não tem API. Google, e-mail e upload de arquivo → `"template"` |
 | `dependencia_dados` | Fluxos com `**Origem:**` / `**Processamento:**` / `**Destino:**` | Origem em planilha, base pública, CSV ou sistema antigo → `true` (e chamar o núcleo de Dados). Importação, seja carga única ou recorrente, também. Consulta automática a um serviço é integração, não dependência de dados |
 | `offline` | Termo "offline" (a PRD sempre diz o mecanismo) | Só consulta sem internet → `"local"`. Registro com sincronização depois → `"sync"` |
 | `volume_alto` | 3.3 *Performance* | Milhares de usuários simultâneos ou picos declarados → `true`. Sem 3.3 → `false` |
@@ -50,7 +50,7 @@ A PRD marca fatores que não têm linha própria na régua. Eles **encaixam nas 
 
 | Fator na PRD | Linha da régua | Observação |
 |---|---|---|
-| Pagamento (gateway, Pix, cartão) | Integração `bi_doc` (cobra e recebe a confirmação) | `bi_sem_doc` se o gateway não tiver API pública |
+| Pagamento (gateway, Pix, cartão) | Integração `bi_doc` (cobra e recebe a confirmação) | Gateway é serviço de mercado. `bi_sem_doc` só se o pagamento passar pelo sistema próprio do cliente |
 | IA (classificar, extrair, gerar, responder) | Integração `uni_doc` (API do modelo) | Se a PRD disser que a IA decide sem humano no fim, marcar também ⚠️ em *Pontos de atenção* |
 | Notificação por push no app | Integração `uni_doc` | |
 | Notificação por WhatsApp automático | Integração `uni_doc`, ou `bi_doc` se o sistema lê a resposta | Link para abrir o WhatsApp não é integração (0) |
@@ -74,7 +74,6 @@ A PRD descreve o produto, não o projeto. Depois de ler a PRD, fazer **uma rodad
 
 | Fator | Pergunta para o CN |
 |---|---|
-| Documentação das integrações | "Para cada integração da PRD ({lista}), o cliente já mandou o link da documentação da API? Se não, quem vai conseguir?" |
 | Disponibilidade do cliente (`cliente_pouca_disponibilidade`) | "Quem do cliente vai testar e aprovar as entregas? Essa pessoa tem umas 2 horas por semana para isso?" |
 | Riscos do time (`riscos`) | "O time vai ter maioria em primeiro projeto? Tem alguém que já sabe que vai sair no meio? Alguma parte depende de outro fornecedor?" |
 | Stack e infra (`stack_fora_template`, `deploy_infra_cliente`) | "O cliente exige alguma tecnologia, ou que o sistema fique nos servidores dele?" (pular se a 3.1 já responde) |
@@ -82,6 +81,8 @@ A PRD descreve o produto, não o projeto. Depois de ler a PRD, fazer **uma rodad
 | Semanas off | "Qual é a data prevista de início? (para contar férias, provas e recesso)" |
 
 Se o CN não souber, usar o valor mais pesado plausível e registrar em *Suposições*, com `(origem: suposição da skill)`.
+
+**Não perguntar sobre a documentação das integrações.** O CN não tem como responder: a skill aplica o peso fixo do Passo 2 e registra a classificação em *Suposições* (ex.: `Integração ERP: bidirecional com sistema do cliente (origem: PRD 2.4 + regra de peso fixo)`).
 
 **Lacuna dentro da PRD** (módulo sem superfície, integração sem meio, fluxo de dados sem uma das três partes, "tempo real" sem mecanismo): não deveria acontecer, porque a skill da PRD pergunta antes de gerar o PDF. Se aparecer, tratar como fator desconhecido (perguntar, ou usar o valor mais pesado) e registrar em *Pontos de atenção* que a PRD precisa de revisão antes de virar anexo de contrato.
 
@@ -92,6 +93,6 @@ Com PRD, a origem cita a seção:
 ```
 Níveis de acesso: 2 a 6 com grandes diferenças (origem: PRD 2.1 — 4 perfis, recepção e veterinário com módulos próprios)
 Fluxos comuns: 4 (origem: PRD 2.2 a 2.5)
-Integração Mercado Pago: bidirecional com documentação (origem: PRD 2.3 + CN mandou o link)
+Integração Mercado Pago: bidirecional com serviço de mercado (origem: PRD 2.3 + regra de peso fixo)
 Disponibilidade do cliente: pouca (origem: CN)
 ```

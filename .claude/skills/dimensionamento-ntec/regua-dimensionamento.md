@@ -95,15 +95,32 @@ Exemplo: app nativo + painel web = 1,2 + 0,1 = **x1,3**.
 | Item | Mín | Central | Máx | Observação |
 |---|---|---|---|---|
 | Integração que o template já tem (Google, S3, e-mail) | 0 | 0 | 0 | |
-| Integração unidirecional, API pública documentada (ex: Mapbox, push) | +0,5 | +0,5 | +1 | Validador olha a API |
-| Integração bidirecional, API documentada | +0,5 | +1 | +1,5 | Validador olha a API |
-| Integração unidirecional, API sem documentação | +1 | +1,5 | +2 | ⚠️ Pedir acesso antes do contrato **ou** escrever o risco no contrato |
-| Integração bidirecional, API sem documentação | +1,5 | +2,5 | +3,5 | ⚠️ Validador **precisa** avaliar a API |
-| Integração bidirecional sem API | 🚩 | — | — | Avaliar alternativa; potencial inviabilidade |
+| Integração unidirecional com serviço de mercado (ex: Mapbox, push) — `uni_doc` | +0,5 | +0,5 | +1 | |
+| Integração bidirecional com serviço de mercado (ex: Mercado Pago) — `bi_doc` | +0,5 | +1 | +1,5 | |
+| Integração unidirecional com sistema do cliente — `uni_sem_doc` | +1 | +1,5 | +2 | ⚠️ Cláusula de contrato + plano B (planilha) |
+| Integração bidirecional com sistema do cliente — `bi_sem_doc` | +1,5 | +2,5 | +3,5 | ⚠️ Cláusula de contrato + plano B (planilha) |
+| Integração bidirecional que a PRD diz não ter API — `sem_api` | 🚩 | — | — | Avaliar alternativa; potencial inviabilidade |
 | Dependência de dados (bases soltas, planilhas, CSV, tabelas externas) | +1 | +1,5 | +2 | ⚠️ Chamar o núcleo de Dados |
 | Offline só local (cálculo no aparelho, sem sincronizar) | 0 | 0 | 0 | |
 | Offline com sincronização | +1,5 | +2 | +3 | ⚠️ Revisar a estrutura do banco |
 | Volume de uso alto (milhares de usuários simultâneos, picos) | +1 | +1,5 | +2 | ⚠️ Requisitos de performance por escrito |
+
+#### Integrações: peso fixo, sem perguntar ao CN
+
+O CN não tem como avaliar a API de outro sistema, e não há técnico para validar antes da proposta. Por isso a skill **não pergunta** sobre documentação e **não pesquisa** o fornecedor: cada integração recebe um peso fixo a partir de duas informações que a PRD já traz.
+
+1. **Sentido.** `envia` ou `recebe` → unidirecional. `envia e recebe` → bidirecional.
+2. **De quem é o sistema do outro lado.**
+   - **Serviço de mercado** → linha "com documentação" (`uni_doc` / `bi_doc`). É um produto vendido para qualquer empresa, com API pública: gateways de pagamento e Pix, mapas, push (Expo/FCM), modelos de IA, WhatsApp Business, emissores de NF-e, Google Calendar, envio de SMS etc.
+   - **Sistema do cliente** → linha "sem documentação" (`uni_sem_doc` / `bi_sem_doc`). É um ERP, sistema legado, sistema feito sob medida ou qualquer sistema que só o cliente usa. Também entram aqui o meio `arquivo` (o layout ainda vai ser combinado) e **qualquer caso em dúvida** (fronteira para o lado mais pesado).
+
+Bidirecional com sistema do cliente **não vira 🚩 por suposição**. Só vira `sem_api` quando a PRD diz explicitamente que o sistema não tem API. Sem essa informação, entra como `bi_sem_doc`, e a cláusula abaixo cobre o risco.
+
+**Toda integração com sistema do cliente leva, na resposta:**
+- **Cláusula de contrato sugerida** (em *Pontos de atenção*): "A integração com {sistema} depende de o cliente fornecer acesso à API e à documentação dela até o início da sprint {n}. Sem esse acesso, a integração será substituída por importação e exportação de planilha, sem alteração de prazo."
+- **Plano B em "O que cortar":** trocar a integração por importação ou exportação manual de planilha, com a economia em semanas recalculada pelo script.
+
+Os pesos são os que já existiam. A regra só fixa **qual linha usar**, para não depender de uma resposta que o CN não tem.
 
 ## F4 — Testes com o cliente
 **Baseline do formulário:** 1 a 4 semanas. **Teto:** 4.
@@ -169,7 +186,7 @@ Aplicado sobre o **central** e o **máximo** (o otimista não leva buffer).
 ## Parar e sinalizar (a skill não decide sozinha)
 
 - 🚩 Multitenancy com instâncias e regras isoladas por cliente → "beira o inviável" (formulário).
-- 🚩 Integração bidirecional sem API.
+- 🚩 Integração bidirecional que a PRD diz não ter API.
 - 🚩 Feature atípica sem benchmark **e** sem documentação → pode exigir prova de conceito antes de vender.
 - ⚠️ Dependência de dados → chamar o núcleo de Dados para avaliar se precisa de engenharia de dados.
 - ⚠️ Provável acima de **26 semanas** → fora da faixa calibrada (ver Calibração). Validar com a área de projetos e considerar quebrar em fases ou contratos.
@@ -216,3 +233,4 @@ Leituras:
 | 16/10/2026 | Levantamento no Notion do NTec (base de projetos: Projeto C, Projeto A, Projeto B, Projeto D, Projetos E, F) | Semanas vendidas, sprints realizadas, fases por task, riscos dos hand-offs |
 | 16/10/2026 | Calibração inicial (Matheus Padilha + Claude) | Pesos mín/central/máx; regra "atípico ≠ RN específica"; corte de calibração em 26 semanas |
 | 16/10/2026 | Skill `documento-requisitos-ntec` ([repositório](https://github.com/rivasaugustus/documento-requisitos-ntec)) | PRD vira a entrada padrão. Mapeamento da PRD para os fatores, sem peso novo: 1 módulo = 1 fluxo; fatores de complexidade da PRD encaixados nas linhas existentes (`leitura-prd.md`) |
+| 17/10/2026 | Decisão do NTec: CNs não avaliam API e não há técnico para validar antes da proposta | Integração com peso fixo, sem perguntar ao CN: serviço de mercado = linha "com documentação", sistema do cliente = linha "sem documentação", com cláusula de contrato e plano B (planilha). Pesos inalterados |

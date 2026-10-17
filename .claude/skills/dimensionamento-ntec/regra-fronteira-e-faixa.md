@@ -32,7 +32,7 @@ Sempre nesta ordem. Só passa ao passo seguinte se o anterior não resolver.
 | 1 | Fluxo comum ou RN específica? | Cadastro com validação de CPF e CNPJ | Comum. RN específica é regra **do cliente** que precisa de documento (fórmula, tabela, norma). Validação padrão de mercado é comum |
 | 2 | Poucas ou grandes diferenças entre perfis? | Admin e usuário, em que o admin só vê um menu a mais | Poucas. Telas próprias, regras próprias ou aprovação de cadastro = grandes |
 | 3 | PWA ou app? | "Quero que instale no celular" | Se não precisa de loja nem de recurso nativo pesado (Bluetooth, segundo plano) → PWA. Na dúvida → app |
-| 4 | Integração documentada ou não? | "Tem API, o TI de lá passa" | Sem link na mão = sem documentação |
+| 4 | Serviço de mercado ou sistema do cliente? | "Tem API, o TI de lá passa" | Produto vendido para qualquer empresa, com API pública = mercado. Sistema que só o cliente usa, ou dúvida = sistema do cliente (peso fixo, sem pedir link) |
 | 5 | Atípico ou só setor incomum? | App de agenda para criadores de abelhas | Setor incomum com produto comum = **não** atípico. Atípico é o *produto* sem benchmark |
 | 6 | Mesmo formato ou formato extra? | Painel admin | Mesmo código web = mesmo formato. Código separado (ex.: app nativo + painel web) = extra |
 | 7 | Dependência de dados ou integração? | "Importar a tabela nutricional pública" | Dado estático importado uma vez ou atualizado à mão = dependência de dados. Consulta automática a um serviço = integração |
@@ -56,7 +56,7 @@ F3 formato: PWA → app nativo (+x0,1 no núcleo, +2,5 de lojas)
 Motivo: cliente quer "baixar na loja"; na dúvida entre PWA e app, a régua vai para o mais pesado.
 
 F3 integração ERP: parada, sem valor
-Motivo: o cliente quer enviar e receber dados de um sistema sem API; potencial inviabilidade, a skill não decide.
+Motivo: a PRD diz que o sistema do cliente não tem API e ele quer enviar e receber dados; potencial inviabilidade, a skill não decide.
 ```
 
 Se a regra não mexeu em nada: `Sem ajustes de fronteira.`
@@ -85,6 +85,6 @@ Se a regra não mexeu em nada: `Sem ajustes de fronteira.`
 | Tirar o segundo formato (só app ou só web no MVP) | ~10% do desenvolvimento + parte do deploy |
 | Juntar perfis de usuário (ex.: um "profissional" no lugar de "nutricionista" e "psicólogo") | 0,5 a 1 em F2 |
 | Mover fluxos não essenciais para uma fase 2 | 1,25 por fluxo comum, 3 por fluxo com RN específica |
-| Trocar integração automática por importação manual (planilha) no MVP | 0,5 a 2,5 |
+| Trocar integração automática por importação manual (planilha) no MVP — é o plano B obrigatório de toda integração com sistema do cliente | 0,5 a 2,5 |
 
 Sempre recalcular com o script depois do corte. Não subtrair de cabeça.

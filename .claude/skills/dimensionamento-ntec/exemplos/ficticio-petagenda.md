@@ -27,7 +27,7 @@ Este caso **não é um projeto real**. Serve para mostrar ao CN como a resposta 
 
 **4. Pontos de atenção**
 1. **Prazo pedido (12) abaixo do piso (14).** Não vender esse prazo com esse escopo.
-2. **Pagamento pelo app (Mercado Pago):** a integração é bidirecional (cobra e recebe a confirmação). A API tem documentação, mas o validador precisa olhar antes do contrato.
+2. **Pagamento pelo app (Mercado Pago):** a integração é bidirecional (cobra e recebe a confirmação). É um serviço de mercado com API pública, então entra com o peso fixo "com documentação", sem precisar perguntar nada.
 3. **Dados separados por clínica (multitenancy (um mesmo sistema atendendo várias empresas com os dados separados)):** confirmar por escrito que as **regras** são iguais para as 3. Se cada clínica quiser regras próprias, o projeto para (🚩).
 4. **Demanda sem documento:** veio só de uma call. A imersão fica mais longa (+1 semana no central).
 5. **Time com maioria em primeiro projeto:** buffer de +10%.

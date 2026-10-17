@@ -30,7 +30,7 @@ Este caso **não é um projeto real**. É o mesmo PetAgenda de `ficticio-petagen
 
 **Pontos para a imersão:** duração padrão de cada tipo de consulta; campos da carteirinha; texto dos lembretes.
 
-**Respostas do CN à rodada curta** (o que a PRD não responde): o link da API do Mercado Pago é público; o time terá maioria em primeiro projeto; a clínica tem uma responsável com 2 horas por semana para validar; existe app parecido de referência; início previsto em fevereiro.
+**Respostas do CN à rodada curta** (o que a PRD não responde): o time terá maioria em primeiro projeto; a clínica tem uma responsável com 2 horas por semana para validar; existe app parecido de referência; início previsto em fevereiro.
 
 ---
 
@@ -44,7 +44,7 @@ Este caso **não é um projeto real**. É o mesmo PetAgenda de `ficticio-petagen
 | Multitenancy | dados separados | PRD 1: "cada clínica vê só os próprios dados, regras iguais" |
 | Fluxos comuns | 3 (2.2, 2.4, 2.5) | PRD seção 2. 2.1 vai para F2 e 2.6 vai para F5 e F6 |
 | Fluxos com RN específica | 1 (2.3) | Rotina agendada (lembrete na data da dose) → o módulo vira RN específica (`leitura-prd.md`, Passo 3) |
-| Integrações | Mercado Pago `bi_doc`; push `uni_doc`; login e e-mail `template` | PRD 2.2 e 2.3 + CN confirmou o link do Mercado Pago |
+| Integrações | Mercado Pago `bi_doc`; push `uni_doc`; login e e-mail `template` | PRD 2.2 e 2.3 + regra de peso fixo: Mercado Pago e push são serviços de mercado (sem pergunta ao CN) |
 | Demanda pouco detalhada | não | Tem PRD |
 | Disponibilidade do cliente | boa | CN |
 | Buffer | +10% (time novato) | CN |

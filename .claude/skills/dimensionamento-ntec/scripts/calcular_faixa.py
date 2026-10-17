@@ -136,9 +136,9 @@ def calcular(e):
     extras = [F3_INTEGRACAO[i] for i in integracoes]
     for i in integracoes:
         if i == "sem_api":
-            paradas.append("Integração bidirecional sem API: avaliar alternativa; potencial motivo de inviabilidade.")
+            paradas.append("Integração bidirecional que a PRD diz não ter API: avaliar alternativa; potencial motivo de inviabilidade.")
         if i in ("uni_sem_doc", "bi_sem_doc"):
-            alertas.append("Integração sem documentação: pedir acesso à API antes do contrato ou registrar o risco no contrato.")
+            alertas.append("Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'.")
     if e.get("dependencia_dados"):
         extras.append(F3_DEPENDENCIA_DADOS)
         alertas.append("Dependência de dados de bases soltas: chamar o núcleo de Dados para avaliar.")

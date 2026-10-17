@@ -26,7 +26,7 @@ Perguntar **no máximo 5 por rodada**, primeiro as que mais mexem no prazo (na o
 | **Regra de negócio específica** (F3, F4) | "Tem algum cálculo, fórmula ou regra que, se o sistema errar, causa prejuízo, risco à saúde ou problema legal? Já existe isso escrito (planilha, artigo, norma)?" | Sim → fluxo com RN específica + RN crítica no F4. Pedir o documento da regra **antes** da proposta |
 | **Formato** (F3, F5, F6) | "As pessoas vão usar pelo navegador, por um app baixado da loja, ou os dois? Precisa estar na App Store / Play Store?" | Navegador = web. "Ícone na tela do celular, mas sem loja" = PWA. Loja = app + F6 |
 | **Níveis de acesso** (F2) | "Quantos tipos diferentes de pessoa usam o sistema? Cada tipo vê telas diferentes ou só algumas opções a mais? Alguém precisa aprovar o cadastro de outro?" | Contar os tipos. Telas e regras próprias ou aprovação → "grandes diferenças" |
-| **Integrações** (F3) | "O sistema precisa conversar com algum outro sistema (pagamento, ERP, planilha, mapa, WhatsApp)? Ele só *puxa* dados, só *manda*, ou os dois? Esse outro sistema tem documentação (um link)?" | Só puxa ou só manda = unidirecional. Os dois = bidirecional. Sem link de documentação = "sem documentação". Google, e-mail e upload de arquivo = template |
+| **Integrações** (F3) | "O sistema precisa conversar com algum outro sistema (pagamento, ERP, planilha, mapa, WhatsApp)? Ele só *puxa* dados, só *manda*, ou os dois? Esse outro sistema é um serviço conhecido (Mercado Pago, Google Maps…) ou um sistema próprio do cliente?" | Só puxa ou só manda = unidirecional. Os dois = bidirecional. **Não perguntar sobre documentação:** peso fixo da régua (serviço de mercado = com documentação; sistema do cliente ou dúvida = sem documentação, com cláusula e plano B). Google, e-mail e upload de arquivo = template |
 | **Dependência de dados** (F3) | "O sistema vai usar dados que hoje estão em planilhas, tabelas públicas ou bases de outros lugares?" | Sim → dependência de dados + chamar o núcleo de Dados |
 | **Offline** (F3) | "Precisa funcionar sem internet? Se sim, o que acontece quando a internet volta: os dados precisam subir para algum lugar?" | Sem internet e nada sobe = offline local (0). Precisa sincronizar = offline com sincronização |
 | **Multitenancy** (F2) | "O sistema vai ser usado por várias empresas ou unidades diferentes? Cada uma precisa de regras e funções próprias, ou só não pode ver os dados da outra?" | Regras próprias por empresa = 🚩. Só não ver os dados da outra = isolamento |
@@ -45,7 +45,7 @@ Perguntar **no máximo 5 por rodada**, primeiro as que mais mexem no prazo (na o
 | "Igual ao [app famoso], só que menor" | Feature atípica até provar o contrário | App famoso = anos de time grande |
 | "Painel para eu acompanhar" | +1 fluxo (dashboard), no mesmo formato web se for o mesmo sistema | |
 | "Tem que ter login com Google" | Template (0) | |
-| "Integra com o nosso sistema" | Integração bidirecional **sem documentação** até aparecer o link | Pedir o link antes de tudo |
+| "Integra com o nosso sistema" | Integração bidirecional com sistema do cliente (`bi_sem_doc`) | Peso fixo, sem pedir link. Cláusula de contrato + plano B (planilha) |
 | "Manda mensagem no WhatsApp" | Link para WhatsApp = 0. Envio automático = integração (API do WhatsApp Business, bidirecional se responder) | |
 | "Funciona no celular" | Web responsiva, PWA ou app: perguntar se precisa estar na loja | |
 | "Depois a gente vê isso" | Fora do escopo. Registrar no "fora do escopo" do formulário | |
@@ -58,7 +58,7 @@ Todo fator preenchido leva a origem entre parênteses:
 ```
 Níveis de acesso: 2 a 6 com grandes diferenças (origem: formulário, seção 6)
 Fluxos críticos: 4 (origem: transcrição da call, cliente descreveu 4 jornadas)
-Integração com ERP: bidirecional sem documentação (origem: suposição da skill — CN não sabia)
+Integração com ERP: bidirecional com sistema do cliente (origem: transcrição da call + regra de peso fixo)
 ```
 
 ## Passo 5 — Conferir declarado × encontrado

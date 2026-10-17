@@ -273,7 +273,7 @@ s.append(table([
     ["Módulo <b>Disponibilização do Produto</b>", "Lojas (F6) e deploy (F5). App de saúde, finanças ou menores = app sensível"],
     ["<b>2.1 Autenticação e Perfis</b>", "Níveis de acesso (F2). Perfil com módulo próprio ou aprovação de cadastro = grandes diferenças"],
     ["Cada módulo da seção 2 (menos 2.1 e Disponibilização)", "1 fluxo comum. Com RN de cálculo, clínica, legal ou de dinheiro = fluxo com RN específica"],
-    ["<b>SID integrar com…</b> (sentido, dados, meio)", "Integração: envia ou recebe = uni; os dois = bi. Sem link de documentação = sem doc"],
+    ["<b>SID integrar com…</b> (sentido, dados, meio)", "Integração: envia ou recebe = uni; os dois = bi. Serviço de mercado = com doc; sistema do cliente = sem doc (peso fixo, sem perguntar)"],
     ["Fluxo de dados com origem em planilha, base externa ou importação", "Dependência de dados (+ chamar o núcleo de Dados)"],
     ["Multiempresa, offline, 3.3 Performance", "Multitenancy, offline (local ou com sincronização), volume alto"],
     ["<b>4. Exclusões Explícitas</b>", "Não somam nada. Conferir que não foram contadas e não oferecer como corte"],
@@ -291,9 +291,19 @@ s.append(table([
     ["Tempo real por push · relatório configurável pelo usuário", "Feature atípica (polling, tela fixa ou exportação = 0)"],
 ], [85, 85]))
 s.append(P("O que a PRD não responde", "h2"))
-s.append(P("A PRD descreve o produto, não o projeto. Depois de ler a PRD, a skill faz uma rodada curta ao CN sobre: link da documentação "
-           "de cada API, disponibilidade do cliente para testar, riscos do time (novato, saída de membros, terceiros), stack ou infra "
+s.append(P("A PRD descreve o produto, não o projeto. Depois de ler a PRD, a skill faz uma rodada curta ao CN sobre: "
+           "disponibilidade do cliente para testar, riscos do time (novato, saída de membros, terceiros), stack ou infra "
            "exigida pelo cliente, app de referência (benchmark) e data de início (para contar as semanas off)."))
+s.append(P("Integrações: peso fixo, sem perguntar ao CN", "h2"))
+s.append(P("O CN não tem como avaliar a API de outro sistema, e não há técnico para validar antes da proposta. Por isso a skill "
+           "não pergunta sobre documentação: usa o sentido (uni ou bi) e <b>de quem é o sistema</b>, que a PRD já traz."))
+s.append(table([
+    ["Sistema do outro lado", "Linha da régua", "O que mais sai na resposta"],
+    ["<b>Serviço de mercado</b> (pagamento, Pix, mapa, push, IA, WhatsApp Business, NF-e)", "Com documentação", "Nada"],
+    ["<b>Sistema do cliente</b> (ERP, legado, sob medida), arquivo ou dúvida", "Sem documentação",
+     "Cláusula de contrato (acesso à API até a sprint n; sem acesso, vira planilha) + plano B em \"O que cortar\""],
+    ["PRD diz explicitamente que o sistema não tem API (bidirecional)", "Parado", "Área de projetos avalia"],
+], [70, 35, 65]))
 
 # 7
 s.append(P("7. Régua de dimensionamento (F1 a F6)", "h1"))
@@ -329,11 +339,11 @@ s.append(table([
     ["Cada fluxo crítico comum (CRUD, listagem, mapa com filtros, agenda)", "1", "1,25", "1,5"],
     ["Cada fluxo com regra de negócio específica (fórmula, cálculo que não pode errar)", "2", "3", "4"],
     ["Cada feature atípica (sem benchmark)", "1", "1,5", "2"],
-    ["Integração unidirecional, API documentada", "+0,5", "+0,5", "+1"],
-    ["Integração bidirecional, API documentada", "+0,5", "+1", "+1,5"],
-    ["Integração unidirecional, sem documentação", "+1", "+1,5", "+2"],
-    ["Integração bidirecional, sem documentação", "+1,5", "+2,5", "+3,5"],
-    ["Integração bidirecional sem API", "Parado", "—", "—"],
+    ["Integração unidirecional com serviço de mercado", "+0,5", "+0,5", "+1"],
+    ["Integração bidirecional com serviço de mercado", "+0,5", "+1", "+1,5"],
+    ["Integração unidirecional com sistema do cliente", "+1", "+1,5", "+2"],
+    ["Integração bidirecional com sistema do cliente", "+1,5", "+2,5", "+3,5"],
+    ["Integração bidirecional que a PRD diz não ter API", "Parado", "—", "—"],
     ["Dependência de dados (planilhas, CSV, tabelas externas) — chamar núcleo de Dados", "+1", "+1,5", "+2"],
     ["Offline com sincronização (offline só local = 0)", "+1,5", "+2", "+3"],
     ["Volume de uso alto (milhares simultâneos)", "+1", "+1,5", "+2"],
@@ -390,7 +400,7 @@ s.append(table([
     ["Tirar o segundo formato do MVP (só app ou só web)", "~10% do desenvolvimento + parte do deploy"],
     ["Juntar perfis de usuário", "0,5 a 1 em F2"],
     ["Mover módulos não essenciais da PRD para uma fase 2", "1,25 por fluxo comum; 3 por fluxo com regra específica"],
-    ["Trocar integração automática por importação manual no MVP", "0,5 a 2,5"],
+    ["Trocar integração automática por importação manual no MVP (plano B de toda integração com sistema do cliente)", "0,5 a 2,5"],
 ], [95, 75]))
 s.append(P("Na dúvida entre duas linhas da régua, a skill vai sempre para a mais pesada, com um comentário de duas linhas "
            "explicando o ajuste (máximo de 3 ajustes por projeto). O histórico do NTec é vender para menos.", "small"))
@@ -405,7 +415,7 @@ s.append(table([
     ["Regra de negócio", "Tem algum cálculo ou regra que, se errar, causa prejuízo, risco à saúde ou problema legal? Já existe escrito?"],
     ["Formato", "Vão usar pelo navegador, por um app da loja, ou os dois? Precisa estar na App Store / Play Store?"],
     ["Níveis de acesso", "Quantos tipos de pessoa usam? Cada tipo vê telas diferentes? Alguém aprova o cadastro de outro?"],
-    ["Integrações", "Precisa conversar com outro sistema? Só puxa, só manda ou os dois? Esse sistema tem documentação (link)?"],
+    ["Integrações", "Precisa conversar com outro sistema? Só puxa, só manda ou os dois? É um serviço conhecido ou um sistema próprio do cliente?"],
     ["Offline", "Precisa funcionar sem internet? Quando a internet volta, os dados precisam subir para algum lugar?"],
     ["Multitenancy", "Várias empresas vão usar? Cada uma tem regras próprias, ou só não pode ver os dados da outra?"],
     ["Disponibilidade", "Quem vai testar e aprovar as entregas? Tem umas 2 horas por semana para isso?"],
@@ -446,7 +456,7 @@ s.append(table([
     ["Níveis de acesso", "2 a 6, grandes diferenças", "2.1: recepção e veterinário com módulos próprios"],
     ["Multitenancy", "dados separados", "Visão Geral: cada clínica vê só os próprios dados"],
     ["Fluxos", "3 comuns + 1 com RN específica", "2.2, 2.4 e 2.5 comuns; 2.3 tem rotina agendada"],
-    ["Integrações", "Mercado Pago (bi, doc); push (uni, doc)", "2.2 e 2.3 + CN confirmou o link"],
+    ["Integrações", "Mercado Pago (bi, doc); push (uni, doc)", "2.2 e 2.3 + peso fixo (serviços de mercado)"],
     ["Demanda pouco detalhada", "não", "Tem PRD"],
     ["Buffer", "+10% (time novato)", "CN"],
 ], [38, 60, 72]))
@@ -473,7 +483,7 @@ s.append(P("14. Parar e sinalizar", "h1"))
 s.append(P("A skill não decide sozinha nestes casos. Ela marca e devolve para a área de projetos:"))
 s.append(bullets([
     f"{STOP} Multitenancy com instâncias e regras isoladas por cliente (\"beira o inviável\").",
-    f"{STOP} Integração bidirecional sem API.",
+    f"{STOP} Integração bidirecional que a PRD diz não ter API.",
     f"{STOP} Feature atípica sem benchmark e sem documentação (pode exigir prova de conceito).",
     f"{REV} Dependência de dados de bases soltas → chamar o núcleo de Dados.",
     f"{REV} Provável acima de 26 semanas (fora da faixa calibrada) → considerar quebrar em fases.",

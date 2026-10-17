@@ -12,7 +12,7 @@ Skill do Claude que ajuda coordenadores de negócios (CNs) do Núcleo de Tecnolo
 skill-dimensionamento-ntec/
 ├── README.md                       ← este arquivo
 ├── docs/
-│   ├── Dimensionamento-NTec-Skill.pdf   ← PDF explicativo (9 páginas, visual do Dimensionamento Tec)
+│   ├── Dimensionamento-NTec-Skill.pdf   ← PDF explicativo (10 páginas, visual do Dimensionamento Tec)
 │   └── gerar_pdf.py                     ← gera o PDF (reportlab + fontes Segoe UI do Windows)
 └── .claude/skills/dimensionamento-ntec/
     ├── SKILL.md                    ← orquestrador: procedimento, guardrails, formato da resposta
@@ -53,8 +53,8 @@ skill-dimensionamento-ntec/
 Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para continuar em outra conversa sem precisar do histórico. **Comece por "Onde paramos".**
 
 ### Onde paramos (17/10/2026)
-- **Em discussão, nada implementado ainda:** como dimensionar integrações **sem** o CN informar a documentação das APIs. O CN não tem como saber isso, e **não há técnico disponível** para validar. Ver a proposta em [Integrações sem o CN informar a documentação](#integrações-sem-o-cn-informar-a-documentação-proposta-pendente).
-- **Próximo passo:** o usuário decide se implementa a proposta. Se sim, a lista de arquivos a mexer está no fim da seção da proposta.
+- **Implementado:** integrações com **peso fixo, sem perguntar ao CN** (ver [Integrações: peso fixo](#integrações-peso-fixo-sem-perguntar-ao-cn-implementado)). Os números da calibração não mudaram.
+- **Próximo passo:** pendência 2 (avisar o Augustus) ou 3 (resto do levantamento), conforme a lista de pendências.
 - **Como trabalhar com o usuário:** quando faltar informação ou houver decisão a tomar, **perguntar antes de assumir**, com uma opção recomendada.
 
 ### Linha do tempo
@@ -65,6 +65,7 @@ Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para co
 | 16/10/2026 | Projetos anonimizados (Projeto A a F) e repositório publicado (público) no GitHub |
 | 16/10/2026 | PDF explicativo v2 (9 páginas), já com a PRD |
 | 17/10/2026 | Explicação de onde vem o "Inventário para dimensionamento"; discussão sobre integrações sem documentação |
+| 17/10/2026 | Integrações com peso fixo, sem perguntar ao CN; PDF v3 (10 páginas) |
 
 ### O que foi pedido (origem)
 Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em conta que somos uma **empresa júnior**, use os dados reais dos projetos e chegue a uma **faixa de semanas**. O uso deve ser **prático para CNs**, que em geral são fracos tecnicamente e mandam para a equipe de projetos prazos sem sentido.
@@ -88,7 +89,7 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 **PRD como entrada padrão**
 - A skill lê o PDF da PRD e, se o CN colar, o bloco "Inventário para dimensionamento". Sem o bloco, monta o inventário a partir do PDF.
 - **Sem PRD:** dimensiona, mas marca ⚠️ "Estimativa preliminar, sem PRD".
-- **O que a PRD não cobre** (documentação das APIs, disponibilidade do cliente, riscos do time, stack e infra, benchmark, data de início): uma rodada curta de perguntas ao CN. *A parte das APIs está em revisão (ver "Onde paramos").*
+- **O que a PRD não cobre** (documentação das APIs, disponibilidade do cliente, riscos do time, stack e infra, benchmark, data de início): uma rodada curta de perguntas ao CN. A documentação das APIs **saiu** dessa rodada (peso fixo, seção abaixo).
 - **1 módulo = 1 fluxo.** 2.1 Autenticação vai para F2, e Disponibilização vai para F5 e F6.
 - **Fatores de complexidade da PRD encaixam nas linhas atuais**, sem peso novo. Pagamento, IA e push viram integração. Concorrência, imutabilidade e rotina agendada fazem o módulo virar RN específica. Tempo real por push e relatório configurável viram feature atípica. Tabela completa em `leitura-prd.md`.
 - **Papel da skill:** ocupa o lugar que a skill da PRD chama de `validacao-tecnica-ntec`, mas calcula **só o prazo, sem preço**.
@@ -100,17 +101,17 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 ### De onde vem o "Inventário para dimensionamento"
 É gerado pela skill da PRD, mas **não fica no PDF**: aparece só na resposta dela no chat (Passo 7), junto com Perfis, Funcionalidades, Integrações e Pontos para a imersão. Colunas fixas: `Módulo | Superfície | Itens A(cli)D | Itens SID | Integrações | Fluxos de dados | Fatores de complexidade`. O CN copia esse bloco e manda junto com o PDF; se esquecer, a nossa skill reconstrói o inventário a partir do PDF (só os "Pontos para a imersão" se perdem). Ideia para pedir ao Augustus: a skill da PRD salvar o inventário num arquivo ao lado do PDF.
 
-### Integrações sem o CN informar a documentação (proposta pendente)
-**Problema:** hoje `leitura-prd.md` (Passo 4) pede ao CN o link da documentação de cada API. O CN não sabe, e não há técnico para validar.
+### Integrações: peso fixo, sem perguntar ao CN (implementado)
+**Problema:** o documento de validação pedia ao CN a API de cada integração (documentação, tipo, fluxo). Os CNs atuais não têm como responder, e não há técnico para validar antes da proposta.
 
-**Proposta (a skill faz a avaliação técnica sozinha):**
-1. **Catálogo de integrações conhecidas** (`catalogo-integracoes.md`): Mercado Pago, Stripe, Pix, Google Maps, Mapbox, push (Expo/FCM), WhatsApp Business, OpenAI, Claude, emissores de NF-e, Google Calendar etc., já classificados (sentido típico, documentação pública, linha da régua). A PRD diz qual é o sistema, e a skill classifica sem perguntar.
-2. **Pesquisa automática:** sistema fora do catálogo → a skill busca na web a documentação do fornecedor, lê e classifica (tem API pública? qual sentido? tem sandbox?), citando o link como evidência. Depende de a busca na web estar ligada (no Claude Code costuma estar; no claude.ai depende da conta da PJ).
-3. **Sistema feito sob medida para o cliente:** a skill entrega ao CN uma **mensagem pronta para o cliente repassar ao TI ou ao fornecedor dele** ("tem API? tem documentação? exporta planilha?"). O CN só encaminha e cola a resposta; se vier link ou PDF, a skill lê sozinha.
-4. **Sem resposta:** peso mais pesado (sem documentação) + **cláusula de contrato** sugerida ("a integração depende do acesso à API fornecido pelo cliente; sem acesso, vira importação por planilha") + o plano B (planilha) em "O que cortar", com a economia em semanas.
-5. *Opcional, mexe no script:* categoria "a confirmar" = mínimo da linha com documentação + central e máximo da linha sem documentação (abre a faixa sem inflar o piso; os pesos já existem).
+**Decisão (17/10/2026):** a skill não pergunta sobre a documentação e não pesquisa o fornecedor. Cada integração recebe um peso fixo a partir do que a PRD já traz: o **sentido** (uni ou bi) e **de quem é o sistema**.
+- **Serviço de mercado** (pagamento, Pix, mapa, push, IA, WhatsApp Business, NF-e, Google Calendar…) → linha "com documentação" (`uni_doc` / `bi_doc`).
+- **Sistema do cliente** (ERP, legado, sob medida), meio `arquivo` ou dúvida → linha "sem documentação" (`uni_sem_doc` / `bi_sem_doc`), mais **cláusula de contrato** ("depende de o cliente fornecer acesso à API até a sprint {n}; sem acesso, vira planilha, sem alteração de prazo") e o **plano B** (planilha) em "O que cortar".
+- `sem_api` (🚩) só quando a PRD disser explicitamente que o sistema não tem API.
 
-**Arquivos a mexer se aprovado:** novo `catalogo-integracoes.md`; `leitura-prd.md` (Passos 2 e 4); `insumos-e-perguntas.md` (pergunta de integrações); `SKILL.md` (procedimento e formato da resposta: mensagem para o cliente e cláusula); `regra-fronteira-e-faixa.md` (fronteira 4 "integração documentada ou não?"); `regua-dimensionamento.md` (registro das fontes); se fizer o item 5, `scripts/calcular_faixa.py` + régua; depois regerar o PDF, copiar para `~/.claude/skills/` e dar push.
+**Pesos inalterados:** a regra só fixa qual linha usar. Os exemplos rodados depois da mudança dão os mesmos números de antes. **Descartado da proposta anterior:** catálogo em arquivo separado, pesquisa na web, mensagem para o cliente repassar ao TI e a categoria "a confirmar" no script.
+
+**Arquivos mexidos:** `regua-dimensionamento.md` (regra + registro das fontes), `leitura-prd.md`, `insumos-e-perguntas.md`, `SKILL.md`, `regra-fronteira-e-faixa.md`, mensagens de alerta do `scripts/calcular_faixa.py`, exemplos PetAgenda, `docs/gerar_pdf.py` e o PDF.
 
 ### Calibração atual
 | Projeto | Faixa da régua (otim. / prov. / cons.) | Vendido | Situação |
@@ -124,7 +125,7 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 Todos são **anteriores à PRD**: as regras de leitura da PRD ainda não foram conferidas contra um projeto real.
 
 ### Pendências (próximos passos)
-1. **Decidir e implementar a proposta de integrações** (seção acima).
+1. **Conferir a regra de peso fixo** no primeiro projeto com integração com sistema do cliente que terminar (se `bi_sem_doc` ficou longe do real, ajustar o peso).
 2. **Avisar o Augustus:** trocar `validacao-tecnica-ntec` por `dimensionamento-ntec` na skill da PRD (a nossa não calcula preço) e, se possível, salvar o inventário num arquivo.
 3. **Mandar o resto do levantamento** (Projeto D completo, Projetos E e F) para calibrar os projetos grandes e tirar os palpites do Projeto D.
 4. **Conseguir a subpágina "Régua de Dimensionamento"** do Notion. Se tiver números, eles valem mais que os da skill.
@@ -132,7 +133,7 @@ Todos são **anteriores à PRD**: as regras de leitura da PRD ainda não foram c
 6. **Conferir as regras de leitura da PRD** no primeiro projeto com PRD que terminar (principalmente "rotina agendada → RN específica").
 7. Testar a skill com um CN num lead real.
 
-Feito: PDF v2 com a PRD; publicação no GitHub com projetos anonimizados.
+Feito: PDF v2 com a PRD; publicação no GitHub com projetos anonimizados; integrações com peso fixo e PDF v3.
 
 ### Onde está cada coisa
 | O quê | Caminho |
