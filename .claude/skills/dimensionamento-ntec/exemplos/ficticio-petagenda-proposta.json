@@ -238,36 +238,41 @@
       ],
       [
         "Sprint 2",
-        "Autenticação, 4 perfis, separação por clínica, cadastro de clínicas e agendamento no app.",
+        "Autenticação, 4 perfis, separação por clínica e cadastro de clínicas.",
         ""
       ],
       [
         "Sprint 3",
-        "Gestão da agenda no painel e pagamento com Mercado Pago.",
+        "Agendamento no app e gestão da agenda no painel.",
         ""
       ],
       [
         "Sprint 4",
-        "Registro de atendimento e vacina, carteirinha de vacina.",
+        "Pagamento com Mercado Pago.",
         ""
       ],
       [
         "Sprint 5",
-        "Rotina de lembretes por push e ajustes do app.",
+        "Registro de atendimento e vacina, carteirinha de vacina.",
         ""
       ],
       [
         "Sprint 6",
-        "Testes com o cliente.",
+        "Rotina de lembretes por push e ajustes do app.",
         ""
       ],
       [
         "Sprint 7",
+        "Testes com o cliente.",
+        ""
+      ],
+      [
+        "Sprint 8",
         "Deploy e envio às lojas.",
         "ponto 2"
       ],
       [
-        "Sprint 8",
+        "Sprint 9",
         "Aprovação nas lojas e entrega.",
         "ponto 2"
       ]
@@ -311,8 +316,8 @@
     },
     "criterios": {
       "F1": "Base. Tem PRD; referência citada no Fathom (não atípico).",
-      "F2": "PRD 2.1: 4 perfis, Recepção e Veterinário com módulos próprios = grandes diferenças; dados separados por clínica. Com fator Claude Code (x0,65 no central).",
-      "F3": "3 fluxos comuns (2.2, 2.4, 2.5) + 1 com RN específica (2.3, rotina agendada) × 1,3; Mercado Pago bi_doc; push uni_doc. Núcleo com fator Claude Code (x0,5 no central).",
+      "F2": "PRD 2.1: 4 perfis, Recepção e Veterinário com módulos próprios = grandes diferenças; dados separados por clínica. Com fator Claude Code (x0,85 no central).",
+      "F3": "3 fluxos comuns (2.2, 2.4, 2.5) + 1 com RN específica (2.3, rotina agendada) × 1,3; Mercado Pago bi_doc; push uni_doc. Núcleo com fator Claude Code (x0,75 no central).",
       "F4": "Base; cliente com validação semanal (Fathom · 12/03).",
       "F5": "Painel web + app.",
       "F6": "App comum nas lojas (PRD 2.6)."

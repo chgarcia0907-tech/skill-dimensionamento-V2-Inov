@@ -58,10 +58,12 @@ F3_VOLUME_ALTO = (1, 1.5, 2)
 # Multiplica só o que é código escrito pelo time: o núcleo do F3 e o F2. Imersão, extras
 # do F3 (integrações, offline com sincronização, dados, volume), testes com o cliente,
 # deploy e lojas dependem do cliente, de terceiros ou de revisão humana e ficam iguais.
-# Medido no Projeto B: motor das 3 faixas + tela completa em ~1 semana (régua: 5,1 no central).
+# Meio-termo calibrado em 2 projetos (17/10/2026): Projeto B (vender 12) e um app + painel de 8 fluxos
+# com offline (~24 semanas, 12 sprints). O ganho da ferramenta é parcialmente comido pelas ~20 h/semana
+# (antes a régua supunha 3 a 4 h/dia por pessoa) e pela coordenação de projetos maiores.
 # Projetos antigos da calibração rodam com "claude_code": false.
-CLAUDE_CODE_F3_NUCLEO = (0.4, 0.5, 0.65)
-CLAUDE_CODE_F2 = (0.5, 0.65, 0.8)
+CLAUDE_CODE_F3_NUCLEO = (0.6, 0.75, 0.9)
+CLAUDE_CODE_F2 = (0.7, 0.85, 1.0)
 
 F4_BASE = (1, 1.5, 2)
 F4_RN_CRITICA = (0.5, 0.5, 1)
@@ -238,7 +240,7 @@ def imprimir(e, r):
     print("|---|---|---|---|")
     for nome, (a, b, c) in r["fases"].items():
         print(f"| {nome} | {fmt(a)} | {fmt(b)} | {fmt(c)} |")
-    cc = (" · Claude Code: núcleo do F3 x0,4/0,5/0,65 e F2 x0,5/0,65/0,8" if r["claude_code"]
+    cc = (" · Claude Code: núcleo do F3 x0,6/0,75/0,9 e F2 x0,7/0,85/1" if r["claude_code"]
           else " · sem fator Claude Code")
     print(f"\nFator de formato no desenvolvimento: x{fmt(r['fator_formato'])}{cc}\n")
     print("| Cenário | Semanas | Sprints (2 sem) |")
