@@ -63,6 +63,7 @@ Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para co
 - **Implementado:** **fator Claude Code** na régua (todos os projetos do NTec agora são codados com Claude Code por uma dupla com ~20 h/semana somadas): núcleo do F3 x0,6 / 0,75 / 0,9 e F2 x0,7 / 0,85 / 1; imersão, extras do F3, testes, deploy e lojas ficam iguais. É um meio-termo: um x0,5 acertava o Projeto B (vender 12) mas dava 20 semanas para um app + painel de 8 fluxos com offline que a área de projetos espera em ~12 sprints. Projetos antigos rodam com `claude_code: false`.
 - **Implementado:** integrações com **peso fixo, sem perguntar ao CN** (ver [Integrações: peso fixo](#integrações-peso-fixo-sem-perguntar-ao-cn-implementado)).
 - **Implementado:** o que a PRD não responde é tirado da **transcrição do Fathom**; o que não estiver lá volta ao CN como **lacuna** (`leitura-prd.md`, Passo 4).
+- **Implementado:** a venda mostra com **"+"** quanto depende das lacunas do Fathom: *"vender 14 semanas = 12 + 2 que dependem do Fathom (disponibilidade do cliente, referência de produto)"*. Vende com as lacunas no valor mais pesado (o erro do NTec é vender para menos) e mostra a parte delas em sprints inteiras. Vale também quando há Fathom, mas ele não fala do assunto ("dependem de confirmar com o cliente"). No JSON: `lacunas_fathom` e `fathom`. A página "Régua de Dimensionamento NTec" faz igual.
 - **Removido (17/10/2026):** o buffer de risco percentual (desprezível; provável = soma dos centrais, conservador = soma dos máximos) e a negociação "quando o cliente pede menos prazo". A seção "O que cortar" continua. Só o Projeto B mudou na calibração (11 / 14 / 21).
 - **Próximo passo:** pendência 2 (avisar o Augustus) ou 3 (resto do levantamento), conforme a lista de pendências.
 - **Como trabalhar com o usuário:** quando faltar informação ou houver decisão a tomar, **perguntar antes de assumir**, com uma opção recomendada.
@@ -80,6 +81,7 @@ Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para co
 | 17/10/2026 | O que a PRD não responde vem do Fathom; o que faltar volta ao CN como lacuna |
 | 17/10/2026 | Entregável passa a ser a Proposta Técnica no template do NTec (PDF) |
 | 17/10/2026 | Fator Claude Code (primeiro x0,5, depois o meio-termo x0,75 no núcleo do F3); PDF explicativo v4 |
+| 17/10/2026 | Venda com "+" para as lacunas do Fathom ("14 = 12 + 2 que dependem do Fathom"), igual na skill e na página |
 
 ### O que foi pedido (origem)
 Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em conta que somos uma **empresa júnior**, use os dados reais dos projetos e chegue a uma **faixa de semanas**. O uso deve ser **prático para CNs**, que em geral são fracos tecnicamente e mandam para a equipe de projetos prazos sem sentido.

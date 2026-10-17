@@ -180,6 +180,7 @@ Sem buffer percentual (removido em 17/10/2026: o efeito era desprezível e o ris
 | **Conservador (teto de risco)** | soma dos máximos | O que acontece se os riscos listados se confirmarem |
 
 - **Arredondamento:** semanas sempre para cima. A **recomendação de venda** é o provável arredondado para cima até fechar sprints inteiras (número par de semanas).
+- **Lacunas do Fathom** (`"lacunas_fathom"` no JSON): a venda é a conta com elas no valor mais pesado. O script mostra com "+" quantas semanas dessa venda dependem delas ("14 = 12 + 2 que dependem do Fathom"), também em sprints inteiras (`leitura-prd.md`, Passo 4).
 - **Depois somar as semanas off** do calendário.
 
 ---

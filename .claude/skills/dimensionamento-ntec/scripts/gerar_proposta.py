@@ -21,7 +21,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from calcular_faixa import calcular, fmt, semanas, sprints  # noqa: E402
+from calcular_faixa import calcular, fmt, parte_lacunas, semanas, sprints  # noqa: E402
 
 try:
     from reportlab.lib import colors
@@ -190,12 +190,14 @@ def montar(d, r):
     cab = d.get("cabecalho", {})
     dim = d.get("dimensionamento", {})
     venda = sprints(r["provavel"]) * 2
+    parte = parte_lacunas(dim.get("entrada", {}), r)
+    parte = f" **{parte}** (lacunas na seção 11)" if parte else ""
 
     selo, cor, texto = STATUS.get(d.get("status", "atencao"), STATUS["atencao"])
     s.append(caixa(Paragraph(
         f'<b>Status do dimensionamento:</b> <font backColor="{cor}" color="white" size="7">&nbsp;{inline(selo)}&nbsp;</font> '
         f"{inline(texto)}<br/>"
-        + inline(f"**Prazo recomendado:** {venda} semanas ({venda // 2} sprints de 2 semanas), mais as semanas off. "
+        + inline(f"**Prazo recomendado:** {venda} semanas ({venda // 2} sprints de 2 semanas){parte}, mais as semanas off. "
                  f"Faixa: otimista {semanas(r['otimista'])} · provável {semanas(r['provavel'])} · "
                  f"conservador {semanas(r['conservador'])} semanas. Detalhe no Anexo."), ST["box"])))
     s.append(Spacer(1, 6))
@@ -404,9 +406,12 @@ def main():
     doc.build([first_top] + montar(d, r), onFirstPage=pagina(projeto), onLaterPages=pagina(projeto))
 
     venda = sprints(r["provavel"]) * 2
+    parte = parte_lacunas(entrada, r)
     print(f"PDF: {destino}")
     print(f"Faixa: otimista {semanas(r['otimista'])} · provável {semanas(r['provavel'])} · "
           f"conservador {semanas(r['conservador'])} · vender {venda} semanas ({venda // 2} sprints)")
+    if parte:
+        print(f"  {parte}")
     print("Checklist:")
     for texto, ok in checklist(d, r):
         print(f"  [{'x' if ok else ' '}] {texto}")

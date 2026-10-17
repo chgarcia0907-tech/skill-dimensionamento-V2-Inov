@@ -18,7 +18,7 @@ Este arquivo é o caminho **sem PRD**: o formulário **Dimensionamento Tec** (in
 
 ## Passo 2 — Preencher os fatores, perguntando o que faltar
 
-**Se veio transcrição do Fathom (ou de outra ferramenta):** procurar a resposta de cada pergunta nela antes de perguntar, com as mesmas regras do Passo 4 de `leitura-prd.md` (só vale o que foi dito explicitamente, citar a reunião e o trecho). O que não estiver lá vira **lacuna** em *Lacunas para o CN*.
+**Se veio transcrição do Fathom (ou de outra ferramenta):** procurar a resposta de cada pergunta nela antes de perguntar, com as mesmas regras do Passo 4 de `leitura-prd.md` (só vale o que foi dito explicitamente, citar a reunião e o trecho). O que não estiver lá vira **lacuna** em *Lacunas para o CN*. Disponibilidade do cliente, stack, infra e referência de produto que ficarem como lacuna seguem o Passo 4 de `leitura-prd.md`: valor mais pesado na conta, o fator em `lacunas_fathom` no JSON e o "+" na venda.
 
 Perguntar **no máximo 5 por rodada**, primeiro as que mais mexem no prazo (na ordem da tabela). Usar as perguntas como estão: foram escritas para o CN repassar ao cliente sem precisar traduzir.
 

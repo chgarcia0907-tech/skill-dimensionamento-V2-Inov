@@ -8,6 +8,7 @@ Modelo completo do JSON: `exemplos/ficticio-petagenda-proposta.json`.
 
 - **Fonte de tudo é a PRD**, mais o Fathom e o CN, como no resto da skill. A proposta não acrescenta módulo, perfil, integração, log ou permissão que a PRD não tem. Se o template pede algo que a PRD não traz, escrever "não previsto no PRD". Se isso muda o prazo, vira ponto em aberto (seção 11).
 - **As semanas não são digitadas.** O script recalcula a faixa a partir de `dimensionamento.entrada`, que é o mesmo JSON da régua (`calcular_faixa.py`). Caixa de status, cronograma e anexo saem do mesmo cálculo.
+- **Lacunas do Fathom na caixa de status.** Com `lacunas_fathom` na entrada, a caixa de status mostra a venda com "+" ("14 semanas = 12 + 2 que dependem do Fathom") (`leitura-prd.md`, Passo 4). O cronograma segue a venda com as lacunas.
 - **Nada interno no corpo** (seções 1 a 14): sem `(origem: ...)` nem nome de arquivo da régua. As origens ficam no anexo (critérios, suposições) e no chat.
 - **Texto curto e sem adjetivo de venda.** Todo termo técnico é explicado na primeira vez que aparece.
 

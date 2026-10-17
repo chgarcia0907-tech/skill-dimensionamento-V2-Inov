@@ -79,6 +79,16 @@ F6_LOJAS = {"nao": (0, 0, 0), "normal": (2, 2.5, 4), "sensivel": (2.5, 3, 6)}
 
 PROVAVEL_CALIBRADO_ATE = 26  # acima disso a régua ainda não foi calibrada
 
+# Fatores que a PRD não responde e a skill procura no Fathom (leitura-prd.md, Passo 4).
+# Lacuna entra na conta com o valor mais pesado; a parte da venda que depende dela aparece
+# com "+" ("vender 14 semanas = 12 + 2 que dependem do Fathom").
+LACUNAS_FATHOM = {
+    "cliente_pouca_disponibilidade": "disponibilidade do cliente",
+    "atipico": "referência de produto",
+    "stack_fora_template": "tecnologia exigida",
+    "deploy_infra_cliente": "servidores do cliente",
+}
+
 
 def soma(*partes):
     return tuple(sum(p[i] for p in partes) for i in range(3))
@@ -205,6 +215,13 @@ def calcular(e):
             "validar com a área de projetos e considerar quebrar em fases."
         )
 
+    # Parte da venda que depende das lacunas do Fathom (em sprints inteiras)
+    lacunas = [k for k in e.get("lacunas_fathom", []) if k in LACUNAS_FATHOM and e.get(k)]
+    venda_confirmada = None
+    if lacunas:
+        confirmada = dict(e, lacunas_fathom=[], **{k: False for k in lacunas})
+        venda_confirmada = venda(calcular(confirmada)["provavel"])
+
     return {
         "fases": fases,
         "fator_formato": fator,
@@ -214,6 +231,8 @@ def calcular(e):
         "conservador": conservador,
         "alertas": alertas,
         "paradas": paradas,
+        "lacunas_na_conta": lacunas,
+        "venda_confirmada": venda_confirmada,
     }
 
 
@@ -223,6 +242,21 @@ def semanas(v):
 
 def sprints(v):
     return math.ceil(semanas(v) / 2)
+
+
+def venda(provavel):
+    """Recomendação de venda: o provável fechado em sprints inteiras de 2 semanas."""
+    return sprints(provavel) * 2
+
+
+def parte_lacunas(e, r):
+    """Complemento da venda com as lacunas do Fathom ("= 12 + 2 que dependem do Fathom (...)"), ou ""."""
+    v, vc = venda(r["provavel"]), r.get("venda_confirmada")
+    if vc is None or vc >= v:
+        return ""
+    quem = "de confirmar com o cliente" if e.get("fathom") else "do Fathom"
+    nomes = ", ".join(LACUNAS_FATHOM[k] for k in r["lacunas_na_conta"])
+    return f"= {vc} + {v - vc} que dependem {quem} ({nomes})"
 
 
 def fmt(v):
@@ -253,8 +287,10 @@ def imprimir(e, r):
     for nome, rotulo in rotulos.items():
         v = r[nome]
         print(f"| {rotulo} | {semanas(v)} ({fmt(round(v, 2))}) | {sprints(v)} |")
-    venda = sprints(r["provavel"]) * 2
-    print(f"\nRecomendação de venda: {venda} semanas ({venda // 2} sprints) + semanas off do calendário.")
+    v = venda(r["provavel"])
+    parte = parte_lacunas(e, r)
+    print(f"\nRecomendação de venda: {v} semanas ({v // 2} sprints){' ' + parte if parte else ''}, "
+          "mais as semanas off do calendário.")
     if r["alertas"]:
         print("\nAlertas:")
         for a in r["alertas"]:
