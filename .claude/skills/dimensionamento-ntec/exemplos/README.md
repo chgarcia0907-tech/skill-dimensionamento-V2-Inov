@@ -11,6 +11,7 @@ Cada projeto tem uma ficha `.md` (o que era, como a régua classificou, compara�
 | [Projetos E e F](projetos-e-f-pendente.md) | ? | ? | ? | não calibrado | 34 / 38 | Em execução |
 | [PetAgenda (fictício)](ficticio-petagenda.md) | App + painel web | 4 | 4 + 0 | 14 / 19 / 25 | — | Resposta completa de exemplo (sem PRD) |
 | [PetAgenda via PRD (fictício)](ficticio-petagenda-prd.md) | App + painel web | 4 | 3 + 1 | 15 / 20 / 28 | — | Como ler a PRD e traduzir para a régua |
+| [PetAgenda proposta (fictício)](ficticio-petagenda-proposta.json) | App + painel web | 4 | 3 + 1 | 15 / 20 / 28 | — | JSON modelo da Proposta Técnica (`scripts/gerar_proposta.py`) |
 
 Os projetos reais desta tabela são **anteriores ao formato de PRD**: os fluxos foram contados a partir das tasks do Notion, e não pela regra "1 módulo = 1 fluxo". Quando um projeto com PRD terminar, ele vira o primeiro precedente para conferir essa regra.
 

@@ -18,7 +18,7 @@ Este arquivo é o caminho **sem PRD**: o formulário **Dimensionamento Tec** (in
 
 ## Passo 2 — Preencher os fatores, perguntando o que faltar
 
-**Se veio transcrição do Fathom (ou de outra ferramenta):** procurar a resposta de cada pergunta nela antes de perguntar, com as mesmas regras do Passo 4 de `leitura-prd.md` (só vale o que foi dito explicitamente, citar a reunião e o trecho). O que não estiver lá vira **lacuna** na seção 5 da resposta.
+**Se veio transcrição do Fathom (ou de outra ferramenta):** procurar a resposta de cada pergunta nela antes de perguntar, com as mesmas regras do Passo 4 de `leitura-prd.md` (só vale o que foi dito explicitamente, citar a reunião e o trecho). O que não estiver lá vira **lacuna** em *Lacunas para o CN*.
 
 Perguntar **no máximo 5 por rodada**, primeiro as que mais mexem no prazo (na ordem da tabela). Usar as perguntas como estão: foram escritas para o CN repassar ao cliente sem precisar traduzir.
 
@@ -75,4 +75,4 @@ Se o CN já preencheu as seções 7 e 8 do formulário, comparar com a faixa da 
 ## Quando parar e devolver para o CN
 
 - Faltam os **fluxos críticos** ou o **formato**: sem eles, não dimensionar (são os fatores que mais mexem no prazo). Devolver as perguntas.
-- O CN respondeu "não sei" para 3 ou mais fatores: dimensionar com valores pesados, marcar ⚠️ e listar as perguntas na seção 5 da resposta.
+- O CN respondeu "não sei" para 3 ou mais fatores: dimensionar com valores pesados, marcar ⚠️ e listar as perguntas em *Lacunas para o CN*.

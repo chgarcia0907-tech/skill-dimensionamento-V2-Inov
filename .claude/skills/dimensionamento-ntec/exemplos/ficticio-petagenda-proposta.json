@@ -1,0 +1,153 @@
+{
+  "projeto": "PetAgenda (exemplo fictício)",
+  "status": "pronto",
+  "cabecalho": {
+    "cliente_projeto": "PetAgenda · Agenda e carteirinha de vacina para rede de clínicas veterinárias",
+    "responsavel_comercial": "",
+    "data_envio": "",
+    "prd_link": "[Requisitos] PetAgenda.pdf",
+    "prd_paginas": 6,
+    "prototipo_link": "link do protótipo validado com o cliente"
+  },
+  "problema": {
+    "dor": "A rede de 3 clínicas agenda consultas por telefone e controla vacinas em fichas de papel.",
+    "problemas": [
+      "Agendamento por telefone ocupa a recepção e gera conflito de horário.",
+      "Tutores esquecem a próxima dose de vacina porque não há lembrete.",
+      "Pagamento só no balcão, sem cobrança antecipada."
+    ]
+  },
+  "visao_geral": {
+    "tipo": "App mobile nativo para tutores (App Store e Play Store) + painel web para as clínicas.",
+    "publico": "Tutores de pets e as equipes de recepção e veterinária da rede.",
+    "proposta_valor": "O tutor agenda, paga e acompanha as vacinas pelo app; a clínica gerencia a agenda num painel.",
+    "principios": ["Cada clínica vê só os próprios dados, com as mesmas regras para todas."]
+  },
+  "entidades": {
+    "centrais": "Agendamento, Pagamento, Pet, Vacina, Atendimento.",
+    "apoio": "Tutor, Clínica, Usuário da clínica (recepção, veterinário, admin), Lembrete."
+  },
+  "perfis": {
+    "tabela": [
+      ["Tutor", "Agenda, paga e vê a carteirinha de vacina do pet.", "Só o app; vê só os próprios pets."],
+      ["Recepção", "Gerencia a agenda da sua clínica.", "Só o painel; dados da própria clínica."],
+      ["Veterinário", "Registra atendimento e vacina.", "Só o painel; dados da própria clínica."],
+      ["Admin da rede", "Cadastra clínicas e usuários.", "Painel; vê as 3 clínicas."]
+    ],
+    "matriz_permissoes": "Sem matriz por ação: as permissões são as dos 4 perfis acima."
+  },
+  "fluxo": [
+    {"etapa": "Tutor escolhe clínica, serviço e horário no app.", "quem": "Tutor (app)", "dados": "Entra: pet, serviço, horário. Sai: agendamento pendente.", "validacoes": "Horário livre na agenda da clínica."},
+    {"etapa": "Tutor paga pelo Mercado Pago e o agendamento é confirmado.", "quem": "Tutor / Mercado Pago", "dados": "Sai: cobrança. Entra: confirmação de pagamento.", "validacoes": "Confirmação recebida do gateway."},
+    {"etapa": "Veterinário registra o atendimento e a vacina aplicada.", "quem": "Veterinário (painel)", "dados": "Entra: atendimento, vacina, próxima dose.", "validacoes": "Só pets da própria clínica."},
+    {"etapa": "Na data da próxima dose, o sistema envia lembrete por push.", "quem": "Sistema (rotina agendada)", "dados": "Sai: notificação push.", "validacoes": "Disparo por agendamento diário."}
+  ],
+  "regras": [
+    ["Cada clínica vê só os próprios dados", "Separação dos dados da rede sem regras diferentes por clínica."],
+    ["Agendamento só é confirmado com pagamento aprovado", "Nenhum horário bloqueado sem pagamento."],
+    ["Lembrete disparado na data da próxima dose", "Tutor avisado sem ação manual da clínica."]
+  ],
+  "arquitetura": [
+    ["Frontend", "App mobile nativo do tutor e painel web das clínicas."],
+    ["Backend", "API central com rotina agendada para os lembretes."],
+    ["Banco de dados", "Banco central com dados separados por clínica."],
+    ["Autenticação", "E-mail e senha, com perfil e clínica identificados no login."],
+    ["Integrações externas", "Mercado Pago (cobrança e confirmação) e push no app."]
+  ],
+  "seguranca": [
+    ["Tipos de dado", "Dados pessoais dos tutores (nome, contato) e dados dos pets. LGPD aplicável. Sem dado de saúde humana nem cartão armazenado (o gateway processa o pagamento)."],
+    ["Login e controle por perfil", "Login nos dois módulos; 4 perfis; filtro por clínica no servidor."],
+    ["Histórico e logs", "Não previstos no PRD."],
+    ["Dados públicos", "Não há links sem login nem formulários públicos."]
+  ],
+  "modulos_criticos": [
+    {"nome": "Pagamento (Mercado Pago)", "detalhe": ["Cobrança no agendamento e confirmação de volta ao sistema."], "mvp": "Cobrança e confirmação.", "futuro": "Nota fiscal e conciliação estão nas Exclusões."},
+    {"nome": "Lembretes por push", "detalhe": ["Rotina agendada que envia push na data da próxima dose."], "mvp": "Lembrete de vacina.", "futuro": ""}
+  ],
+  "roadmap": [
+    ["MVP", "Autenticação, perfis e cadastro de clínicas", "Prioritário"],
+    ["MVP", "Agendamento e pagamento", "Prioritário"],
+    ["MVP", "Carteirinha de vacina e lembretes", "Prioritário"],
+    ["MVP", "Registro de atendimento", "Prioritário"],
+    ["MVP", "Gestão da agenda da clínica", "Prioritário"],
+    ["MVP", "Publicação nas lojas", "Prioritário"],
+    ["Futuro", "Prontuário completo", "Futuro"],
+    ["Futuro", "Migração do histórico das clínicas", "Futuro"]
+  ],
+  "pontos_abertos": [
+    "**1. Data de início:** para somar férias, provas e recesso (semanas off não somadas).",
+    "**2. Contas de desenvolvedor Apple e Google:** o cliente precisa abrir na imersão; conta de empresa pode levar semanas."
+  ],
+  "stack": {
+    "itens": [
+      ["App mobile", "Expo (React Native), template NTec."],
+      ["Painel web e API", "Next.js, template NTec."],
+      ["Banco de dados", "MongoDB com Prisma."],
+      ["Autenticação", "Better Auth."],
+      ["Hospedagem", "Infra do NTec (ex.: Vercel)."],
+      ["Testes", "Vitest e Playwright."]
+    ],
+    "nao_validado": ["Toda a stack é premissa a validar na Sprint de Refino e Prototipação (o PRD não fixa tecnologia)."]
+  },
+  "cronograma": {
+    "sprints": [
+      ["Sprint 1", "Imersão, refino do PRD, validação do protótipo e setup. Pedir as contas Apple e Google.", "ponto 2"],
+      ["Sprint 2", "Autenticação, 4 perfis, separação por clínica e cadastro de clínicas.", ""],
+      ["Sprint 3", "Agendamento no app e gestão da agenda no painel.", ""],
+      ["Sprint 4", "Pagamento com Mercado Pago.", ""],
+      ["Sprint 5", "Registro de atendimento e vacina.", ""],
+      ["Sprint 6", "Carteirinha de vacina e rotina de lembretes por push.", ""],
+      ["Sprint 7", "Continuação dos lembretes e ajustes do app.", ""],
+      ["Sprint 8", "Testes com o cliente.", ""],
+      ["Sprint 9", "Deploy e envio às lojas.", "ponto 2"],
+      ["Sprint 10", "Aprovação nas lojas e entrega.", "ponto 2"]
+    ],
+    "duracao_obs": "mais as semanas off do calendário"
+  },
+  "prototipo": {
+    "recebido": true,
+    "tabela": [],
+    "declaracao": "O protótipo segue integralmente as regras do PRD."
+  },
+  "dependencia_externa_sem_confirmacao": false,
+  "dimensionamento": {
+    "entrada": {
+      "projeto": "PetAgenda, a partir da PRD (exemplo fictício)",
+      "demanda_pouco_detalhada": false,
+      "atipico": false,
+      "stack_fora_template": false,
+      "niveis_acesso": "2-6-alta",
+      "multitenancy": "separado",
+      "fluxos_comuns": 3,
+      "fluxos_rn_especifica": 1,
+      "features_atipicas": 0,
+      "formatos": ["app", "web"],
+      "integracoes": ["bi_doc", "uni_doc", "template"],
+      "dependencia_dados": false,
+      "offline": "nao",
+      "volume_alto": false,
+      "rn_critica": false,
+      "cliente_pouca_disponibilidade": false,
+      "deploy_infra_cliente": false,
+      "lojas": "normal"
+    },
+    "criterios": {
+      "F1": "Base. Tem PRD; referência citada no Fathom (não atípico).",
+      "F2": "PRD 2.1: 4 perfis, Recepção e Veterinário com módulos próprios = grandes diferenças; dados separados por clínica.",
+      "F3": "3 fluxos comuns (2.2, 2.4, 2.5) + 1 com RN específica (2.3, rotina agendada) × 1,3; Mercado Pago bi_doc; push uni_doc.",
+      "F4": "Base; cliente com validação semanal (Fathom · 12/03).",
+      "F5": "Painel web + app.",
+      "F6": "App comum nas lojas (PRD 2.6)."
+    },
+    "atencao": ["A regra \"rotina agendada vira RN específica\" ainda não foi calibrada; como fluxo comum, o provável cairia para 17,5 semanas."],
+    "lacunas": [["Data de início", "Data ou mês de início", "Qual é a data prevista de início?", "Semanas off não somadas"]],
+    "precedente": "Projeto D (app nas lojas + painel web): 18 semanas vendidas. O PetAgenda tem pagamento, push e mais perfis.",
+    "cortes": [
+      ["Publicar como PWA em vez de app nas lojas", "F6 inteira (−2,5) + fator de formato"],
+      ["Juntar Recepção e Veterinário num perfil Clínica", "−1 semana"]
+    ],
+    "suposicoes": ["Mercado Pago e push classificados pela regra de peso fixo (serviços de mercado)."],
+    "fronteira": [],
+    "imersao": ["Duração padrão de cada tipo de consulta.", "Campos da carteirinha.", "Texto dos lembretes."]
+  }
+}
