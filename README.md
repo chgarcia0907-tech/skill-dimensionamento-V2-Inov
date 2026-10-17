@@ -93,7 +93,7 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 3. **Atualizar a calibração** quando o Projeto A (19/10/2026) e o Projeto B e o Projeto D (23/11/2026) terminarem. O passo a passo está em `exemplos/README.md`.
 4. **Conferir as regras de leitura da PRD** no primeiro projeto com PRD que terminar (principalmente "rotina agendada → RN específica").
 5. Atualizar `docs/gerar_pdf.py` e o PDF explicativo para mostrar a PRD como entrada.
-6. Opcional: subir esta pasta para o GitHub (como o repositório da Gabi) e testar a skill com um CN num lead real.
+6. Testar a skill com um CN num lead real. (Publicada em https://github.com/matheusrpgomes-sketch/skill-dimensionamento-ntec, com os projetos anonimizados.)
 
 ### Onde está cada coisa
 | O quê | Caminho |
