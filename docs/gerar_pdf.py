@@ -193,10 +193,10 @@ s.append(callout(
 s.append(Spacer(1, 10))
 toc = ["1. O que é a skill", "2. Onde ela entra no processo", "3. Como acessar e usar",
        "4. Arquitetura (o que tem dentro)", "5. Procedimento", "6. Da PRD para a régua",
-       "7. Régua de dimensionamento (F1 a F6)", "8. Buffer de risco adaptável",
-       "9. Faixa final e negociação", "10. Perguntas para o CN", "11. Calibração com projetos reais",
-       "12. Exemplo: PetAgenda a partir da PRD", "13. Linha do tempo de exemplo (Projeto A)",
-       "14. Parar e sinalizar", "15. Histórico, datas e pendências"]
+       "7. Régua de dimensionamento (F1 a F6)", 
+       "8. Faixa final e cortes", "9. Perguntas para o CN", "10. Calibração com projetos reais",
+       "11. Exemplo: PetAgenda a partir da PRD", "12. Linha do tempo de exemplo (Projeto A)",
+       "13. Parar e sinalizar", "14. Histórico, datas e pendências"]
 for t in toc:
     s.append(P(t, "toc"))
 
@@ -210,8 +210,8 @@ s.append(P("Uma skill do Claude que transforma a <b>PRD</b> do projeto (o docume
 s.append(bullets([
     "<b>Entrega três números:</b> otimista (piso), provável (recomendado) e conservador (teto de risco), em semanas e sprints de 2 semanas.",
     "<b>Pergunta em linguagem de negócio</b> o que falta, e traduz a resposta para os fatores técnicos.",
-    "<b>Mostra o que cortar</b> quando o cliente quer menos prazo, com quantas semanas cada corte economiza.",
-    "<b>Gera um bloco pronto</b> para colar nas seções 7 (Baseline) e 8 (Buffer) do formulário.",
+    "<b>Mostra o que cortar</b>: cortes de escopo, com quantas semanas cada um economiza.",
+    "<b>Gera um bloco pronto</b> para colar na seção 7 (Baseline) do formulário. A régua não usa buffer percentual.",
 ]))
 
 # 2
@@ -247,8 +247,8 @@ s.append(table([
     ["SKILL.md", "Orquestrador: procedimento, regras gerais, quando parar e o formato fixo da resposta", "Sempre"],
     ["leitura-prd.md", "Onde está cada fator na PRD, tradução dos fatores de complexidade dela e o que perguntar ao CN", "Sempre primeiro, quando há PRD"],
     ["insumos-e-perguntas.md", "Caminho sem PRD: como ler formulário, ficha ou transcrição; vocabulário negócio → técnico", "Quando não há PRD"],
-    ["regua-dimensionamento.md", "Pesos de cada fase (F1 a F6), buffer, faixa final, calibração e fontes", "Sempre"],
-    ["regra-fronteira-e-faixa.md", "Desempate quando um fator cabe em duas linhas; o que fazer quando o cliente pede menos prazo", "Em caso de dúvida ou negociação"],
+    ["regua-dimensionamento.md", "Pesos de cada fase (F1 a F6), faixa final, calibração e fontes", "Sempre"],
+    ["regra-fronteira-e-faixa.md", "Desempate quando um fator cabe em duas linhas; tabela de cortes", "Em caso de dúvida e para O que cortar"],
     ["scripts/calcular_faixa.py", "Faz a conta (fonte da verdade dos pesos), para o número não sair de cabeça", "Sempre"],
     ["exemplos/", "Precedentes reais anonimizados (Projetos A a D), Projetos E e F pendentes e o caso fictício PetAgenda (sem PRD e via PRD)", "Para comparar com projeto parecido"],
 ], [45, 90, 35]))
@@ -292,7 +292,7 @@ s.append(table([
 ], [85, 85]))
 s.append(P("O que a PRD não responde", "h2"))
 s.append(P("A PRD descreve o produto, não o projeto. Depois de ler a PRD, a skill faz uma rodada curta ao CN sobre: "
-           "disponibilidade do cliente para testar, riscos do time (novato, saída de membros, terceiros), stack ou infra "
+           "disponibilidade do cliente para testar, stack ou infra "
            "exigida pelo cliente, app de referência (benchmark) e data de início (para contar as semanas off)."))
 s.append(P("Integrações: peso fixo, sem perguntar ao CN", "h2"))
 s.append(P("O CN não tem como avaliar a API de outro sistema, e não há técnico para validar antes da proposta. Por isso a skill "
@@ -364,35 +364,16 @@ s.append(Spacer(1, 4))
 s.append(P("Semanas off (férias, provas, recessos) e a garantia gratuita de 30 dias ficam fora da régua: as semanas off são somadas depois, pelo calendário.", "small"))
 
 # 8
-s.append(P("8. Buffer de risco adaptável", "h1"))
-s.append(P("Aplicado sobre o central e o máximo (o otimista não leva buffer). <b>Não aplicar só \"porque o time é júnior\"</b>: isso já está nos pesos."))
-s.append(table([
-    ["Risco", "Buffer"],
-    ["Maioria do time no primeiro projeto (menos de 6 meses de prática)", "+10%"],
-    ["Troca ou saída de membros prevista durante o projeto", "+10% a +20%"],
-    ["Terceiros envolvidos (outro fornecedor, entrega externa)", "+10%"],
-    ["3 ou mais integrações fora do template", "+10% (automático)"],
-    ["Teto — acima disso, a área de projetos revisa", "30%"],
-], [130, 40]))
-
-# 9
 s.append(PageBreak())
-s.append(P("9. Faixa final e negociação", "h1"))
+s.append(P("8. Faixa final e cortes", "h1"))
 s.append(table([
     ["Cenário", "Conta", "Para que serve"],
     ["<b>Otimista (piso)</b>", "Soma dos mínimos", "Nunca vender abaixo disto"],
-    ["<b>Provável (recomendado)</b>", "Soma dos centrais × (1 + buffer)", "O valor para a proposta"],
-    ["<b>Conservador (teto)</b>", "Soma dos máximos × (1 + buffer)", "O que acontece se os riscos se confirmarem"],
+    ["<b>Provável (recomendado)</b>", "Soma dos centrais", "O valor para a proposta"],
+    ["<b>Conservador (teto)</b>", "Soma dos máximos", "O que acontece se os riscos se confirmarem"],
 ], [45, 65, 60]))
 s.append(Spacer(1, 4))
 s.append(P("Semanas são sempre arredondadas para cima. A <b>recomendação de venda</b> é o provável fechado em sprints inteiras (número par de semanas), mais as semanas off."))
-s.append(P("Quando o cliente pede menos prazo", "h2"))
-s.append(table([
-    ["Prazo pedido", "Status", "O que fazer"],
-    ["Igual ou acima do provável", OK and P(OK, "cell"), "Vender"],
-    ["Entre o otimista e o provável", P(REV, "cell"), "Só com escopo congelado em contrato e cliente disponível; propor 1 ou 2 cortes"],
-    ["Abaixo do otimista", P(STOP, "cell"), "Não vender o prazo: negociar escopo e recalcular sem os itens cortados"],
-], [50, 25, 95]))
 s.append(P("Cortes que mais economizam", "h2"))
 s.append(table([
     ["Corte", "Economia típica (central)"],
@@ -405,8 +386,8 @@ s.append(table([
 s.append(P("Na dúvida entre duas linhas da régua, a skill vai sempre para a mais pesada, com um comentário de duas linhas "
            "explicando o ajuste (máximo de 3 ajustes por projeto). O histórico do NTec é vender para menos.", "small"))
 
-# 10
-s.append(P("10. Perguntas para o CN", "h1"))
+# 9
+s.append(P("9. Perguntas para o CN", "h1"))
 s.append(P("Com PRD, a maioria destas perguntas já está respondida no documento, e a skill pergunta só o que falta (seção 6). "
            "Sem PRD, ela usa a lista inteira, pronta para repassar ao cliente:"))
 s.append(table([
@@ -421,8 +402,8 @@ s.append(table([
     ["Disponibilidade", "Quem vai testar e aprovar as entregas? Tem umas 2 horas por semana para isso?"],
 ], [32, 138]))
 
-# 11
-s.append(P("11. Calibração com projetos reais", "h1"))
+# 10
+s.append(P("10. Calibração com projetos reais", "h1"))
 s.append(P("A régua foi rodada sobre os projetos do NTec com dados levantados no Notion (estado em 16/10/2026). "
            "Os projetos aparecem anonimizados (Projeto A a F). Faixa = otimista / provável / conservador, em semanas."))
 s.append(table([
@@ -430,7 +411,7 @@ s.append(table([
     ["Projeto A", "PWA", "20/07/2026 → 19/10/2026", "12 (+1 off)", "9 / <b>12</b> / 16", "Finalizando, no prazo", P(OK, "cell")],
     ["Projeto D", "App + web", "27/07/2026 → 23/11/2026", "18 (+3 off)", "13 / <b>17→18</b> / 23", "Execução, 47,6%, sem atraso", P(OK, "cell")],
     ["Projeto C", "Web + app", "13/04/2026 → 10/07/2026", "11 (+2 off)", "13 / <b>18</b> / 23", "Entregue com atraso (~14 sem)", P(REV, "cell")],
-    ["Projeto B", "App nativo", "01/09/2026 → 23/11/2026", "12 (+1 off)", "11 / <b>15→16</b> / 23", "Execução, 45,2%", P(REV, "cell")],
+    ["Projeto B", "App nativo", "01/09/2026 → 23/11/2026", "12 (+1 off)", "11 / <b>14</b> / 21", "Execução, 45,2%", P(REV, "cell")],
     ["Projeto E", "?", "20/07/2026 → 15/01 ou 15/02/2027", "34", "não calibrado", "Execução, 37%", "—"],
     ["Projeto F", "?", "22/04/2026 → 06/01/2027 ou 25/10/2026", "38 (+3 off)", "não calibrado", "Execução, 58,7%", "—"],
 ], [20, 18, 34, 18, 26, 30, 24]))
@@ -446,8 +427,8 @@ s.append(callout("<b>Todos esses projetos são anteriores à PRD.</b> Os fluxos 
                  "regra \"1 módulo = 1 fluxo\". As regras de leitura da PRD ainda não foram conferidas contra um projeto real: o "
                  "primeiro projeto com PRD que terminar vira o precedente para isso.", YEL_BG, YEL))
 
-# 12
-s.append(P("12. Exemplo: PetAgenda a partir da PRD", "h1"))
+# 11
+s.append(P("11. Exemplo: PetAgenda a partir da PRD", "h1"))
 s.append(P("Caso fictício: app para tutores de pets (lojas) e painel web para uma rede de 3 clínicas. A PRD traz 4 perfis, "
            "os módulos 2.2 a 2.5, pagamento pelo Mercado Pago e lembrete de vacina por push, disparado na data da próxima dose."))
 s.append(table([
@@ -458,28 +439,27 @@ s.append(table([
     ["Fluxos", "3 comuns + 1 com RN específica", "2.2, 2.4 e 2.5 comuns; 2.3 tem rotina agendada"],
     ["Integrações", "Mercado Pago (bi, doc); push (uni, doc)", "2.2 e 2.3 + peso fixo (serviços de mercado)"],
     ["Demanda pouco detalhada", "não", "Tem PRD"],
-    ["Buffer", "+10% (time novato)", "CN"],
 ], [38, 60, 72]))
 s.append(Spacer(1, 4))
 s.append(table([
     ["", "Sem PRD (só a call)", "Com PRD"],
     ["Imersão (F1, central)", "3 semanas (demanda sem documento)", "2 semanas"],
     ["Desenvolvimento", "4 fluxos comuns", "3 comuns + 1 com RN (lembrete agendado)"],
-    ["Faixa (otim. / prov. / cons.)", "14 / 21 / 28", "15 / 22 / 30"],
-    ["Recomendação de venda", "22 semanas", "22 semanas"],
+    ["Faixa (otim. / prov. / cons.)", "14 / 19 / 25", "15 / 20 / 28"],
+    ["Recomendação de venda", "20 semanas", "20 semanas"],
 ], [50, 60, 60]))
 s.append(P("O número quase não mudou, mas agora cada fator aponta para uma seção do anexo de contrato. A PRD também revelou o "
            "lembrete por rotina agendada, que a call não deixava claro.", "small"))
 
-# 13
-s.append(P("13. Linha do tempo de exemplo (Projeto A)", "h1"))
+# 12
+s.append(P("12. Linha do tempo de exemplo (Projeto A)", "h1"))
 s.append(P("As fases no valor central da régua, encaixadas no calendário real do projeto: início em 20/07/2026, 12 semanas de trabalho "
            "+ 1 semana off entre a S4 e a S5, fim previsto em 19/10/2026."))
 s.append(gantt())
 s.append(P("Datas no topo = segunda-feira de cada sprint. A barra de deploy inclui o arredondamento de 11,5 para 12 semanas.", "small"))
 
-# 14
-s.append(P("14. Parar e sinalizar", "h1"))
+# 13
+s.append(P("13. Parar e sinalizar", "h1"))
 s.append(P("A skill não decide sozinha nestes casos. Ela marca e devolve para a área de projetos:"))
 s.append(bullets([
     f"{STOP} Multitenancy com instâncias e regras isoladas por cliente (\"beira o inviável\").",
@@ -491,11 +471,11 @@ s.append(bullets([
     f"{REV} Divergência entre o que o CN declarou e o que aparece na PRD, nos documentos ou na call.",
     f"{REV} Lacuna dentro da PRD (módulo sem superfície, integração sem meio, \"tempo real\" sem mecanismo): a PRD precisa de revisão antes de virar anexo.",
     f"{REV} Estimativa sem PRD: sempre preliminar.",
-    f"{REV} Teto de fase atingido ou buffer acima de 30%.",
+    f"{REV} Teto de fase atingido.",
 ]))
 
-# 15
-s.append(P("15. Histórico, datas e pendências", "h1"))
+# 14
+s.append(P("14. Histórico, datas e pendências", "h1"))
 s.append(table([
     ["Data", "O que aconteceu"],
     ["13/04/2026", "Início do Projeto C (primeiro projeto da base de calibração)"],
@@ -504,6 +484,7 @@ s.append(table([
     ["01/09/2026", "Início do Projeto B"],
     ["16/10/2026", "Leitura da skill do NCiv, do formulário Dimensionamento Tec e do levantamento no Notion; criação e calibração da skill (v1); instalação em ~/.claude/skills"],
     ["16/10/2026", "v2: a PRD da skill documento-requisitos-ntec vira a entrada padrão; projetos anonimizados; publicação no GitHub"],
+    ["17/10/2026", "v3: integrações com peso fixo, sem perguntar ao CN; buffer de risco e negociação de prazo removidos"],
     ["19/10/2026", "Fim previsto do Projeto A — confirmar se a calibração continua valendo"],
     ["23/11/2026", "Fim previsto do Projeto B e do Projeto D — atualizar a calibração com o realizado"],
 ], [28, 142]))
@@ -512,7 +493,7 @@ s.append(bullets([
     "Fichas técnicas de Projetos E e F, para calibrar projetos grandes (o levantamento recebido veio cortado).",
     "Conteúdo da subpágina \"Régua de Dimensionamento\" do Notion, citada no formulário mas não incluída no PDF. Se tiver números, eles valem mais que os da skill.",
     "Conferir no hand-off do Projeto D os fatores marcados como palpite (perfis, fluxos, offline).",
-    "Preencher as retrospectivas: hoje quase todas estão vazias, e sem elas o buffer não tem base histórica.",
+    "Preencher as retrospectivas: hoje quase todas estão vazias, e sem elas não se sabe a causa dos atrasos.",
     "Avisar o autor da skill da PRD para trocar <i>validacao-tecnica-ntec</i> por <i>dimensionamento-ntec</i>.",
     "Conferir as regras de leitura da PRD (\"1 módulo = 1 fluxo\" e \"rotina agendada → RN específica\") no primeiro projeto com PRD que terminar.",
 ]))

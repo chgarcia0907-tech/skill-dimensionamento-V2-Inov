@@ -3,34 +3,32 @@
 Este caso **não é um projeto real**. Serve para mostrar ao CN como a resposta da skill fica do começo ao fim. Entrada: `ficticio-petagenda.json`.
 
 **O que o CN mandou:**
-> "Rede de 3 clínicas veterinárias quer um app pro tutor marcar consulta, ver a carteirinha de vacina do pet e receber lembrete. A clínica quer um painel pra recepção e pro veterinário. Querem pagar a consulta pelo app (Mercado Pago). Querem em 3 meses. Não tem documento, foi só uma call."
+> "Rede de 3 clínicas veterinárias quer um app pro tutor marcar consulta, ver a carteirinha de vacina do pet e receber lembrete. A clínica quer um painel pra recepção e pro veterinário. Querem pagar a consulta pelo app (Mercado Pago). Não tem documento, foi só uma call."
 
-**Respostas do CN às perguntas da skill:** cada clínica só vê os próprios dados, mas as regras são as mesmas para todas; o tutor baixa o app na loja; o veterinário registra o atendimento e a recepção gerencia a agenda; o lembrete é por notificação no celular; o time terá maioria em primeiro projeto.
+**Respostas do CN às perguntas da skill:** cada clínica só vê os próprios dados, mas as regras são as mesmas para todas; o tutor baixa o app na loja; o veterinário registra o atendimento e a recepção gerencia a agenda; o lembrete é por notificação no celular.
 
 ---
 
 # Projeto PetAgenda
 
-🚩 **Parado no prazo pedido**: 12 semanas fica abaixo do piso (14). Com cortes de escopo, cabe.
+⚠️ **Estimativa preliminar, sem PRD.** Rodar a skill da PRD antes de fechar a proposta.
 
-**1. Prazo em uma frase.** Do jeito pedido, recomendado vender **22 semanas (11 sprints)** + semanas off, e não vender abaixo de 14. Para caber nos 3 meses, cortar escopo (seção 8): a versão em PWA, sem pagamento e com a carteirinha de vacina na fase 2, fica em **14 semanas**.
+**1. Prazo em uma frase.** Recomendado vender **20 semanas (10 sprints)** + semanas off. Não vender abaixo de 14.
 
-**2. Faixa de semanas (escopo pedido)**
+**2. Faixa de semanas**
 
 | Cenário | Semanas | Sprints | Quando acontece |
 |---|---|---|---|
 | Otimista (piso) | 14 | 7 | Escopo congelado, clínica responde rápido |
-| **Provável (recomendado)** | **21 → vender 22** | **11** | O que costuma acontecer no NTec |
-| Conservador (teto de risco) | 28 | 14 | Se pagamento e lojas derem problema e o time novato demorar a engrenar |
+| **Provável (recomendado)** | **19 → vender 20** | **10** | O que costuma acontecer no NTec |
+| Conservador (teto de risco) | 25 | 13 | Se pagamento e lojas derem problema |
 
 **3. Resumo.** App nativo para tutores (lojas) + painel web para as clínicas. 4 perfis (tutor, recepção, veterinário, admin da rede). 4 fluxos críticos: agendar consulta, carteirinha de vacina com lembretes, registro de atendimento, gestão da agenda. Pagamento online e notificações. 3 clínicas com dados separados.
 
 **4. Pontos de atenção**
-1. **Prazo pedido (12) abaixo do piso (14).** Não vender esse prazo com esse escopo.
-2. **Pagamento pelo app (Mercado Pago):** a integração é bidirecional (cobra e recebe a confirmação). É um serviço de mercado com API pública, então entra com o peso fixo "com documentação", sem precisar perguntar nada.
-3. **Dados separados por clínica (multitenancy (um mesmo sistema atendendo várias empresas com os dados separados)):** confirmar por escrito que as **regras** são iguais para as 3. Se cada clínica quiser regras próprias, o projeto para (🚩).
-4. **Demanda sem documento:** veio só de uma call. A imersão fica mais longa (+1 semana no central).
-5. **Time com maioria em primeiro projeto:** buffer de +10%.
+1. **Pagamento pelo app (Mercado Pago):** a integração é bidirecional (cobra e recebe a confirmação). É um serviço de mercado com API pública, então entra com o peso fixo "com documentação", sem precisar perguntar nada.
+2. **Dados separados por clínica (multitenancy (um mesmo sistema atendendo várias empresas com os dados separados)):** confirmar por escrito que as **regras** são iguais para as 3. Se cada clínica quiser regras próprias, o projeto para (🚩).
+3. **Demanda sem documento:** veio só de uma call. A imersão fica mais longa (+1 semana no central).
 
 **5. Perguntas para o cliente**
 - "Cada clínica tem regras próprias (horários, preços, tipos de consulta) ou todas seguem as mesmas regras?"
@@ -48,26 +46,23 @@ Este caso **não é um projeto real**. Serve para mostrar ao CN como a resposta 
 | F4 Testes com cliente | base | 1 | 1,5 | 2 |
 | F5 Deploy | web + app | 0,5 | 1 | 1,5 |
 | F6 Lojas | app comum | 2 | 2,5 | 4 |
-| **Total** | buffer +10% (time novato) | **14** | **21** | **28** |
+| **Total** | | **14** | **19** | **25** |
 
-**7. Precedente.** **Projeto D** (app nas lojas + painel web, 5 fluxos comuns): vendido 18, sem atraso até agora. O PetAgenda fica acima por causa do pagamento, dos perfis com mais diferenças, da demanda sem documento e do buffer.
+**7. Precedente.** **Projeto D** (app nas lojas + painel web, 5 fluxos comuns): vendido 18, sem atraso até agora. O PetAgenda fica acima por causa do pagamento, dos perfis com mais diferenças e da demanda sem documento.
 
-**8. O que cortar se o cliente quiser menos prazo** (recalculado com o script)
+**8. O que cortar** (recalculado com o script)
 
 | Corte | Provável | Venda |
 |---|---|---|
-| Escopo pedido | 21 | 22 |
-| PWA (app instalado pelo navegador) em vez de app nas lojas | 16 | 16 |
-| + pagamento na clínica no MVP (sem Mercado Pago) | 15 | 16 |
-| + carteirinha de vacina na fase 2 | 14 | **14** |
-
-Com os 3 cortes, as 12 semanas pedidas ficam **entre o piso (10) e o provável (14)**: possível só com escopo congelado em contrato e um responsável da clínica disponível. Recomendação: propor 14.
+| Escopo completo | 19 | 20 |
+| PWA (app instalado pelo navegador) em vez de app nas lojas | 15 | 16 |
+| + pagamento na clínica no MVP (sem Mercado Pago) | 14 | 14 |
+| + carteirinha de vacina na fase 2 | 13 | **14** |
 
 **9. Bloco para colar no Dimensionamento Tec**
 ```
 7. Baseline: Imersão/setup 3 sem · Acesso/login 2,5 sem · Desenvolvimento 8 sem · Testes com cliente 1,5 sem · Deploy 1 sem · Lojas 2,5 sem
-8. Buffer: 10% — maioria do time em primeiro projeto
-Faixa: otimista 14 · provável 21 (vender 22) · conservador 28 semanas (+ semanas off)
+Faixa: otimista 14 · provável 19 (vender 20) · conservador 25 semanas (+ semanas off)
 ```
 
 **10. Observações**

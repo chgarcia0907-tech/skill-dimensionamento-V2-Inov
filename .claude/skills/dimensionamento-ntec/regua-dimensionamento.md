@@ -4,7 +4,7 @@ Pesos usados para transformar o que o coordenador de negócios (CN) levantou em 
 
 **Fonte da verdade dos números:** `scripts/calcular_faixa.py`. Esta tabela e o script precisam bater. Se mudar um, mude o outro e registre no fim deste arquivo.
 
-**Índice:** Regras de uso · Regras transversais · F1 a F6 · Buffer de risco · Faixa final · Parar e sinalizar · Calibração · Lacunas · Registro das fontes
+**Índice:** Regras de uso · Regras transversais · F1 a F6 · Faixa final · Parar e sinalizar · Calibração · Lacunas · Registro das fontes
 
 ---
 
@@ -21,7 +21,7 @@ Pesos usados para transformar o que o coordenador de negócios (CN) levantou em 
 ## Regras transversais
 
 ### Os pesos já assumem o time típico do NTec
-Membros de empresa júnior com 3 a 4 h/dia, sprints de 2 semanas e o template do monorepo NTec (Next.js + Expo + MongoDB/Prisma + Better Auth). **Não aplicar buffer só "porque o time é júnior"**: isso já está nos pesos. O buffer é para risco *a mais* (seção Buffer).
+Membros de empresa júnior com 3 a 4 h/dia, sprints de 2 semanas e o template do monorepo NTec (Next.js + Expo + MongoDB/Prisma + Better Auth). **Não há buffer percentual:** o risco já está no intervalo mínimo / central / máximo de cada linha.
 
 ### O que o template já entrega (não soma prazo)
 Login por e-mail e senha, recuperação de senha, login com Google, envio de e-mail (Resend), upload de arquivo para AWS S3, estrutura de API e painel admin básico. Quando uma "integração" é uma dessas, ela entra como `template` (0 semanas).
@@ -154,32 +154,18 @@ Dica que reduz o risco: pedir ao cliente que abra a conta de desenvolvedor (Appl
 
 ---
 
-## Buffer de risco adaptável (formulário, seção 8)
-
-Aplicado sobre o **central** e o **máximo** (o otimista não leva buffer).
-
-| Risco | Buffer |
-|---|---|
-| Maioria do time no primeiro projeto (menos de 6 meses de prática) | +10% |
-| Troca ou saída de membros prevista durante o projeto | +10% a +20% |
-| Terceiros envolvidos (outro fornecedor entrega uma parte, depende de entrega externa) | +10% |
-| 3 ou mais integrações fora do template | +10% (automático no script) |
-
-**Teto: 30%.** Acima disso, a skill para e manda para a área de projetos. O formulário dá um exemplo de +20% (projeto complexo, 10+ sprints, 2 analistas saindo na sprint 7).
-
----
-
 ## Faixa final
+
+Sem buffer percentual (removido em 17/10/2026: o efeito era desprezível e o risco já está no intervalo de cada linha).
 
 | Cenário | Conta | Para que serve |
 |---|---|---|
 | **Otimista (piso)** | soma dos mínimos | Nunca vender abaixo disto. Só se chega nele com escopo congelado e cliente rápido |
-| **Provável (recomendado)** | soma dos centrais × (1 + buffer) | O valor para a proposta |
-| **Conservador (teto de risco)** | soma dos máximos × (1 + buffer) | O que acontece se os riscos listados se confirmarem |
+| **Provável (recomendado)** | soma dos centrais | O valor para a proposta |
+| **Conservador (teto de risco)** | soma dos máximos | O que acontece se os riscos listados se confirmarem |
 
 - **Arredondamento:** semanas sempre para cima. A **recomendação de venda** é o provável arredondado para cima até fechar sprints inteiras (número par de semanas).
 - **Depois somar as semanas off** do calendário.
-- **Prazo pedido pelo cliente abaixo do otimista** → não negociar prazo, negociar escopo (ver "O que cortar" em `SKILL.md`). No histórico, foi o que funcionou: o Projeto A saiu de 14 sprints propostas para um MVP de 6 e terminou no prazo.
 
 ---
 
@@ -191,11 +177,11 @@ Aplicado sobre o **central** e o **máximo** (o otimista não leva buffer).
 - ⚠️ Dependência de dados → chamar o núcleo de Dados para avaliar se precisa de engenharia de dados.
 - ⚠️ Provável acima de **26 semanas** → fora da faixa calibrada (ver Calibração). Validar com a área de projetos e considerar quebrar em fases ou contratos.
 - ⚠️ Cliente Enterprise ou Grande com regras de deploy e restrição de stack → envolver a área de projetos antes da proposta.
-- ⚠️ Qualquer teto de fase atingido (F1, F2 ou F4 em 4 semanas) ou buffer acima de 30%.
+- ⚠️ Qualquer teto de fase atingido (F1, F2 ou F4 em 4 semanas).
 
 ---
 
-## Calibração (estado em 16/10/2026)
+## Calibração (estado em 17/10/2026, sem buffer)
 
 Rodando a régua sobre os projetos reais (detalhes em `exemplos/`):
 
@@ -204,7 +190,7 @@ Rodando a régua sobre os projetos reais (detalhes em `exemplos/`):
 | Projeto A | 9 | 12 | 16 | 12 (+1 off) | No prazo, finalizando | ✅ Provável = vendido |
 | Projeto D | 13 | 17 → **18** | 23 | 18 (+3 off) | Em execução, sem atraso (47,6% do prazo) | ✅ Recomendação = vendido |
 | Projeto C | 13 | 18 | 23 | 11 (+2 off) | ~14 semanas, atrasou, testes não terminados | ⚠️ Vendido abaixo do piso → atrasou. Régua ~3 semanas acima do real |
-| Projeto B | 11 | 15 → **16** | 23 | 12 (+1 off) | Em execução (45% do prazo) | ⚠️ Vendido entre piso e provável; hand-off já registrou o prazo como apertado |
+| Projeto B | 11 | 14 | 21 | 12 (+1 off) | Em execução (45% do prazo) | ⚠️ Vendido entre piso e provável; hand-off já registrou o prazo como apertado |
 | Projeto E | — | — | — | 34 | Em execução | Sem ficha técnica; não calibrado |
 | Projeto F | — | — | — | 38 (+3 off) | Em execução | Sem ficha técnica; não calibrado |
 
@@ -221,7 +207,7 @@ Leituras:
 - **Contagem de fluxos dos projetos antigos é estimada** a partir das tasks do Notion (marcada como palpite nos exemplos).
 - **Regras de tradução da PRD ainda não calibradas:** "1 módulo = 1 fluxo" e "concorrência, imutabilidade ou rotina agendada → módulo com RN específica" (`leitura-prd.md`) não foram conferidas contra um projeto real, porque todos os projetos da calibração são anteriores à PRD.
 - **A "Régua de Dimensionamento" citada no formulário é uma subpágina do Notion** que não veio no PDF. Se ela tiver números diferentes, ela vence e este arquivo precisa ser atualizado.
-- **Retrospectivas quase sempre vazias:** as causas de atraso não estão registradas, então os buffers ainda não têm base histórica.
+- **Retrospectivas quase sempre vazias:** as causas de atraso não estão registradas.
 
 ---
 
@@ -234,3 +220,4 @@ Leituras:
 | 16/10/2026 | Calibração inicial (Matheus Padilha + Claude) | Pesos mín/central/máx; regra "atípico ≠ RN específica"; corte de calibração em 26 semanas |
 | 16/10/2026 | Skill `documento-requisitos-ntec` ([repositório](https://github.com/rivasaugustus/documento-requisitos-ntec)) | PRD vira a entrada padrão. Mapeamento da PRD para os fatores, sem peso novo: 1 módulo = 1 fluxo; fatores de complexidade da PRD encaixados nas linhas existentes (`leitura-prd.md`) |
 | 17/10/2026 | Decisão do NTec: CNs não avaliam API e não há técnico para validar antes da proposta | Integração com peso fixo, sem perguntar ao CN: serviço de mercado = linha "com documentação", sistema do cliente = linha "sem documentação", com cláusula de contrato e plano B (planilha). Pesos inalterados |
+| 17/10/2026 | Decisão do NTec: buffer desprezível | Buffer de risco adaptável (seção 8 do formulário) removido: provável = soma dos centrais, conservador = soma dos máximos. Projeto B passa de 11 / 15 / 23 para 11 / 14 / 21. Também saiu a negociação "quando o cliente pede menos prazo" (a seção "O que cortar" continua) |

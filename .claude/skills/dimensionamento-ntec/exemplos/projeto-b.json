@@ -16,6 +16,5 @@
   "rn_critica": true,
   "cliente_pouca_disponibilidade": true,
   "deploy_infra_cliente": false,
-  "lojas": "sensivel",
-  "riscos": {"time_novato": true, "terceiros": false, "troca_membros": 0}
+  "lojas": "sensivel"
 }

@@ -18,8 +18,8 @@ skill-dimensionamento-ntec/
     ├── SKILL.md                    ← orquestrador: procedimento, guardrails, formato da resposta
     ├── leitura-prd.md              ← entrada padrão: onde está cada fator na PRD + o que perguntar ao CN
     ├── insumos-e-perguntas.md      ← caminho sem PRD (formulário, ficha, transcrição) + vocabulário
-    ├── regua-dimensionamento.md    ← pesos por fase (F1 a F6), buffer, faixa final, calibração, fontes
-    ├── regra-fronteira-e-faixa.md  ← desempate entre linhas + o que fazer quando o cliente quer menos prazo
+    ├── regua-dimensionamento.md    ← pesos por fase (F1 a F6), faixa final, calibração, fontes
+    ├── regra-fronteira-e-faixa.md  ← desempate entre linhas + tabela de cortes ("O que cortar")
     ├── scripts/calcular_faixa.py   ← faz a conta (fonte da verdade dos pesos)
     └── exemplos/                   ← precedentes (.md + .json): Projeto A, Projeto B, Projeto C, Projeto D,
                                       Projetos E e F (pendente), PetAgenda (fictício, resposta completa)
@@ -53,7 +53,8 @@ skill-dimensionamento-ntec/
 Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para continuar em outra conversa sem precisar do histórico. **Comece por "Onde paramos".**
 
 ### Onde paramos (17/10/2026)
-- **Implementado:** integrações com **peso fixo, sem perguntar ao CN** (ver [Integrações: peso fixo](#integrações-peso-fixo-sem-perguntar-ao-cn-implementado)). Os números da calibração não mudaram.
+- **Implementado:** integrações com **peso fixo, sem perguntar ao CN** (ver [Integrações: peso fixo](#integrações-peso-fixo-sem-perguntar-ao-cn-implementado)).
+- **Removido (17/10/2026):** o buffer de risco percentual (desprezível; provável = soma dos centrais, conservador = soma dos máximos) e a negociação "quando o cliente pede menos prazo". A seção "O que cortar" continua. Só o Projeto B mudou na calibração (11 / 14 / 21).
 - **Próximo passo:** pendência 2 (avisar o Augustus) ou 3 (resto do levantamento), conforme a lista de pendências.
 - **Como trabalhar com o usuário:** quando faltar informação ou houver decisão a tomar, **perguntar antes de assumir**, com uma opção recomendada.
 
@@ -66,23 +67,24 @@ Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para co
 | 16/10/2026 | PDF explicativo v2 (9 páginas), já com a PRD |
 | 17/10/2026 | Explicação de onde vem o "Inventário para dimensionamento"; discussão sobre integrações sem documentação |
 | 17/10/2026 | Integrações com peso fixo, sem perguntar ao CN; PDF v3 (10 páginas) |
+| 17/10/2026 | Buffer de risco e negociação de prazo removidos |
 
 ### O que foi pedido (origem)
 Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em conta que somos uma **empresa júnior**, use os dados reais dos projetos e chegue a uma **faixa de semanas**. O uso deve ser **prático para CNs**, que em geral são fracos tecnicamente e mandam para a equipe de projetos prazos sem sentido.
 
 ### Insumos usados
 1. **Skill do NCiv** (GitHub da Gabi): 4 arquivos Markdown. SKILL.md orquestra, os outros 3 trazem as regras (faixas por disciplina, regra de fronteira, leitura do Drive).
-2. **Formulário "Dimensionamento Tec"** (`~\Downloads\dimensionamento.pdf`, 5 páginas): seções 1–10. O Baseline (seção 7) tem as fases de 1 a 4 semanas cada e lojas de 2 a 6. O perfil da demanda (seção 6) traz formato, níveis de acesso, multitenancy, integrações, dados e offline. A seção 8 é o buffer adaptável. A subpágina **"Régua de Dimensionamento"** do Notion é citada, mas **não veio no PDF**.
+2. **Formulário "Dimensionamento Tec"** (`~\Downloads\dimensionamento.pdf`, 5 páginas): seções 1–10. O Baseline (seção 7) tem as fases de 1 a 4 semanas cada e lojas de 2 a 6. O perfil da demanda (seção 6) traz formato, níveis de acesso, multitenancy, integrações, dados e offline. A seção 8 é o buffer adaptável (a régua não usa mais). A subpágina **"Régua de Dimensionamento"** do Notion é citada, mas **não veio no PDF**.
 3. **Levantamento do Notion** (colado no chat, **cortado no meio do Projeto D**). Trouxe o inventário de 6 projetos e as fichas completas de Projeto C, Projeto A e Projeto B.
 4. **Skill da PRD** (`documento-requisitos-ntec`, [repositório do Augustus](https://github.com/rivasaugustus/documento-requisitos-ntec)): gera o documento de requisitos "[Requisitos] {projeto}" a partir das reuniões (Fathom, Granola, transcrições). Template: Visão Geral, Requisitos Funcionais por módulo (A(cli)D/SID, Superfície, integrações com sentido, dados e meio), Não Funcionais e Exclusões Explícitas.
 
 ### Decisões tomadas
 **Régua (v1)**
-- **Modelo:** fases F1–F6 do formulário, cada fator com mínimo / central / máximo. Faixa: otimista = soma dos mínimos; provável = soma dos centrais × (1 + buffer); conservador = soma dos máximos × (1 + buffer). A venda recomendada é o provável arredondado para sprints inteiras (2 semanas), mais as semanas off.
-- **Os pesos já embutem o "time júnior"** (3 a 4 h/dia, template NTec). O buffer é só para risco extra: time novato +10%, troca de membros +10 a 20%, terceiros +10%, 3 ou mais integrações +10%. Teto de 30%.
+- **Modelo:** fases F1–F6 do formulário, cada fator com mínimo / central / máximo. Faixa: otimista = soma dos mínimos; provável = soma dos centrais; conservador = soma dos máximos. A venda recomendada é o provável arredondado para sprints inteiras (2 semanas), mais as semanas off.
+- **Os pesos já embutem o "time júnior"** (3 a 4 h/dia, template NTec). **Sem buffer percentual** (removido em 17/10/2026 por ser desprezível): o risco fica no intervalo mín/central/máx.
 - **Fronteira: sempre para o lado mais pesado.** O histórico do NTec é vender para menos (Projeto C).
 - **Atípico ≠ regra de negócio específica**, para não contar o mesmo motivo duas vezes (erro achado na calibração do Projeto C).
-- **Cliente pede menos que o piso → negociar escopo, não prazo.** A resposta sempre traz a seção "O que cortar".
+- **A resposta sempre traz a seção "O que cortar"** (cortes de escopo com a economia em semanas). A negociação "quando o cliente pede menos prazo" foi removida em 17/10/2026.
 - **Template NTec** (Google login, e-mail, S3) não soma prazo. Painel admin no mesmo código web não conta como formato extra.
 - **Script Python como fonte da verdade** dos pesos, para o Claude não somar de cabeça. Se mudar um peso, mudar no script **e** na régua.
 
@@ -119,7 +121,7 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 | Projeto A | 9 / 12 / 16 | 12 | No prazo ✅ |
 | Projeto D | 13 / 17 → vender 18 / 23 | 18 | Sem atraso ✅ (fatores com palpite) |
 | Projeto C | 13 / 18 / 23 | 11 | Atrasou (~14). Régua ~3 semanas acima do real (viés conhecido) |
-| Projeto B | 11 / 15 → vender 16 / 23 | 12 | Em execução; fim previsto em 23/11/2026 |
+| Projeto B | 11 / 14 / 21 | 12 | Em execução; fim previsto em 23/11/2026 |
 | Projetos E e F | não calibrado | 34 / 38 | Sem ficha. Alerta automático acima de 26 semanas |
 
 Todos são **anteriores à PRD**: as regras de leitura da PRD ainda não foram conferidas contra um projeto real.

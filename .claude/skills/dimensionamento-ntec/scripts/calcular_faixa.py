@@ -66,12 +66,6 @@ F5_INFRA_CLIENTE = (1, 1, 2)
 
 F6_LOJAS = {"nao": (0, 0, 0), "normal": (2, 2.5, 4), "sensivel": (2.5, 3, 6)}
 
-BUFFER = {
-    "time_novato": 10,
-    "terceiros": 10,
-    "integracoes_3_ou_mais": 10,
-}
-BUFFER_TETO = 30
 PROVAVEL_CALIBRADO_ATE = 26  # acima disso a régua ainda não foi calibrada
 
 
@@ -188,22 +182,7 @@ def calcular(e):
     }
     total = soma(*fases.values())
 
-    # Buffer de risco
-    buffer = 0
-    riscos = e.get("riscos", {})
-    for chave, pct in BUFFER.items():
-        if chave != "integracoes_3_ou_mais" and riscos.get(chave):
-            buffer += pct
-    if len([i for i in integracoes if i != "template"]) >= 3:
-        buffer += BUFFER["integracoes_3_ou_mais"]
-    buffer += int(riscos.get("troca_membros", 0))
-    if buffer > BUFFER_TETO:
-        alertas.append(f"Buffer de {buffer}% passou do teto de {BUFFER_TETO}%: revisar com a área de projetos.")
-        buffer = BUFFER_TETO
-
-    otimista = total[0]
-    provavel = total[1] * (1 + buffer / 100)
-    conservador = total[2] * (1 + buffer / 100)
+    otimista, provavel, conservador = total
     if provavel > PROVAVEL_CALIBRADO_ATE:
         alertas.append(
             f"Provável acima de {PROVAVEL_CALIBRADO_ATE} semanas: fora da faixa calibrada da régua; "
@@ -213,7 +192,6 @@ def calcular(e):
     return {
         "fases": fases,
         "fator_formato": fator,
-        "buffer_pct": buffer,
         "otimista": otimista,
         "provavel": provavel,
         "conservador": conservador,
@@ -245,8 +223,7 @@ def imprimir(e, r):
     print("|---|---|---|---|")
     for nome, (a, b, c) in r["fases"].items():
         print(f"| {nome} | {fmt(a)} | {fmt(b)} | {fmt(c)} |")
-    print(f"\nFator de formato no desenvolvimento: x{fmt(r['fator_formato'])}")
-    print(f"Buffer de risco: {r['buffer_pct']}%\n")
+    print(f"\nFator de formato no desenvolvimento: x{fmt(r['fator_formato'])}\n")
     print("| Cenário | Semanas | Sprints (2 sem) |")
     print("|---|---|---|")
     rotulos = {

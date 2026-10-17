@@ -30,7 +30,7 @@ Este caso **não é um projeto real**. É o mesmo PetAgenda de `ficticio-petagen
 
 **Pontos para a imersão:** duração padrão de cada tipo de consulta; campos da carteirinha; texto dos lembretes.
 
-**Respostas do CN à rodada curta** (o que a PRD não responde): o time terá maioria em primeiro projeto; a clínica tem uma responsável com 2 horas por semana para validar; existe app parecido de referência; início previsto em fevereiro.
+**Respostas do CN à rodada curta** (o que a PRD não responde): a clínica tem uma responsável com 2 horas por semana para validar; existe app parecido de referência; início previsto em fevereiro.
 
 ---
 
@@ -47,7 +47,6 @@ Este caso **não é um projeto real**. É o mesmo PetAgenda de `ficticio-petagen
 | Integrações | Mercado Pago `bi_doc`; push `uni_doc`; login e e-mail `template` | PRD 2.2 e 2.3 + regra de peso fixo: Mercado Pago e push são serviços de mercado (sem pergunta ao CN) |
 | Demanda pouco detalhada | não | Tem PRD |
 | Disponibilidade do cliente | boa | CN |
-| Buffer | +10% (time novato) | CN |
 
 **Exclusões conferidas:** nota fiscal, conciliação e migração não foram contadas. Também não podem aparecer em "O que cortar", porque já estão fora.
 
@@ -56,8 +55,8 @@ Este caso **não é um projeto real**. É o mesmo PetAgenda de `ficticio-petagen
 | Cenário | Semanas | Sprints |
 |---|---|---|
 | Otimista (piso) | 15 | 8 |
-| **Provável (recomendado)** | **22** | **11** |
-| Conservador (teto de risco) | 30 | 15 |
+| **Provável (recomendado)** | **20** | **10** |
+| Conservador (teto de risco) | 28 | 14 |
 
 ## Comparação com o mesmo caso sem PRD
 
@@ -65,9 +64,9 @@ Este caso **não é um projeto real**. É o mesmo PetAgenda de `ficticio-petagen
 |---|---|---|
 | F1 Imersão | 3 (demanda sem documento) | 2 (tem PRD) |
 | F3 Desenvolvimento | 4 fluxos comuns | 3 comuns + 1 com RN (lembrete por rotina agendada) |
-| Provável | 21 → vender 22 | 22 → vender 22 |
-| Status | 🚩 no prazo pedido | 🚩 no prazo pedido |
+| Provável | 19 → vender 20 | 20 → vender 20 |
+| Status | ⚠️ preliminar, sem PRD | ✅ pronto para proposta |
 
 A PRD tirou uma semana da imersão, mas mostrou que o lembrete é disparado por agendamento, coisa que a call não deixava claro. Com a regra "rotina agendada → RN específica", o módulo da carteirinha pesa mais. O provável quase não mudou, mas agora cada número aponta para uma seção do anexo de contrato.
 
-Se a rotina agendada contasse como fluxo comum, o provável cairia para 19,25 semanas (vender 20). Essa regra ainda **não foi calibrada** com projeto real e é a primeira a conferir quando houver um projeto do NTec com PRD terminado.
+Se a rotina agendada contasse como fluxo comum, o provável cairia para 17,5 semanas (vender 18). Essa regra ainda **não foi calibrada** com projeto real e é a primeira a conferir quando houver um projeto do NTec com PRD terminado.

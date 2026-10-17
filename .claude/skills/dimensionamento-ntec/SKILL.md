@@ -17,8 +17,8 @@ A área de projetos sempre revisa o resultado antes de virar proposta. A skill e
 |---|---|
 | `leitura-prd.md` | **Sempre primeiro quando houver PRD.** Onde está cada fator na PRD, como traduzir os fatores de complexidade dela e o que perguntar ao CN porque a PRD não responde |
 | `insumos-e-perguntas.md` | Quando **não** houver PRD (formulário, ficha, briefing, transcrição), e para o vocabulário de negócio → técnico |
-| `regua-dimensionamento.md` | Sempre: pesos de cada fase (F1 a F6), buffer, faixa final, quando parar |
-| `regra-fronteira-e-faixa.md` | Quando um fator encaixar em duas linhas da régua, ou o cliente pedir um prazo menor que o piso |
+| `regua-dimensionamento.md` | Sempre: pesos de cada fase (F1 a F6), faixa final, quando parar |
+| `regra-fronteira-e-faixa.md` | Quando um fator encaixar em duas linhas da régua, e para a tabela de cortes de "O que cortar" |
 | `exemplos/*.md` | Para achar um **precedente** parecido (mesmo formato, mesmo porte) e comparar o resultado |
 | `scripts/calcular_faixa.py` | Sempre, para fazer a conta (não somar de cabeça) |
 
@@ -27,7 +27,7 @@ A área de projetos sempre revisa o resultado antes de virar proposta. A skill e
 1. **Ler a entrada.**
    - **Com PRD** (PDF ou markdown "[Requisitos] {projeto}", com ou sem o bloco "Inventário para dimensionamento"): seguir `leitura-prd.md`. Se o inventário não veio, montar a partir do PDF.
    - **Sem PRD** (formulário Dimensionamento Tec, ficha, briefing ou transcrição): seguir `insumos-e-perguntas.md` e marcar a resposta como ⚠️ *Estimativa preliminar, sem PRD*.
-2. **Preencher os fatores** da régua. Com PRD, a rodada de perguntas ao CN cobre só o que a PRD não responde (disponibilidade do cliente, riscos do time, stack e infra, benchmark, data de início). **Integrações não geram pergunta:** recebem peso fixo pela regra de `regua-dimensionamento.md` (serviço de mercado = com documentação; sistema do cliente = sem documentação, com cláusula de contrato e plano B). No máximo 5 perguntas por rodada, as que mais mexem no prazo primeiro. Se o CN não souber, usar o valor mais pesado plausível e registrar em *Suposições*.
+2. **Preencher os fatores** da régua. Com PRD, a rodada de perguntas ao CN cobre só o que a PRD não responde (disponibilidade do cliente, stack e infra, benchmark, data de início). **Integrações não geram pergunta:** recebem peso fixo pela regra de `regua-dimensionamento.md` (serviço de mercado = com documentação; sistema do cliente = sem documentação, com cláusula de contrato e plano B). No máximo 5 perguntas por rodada, as que mais mexem no prazo primeiro. Se o CN não souber, usar o valor mais pesado plausível e registrar em *Suposições*.
 3. **Montar o JSON** de entrada (formato dos `exemplos/*.json`) e rodar:
    ```bash
    python scripts/calcular_faixa.py entrada.json
@@ -42,7 +42,7 @@ A área de projetos sempre revisa o resultado antes de virar proposta. A skill e
 - **Nunca inventar número nem fator.** Fator desconhecido → pergunta. Sem resposta → valor mais pesado + *Suposições*. No NTec, o erro histórico é vender para menos (Projeto C: vendido 11, levou ~14).
 - **Sempre marcar a origem** do dado: `(origem: PRD 2.3)`, `(origem: CN)`, `(origem: formulário)`, `(origem: transcrição da call)`, `(origem: palpite do CN)`, `(origem: suposição da skill)`.
 - **Restrição técnica → parar, não aumentar prazo.** Multitenancy com instâncias isoladas, integração bidirecional que a PRD diz não ter API e feature sem benchmark nem documentação viram 🚩, não "+3 semanas".
-- **Prazo do cliente abaixo do otimista → negociar escopo, não prazo.** Sempre trazer a seção "O que cortar". Com PRD, cada corte é um módulo ou uma integração da seção 2, e nunca algo que já está nas Exclusões Explícitas.
+- **Sempre trazer a seção "O que cortar".** Com PRD, cada corte é um módulo ou uma integração da seção 2, e nunca algo que já está nas Exclusões Explícitas.
 - **A PRD é anexo de contrato.** Não acrescentar módulo, perfil ou integração que não estão nela. Se a skill achar que falta algo para o produto funcionar, isso vai para *Pontos de atenção* ("a PRD não cobre X"), e não para a conta.
 - **Não prometer stack nem tecnologia.** Se o CN já falou "vai ser em X", registrar como premissa a validar.
 - **Semanas off e garantia ficam fora da faixa**: somar as semanas off do calendário depois; a garantia de 30 dias é gratuita.
@@ -55,7 +55,7 @@ A área de projetos sempre revisa o resultado antes de virar proposta. A skill e
 - Cliente Enterprise ou Grande com restrição de stack ou regras de deploy próprias.
 - Divergência entre o que o CN declarou e o que aparece na PRD, nos documentos ou na transcrição.
 - Lacuna dentro da PRD (módulo sem superfície, integração sem meio, termo como "tempo real" sem mecanismo): a PRD precisa de revisão antes de virar anexo de contrato.
-- Teto de fase atingido ou buffer acima de 30%.
+- Teto de fase atingido.
 
 ## Formato da resposta (sempre este, nesta ordem)
 
@@ -88,12 +88,11 @@ Público: um CN que talvez nunca tenha programado. Frases curtas. Todo termo té
 
 **7. Precedente**: o projeto do NTec mais parecido, com o prazo dele e por que é comparável (ou "sem precedente comparável").
 
-**8. O que cortar se o cliente quiser menos prazo**: 2 a 4 cortes concretos com a economia estimada em semanas (ex.: "publicar como PWA em vez de app nas lojas: −3 semanas"). Sempre presente, mesmo quando o prazo cabe. Se houver integração com sistema do cliente, um dos cortes é sempre o plano B: trocá-la por importação ou exportação de planilha.
+**8. O que cortar**: 2 a 4 cortes concretos com a economia estimada em semanas (ex.: "publicar como PWA em vez de app nas lojas: −3 semanas"). Sempre presente, mesmo quando o prazo cabe. Se houver integração com sistema do cliente, um dos cortes é sempre o plano B: trocá-la por importação ou exportação de planilha.
 
-**9. Bloco para colar no Dimensionamento Tec** (seções 7 e 8 do formulário):
+**9. Bloco para colar no Dimensionamento Tec** (seção 7 do formulário; a seção 8, de buffer, fica em branco porque a régua não usa buffer):
 ```
 7. Baseline: Imersão/setup X sem · Acesso/login X sem · Desenvolvimento X sem · Testes com cliente X sem · Deploy X sem · Lojas X sem
-8. Buffer: X% — [riscos que justificam]
 Faixa: otimista X · provável X · conservador X semanas (+ N semanas off)
 ```
 
@@ -104,4 +103,4 @@ Faixa: otimista X · provável X · conservador X semanas (+ N semanas off)
 
 ## Status da skill
 
-Versão inicial (16/10/2026). Entrada padrão passou a ser a PRD em 16/10/2026. Integrações com peso fixo, sem perguntar ao CN, desde 17/10/2026. Calibrada com Projeto A, Projeto D, Projeto C e Projeto B, que são anteriores ao formato de PRD: a contagem "1 módulo = 1 fluxo" ainda não foi conferida contra um projeto real com PRD. Pendente: (1) fichas técnicas de Projetos E e F para calibrar projetos grandes; (2) conteúdo da subpágina "Régua de Dimensionamento" do Notion, que não veio no PDF; (3) atualizar a calibração quando Projeto B e Projeto D terminarem.
+Versão inicial (16/10/2026). Entrada padrão passou a ser a PRD em 16/10/2026. Integrações com peso fixo, sem perguntar ao CN, desde 17/10/2026. Sem buffer percentual nem negociação de prazo desde 17/10/2026. Calibrada com Projeto A, Projeto D, Projeto C e Projeto B, que são anteriores ao formato de PRD: a contagem "1 módulo = 1 fluxo" ainda não foi conferida contra um projeto real com PRD. Pendente: (1) fichas técnicas de Projetos E e F para calibrar projetos grandes; (2) conteúdo da subpágina "Régua de Dimensionamento" do Notion, que não veio no PDF; (3) atualizar a calibração quando Projeto B e Projeto D terminarem.

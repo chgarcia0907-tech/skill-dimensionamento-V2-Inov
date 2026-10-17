@@ -16,7 +16,6 @@ Calculadora clínica pediátrica que substitui a planilha usada hoje pela client
 | RN crítica | sim: erro de cálculo é risco clínico | hand-off |
 | Cliente com pouca disponibilidade | sim | hand-off |
 | Lojas | app sensível (saúde): revisão mais rigorosa | hand-off |
-| Buffer | +10%: time com menos de 6 meses de prática | hand-off |
 
 ## Resultado da régua
 
@@ -28,12 +27,12 @@ Calculadora clínica pediátrica que substitui a planilha usada hoje pela client
 | F4 Testes com cliente | 2 | 2,5 | 4 |
 | F5 Deploy | 0,5 | 0,5 | 1 |
 | F6 Lojas (sensível) | 2,5 | 3 | 6 |
-| **Faixa (buffer 10%)** | **11** | **15 → vender 16** | **23** |
+| **Faixa** | **11** | **14** | **21** |
 
 ## Vendido × planejado
 Plano do hand-off: imersão (sem. 1–2), motor de cálculo em três etapas (3–6), interface e preferências (7–8), testes, deploy e lojas (9–12).
 
-- O vendido (12) fica **entre o piso (11) e o provável (15)**. Pela regra de fronteira, isso só se sustenta com escopo congelado e cliente disponível. Nenhuma das duas condições vale aqui (uma regra de cálculo ainda estava em aberto e a cliente tem pouca agenda).
+- O vendido (12) fica **entre o piso (11) e o provável (14)**, com uma regra de cálculo ainda em aberto e a cliente com pouca agenda.
 - O próprio hand-off registrou os riscos: escopo real maior que o da ficha, prazo encolhido de 4 para 2–3 meses e "não se sustenta com só 1 dev".
 - **Resultado final: a confirmar** quando o projeto terminar.
 

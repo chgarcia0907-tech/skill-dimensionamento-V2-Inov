@@ -69,15 +69,9 @@ Se a regra não mexeu em nada: `Sem ajustes de fronteira.`
 
 ---
 
-## 6. Quando o cliente pede menos prazo do que a faixa
+## 6. Cortes que mais economizam (para a seção "O que cortar")
 
-| Prazo pedido | O que fazer |
-|---|---|
-| ≥ provável | ✅ Vender o pedido (ou o provável, se for maior) |
-| Entre o otimista e o provável | ⚠️ Possível **só** com escopo congelado em contrato e cliente com disponibilidade garantida. Registrar na seção 9 do formulário. Propor 1 ou 2 cortes da seção "O que cortar" para voltar ao provável |
-| < otimista | 🚩 Não vender esse prazo. Negociar escopo: recalcular a régua **sem** os itens cortados e mostrar o novo provável |
-
-### Cortes que mais economizam (ordem de impacto típica)
+Ordem de impacto típica:
 
 | Corte | Economia típica (central) |
 |---|---|

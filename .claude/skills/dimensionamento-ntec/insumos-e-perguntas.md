@@ -11,7 +11,7 @@ Este arquivo é o caminho **sem PRD**: o formulário **Dimensionamento Tec** (in
 | Entrada | O que aproveitar | Cuidado |
 |---|---|---|
 | **PRD ("[Requisitos] {projeto}")** | Tudo | Não é este arquivo: ir para `leitura-prd.md` |
-| Formulário Dimensionamento Tec | Seções 1 (perfis de usuário), 3 (fluxos críticos, features atípicas), 5 (porte e maturidade do cliente) e 6 (perfil da demanda: formato, níveis, multitenancy, integrações, dados, offline) | Seções 7 e 8 preenchidas pelo CN são **palpite**: não usar como entrada, só comparar no fim |
+| Formulário Dimensionamento Tec | Seções 1 (perfis de usuário), 3 (fluxos críticos, features atípicas), 5 (porte e maturidade do cliente) e 6 (perfil da demanda: formato, níveis, multitenancy, integrações, dados, offline) | Seções 7 e 8 (baseline e buffer) preenchidas pelo CN são **palpite**: não usar como entrada, só comparar no fim |
 | Ficha de qualificação ou proposta | Produto, setor, porte, o que o cliente pediu | Costuma **subestimar o escopo** (Projeto B: o escopo real ficou maior que o da ficha) |
 | Transcrição de call (Fathom, Granola, notas) | Fluxos descritos pelo cliente, integrações citadas, urgência, quem aprova | Filtrar a conversa: só o que mexe em prazo. Desejo vago ("seria legal ter…") não é escopo até o CN confirmar |
 | Texto livre do CN | O que tiver | Tudo é `origem: palpite do CN` até ser confirmado |
@@ -35,7 +35,6 @@ Perguntar **no máximo 5 por rodada**, primeiro as que mais mexem no prazo (na o
 | **Stack e deploy** (F1, F5) | "O cliente exige alguma tecnologia ou que o sistema fique nos servidores dele?" | Sim → stack fora do template e/ou infra do cliente |
 | **Documentação da demanda** (F1) | "Já existe documento de requisitos, protótipo ou referência de app parecido?" | Nada disso → demanda pouco detalhada |
 | **Atípico** (F1, F3) | "Existe algum app ou site parecido que a gente possa usar de referência?" | Nenhum benchmark → atípico. Não marcar só porque o *setor* é incomum se o produto é comum |
-| **Riscos de time** (buffer) | (pergunta para a área de projetos, não para o cliente) "O time vai ter maioria em primeiro projeto? Alguém sai no meio?" | Ver Buffer em `regua-dimensionamento.md` |
 
 ## Passo 3 — Vocabulário: o que o cliente diz × o que a régua entende
 

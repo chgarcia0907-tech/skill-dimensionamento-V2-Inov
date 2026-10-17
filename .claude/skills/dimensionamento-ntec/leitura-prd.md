@@ -38,7 +38,7 @@ Este arquivo diz onde, na PRD, está cada fator da régua e como traduzi-lo para
 | `demanda_pouco_detalhada` | — | **`false`.** A PRD é o documento de requisitos |
 | `stack_fora_template` | 3.1 (serviços de terceiros definidos com o cliente) | A PRD não fixa stack de propósito. Só `true` se a 3.1 citar uma tecnologia exigida pelo cliente. Se não citar, perguntar (Passo 4) |
 | `deploy_infra_cliente` | 3.1 | `true` se a 3.1 disser que roda nos servidores ou na nuvem do cliente. Se não disser, perguntar (Passo 4) |
-| `atipico`, `cliente_pouca_disponibilidade`, `riscos` | — | Não estão na PRD. Perguntar (Passo 4) |
+| `atipico`, `cliente_pouca_disponibilidade` | — | Não estão na PRD. Perguntar (Passo 4) |
 
 **Hardcoded** (decisão fixa do cliente) não muda nenhum peso. Ele só confirma que não há tela de configuração daquele item, e a skill não deve somar tela de configuração por conta própria.
 
@@ -75,7 +75,6 @@ A PRD descreve o produto, não o projeto. Depois de ler a PRD, fazer **uma rodad
 | Fator | Pergunta para o CN |
 |---|---|
 | Disponibilidade do cliente (`cliente_pouca_disponibilidade`) | "Quem do cliente vai testar e aprovar as entregas? Essa pessoa tem umas 2 horas por semana para isso?" |
-| Riscos do time (`riscos`) | "O time vai ter maioria em primeiro projeto? Tem alguém que já sabe que vai sair no meio? Alguma parte depende de outro fornecedor?" |
 | Stack e infra (`stack_fora_template`, `deploy_infra_cliente`) | "O cliente exige alguma tecnologia, ou que o sistema fique nos servidores dele?" (pular se a 3.1 já responde) |
 | Atípico (`atipico`, `features_atipicas`) | "Existe algum app ou site parecido que a gente possa usar de referência?" |
 | Semanas off | "Qual é a data prevista de início? (para contar férias, provas e recesso)" |
