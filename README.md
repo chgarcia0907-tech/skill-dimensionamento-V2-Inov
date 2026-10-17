@@ -12,7 +12,7 @@ Skill do Claude que ajuda coordenadores de negócios (CNs) do Núcleo de Tecnolo
 skill-dimensionamento-ntec/
 ├── README.md                       ← este arquivo
 ├── docs/
-│   ├── Dimensionamento-NTec-Skill.pdf   ← PDF explicativo (8 páginas, visual do Dimensionamento Tec)
+│   ├── Dimensionamento-NTec-Skill.pdf   ← PDF explicativo (9 páginas, visual do Dimensionamento Tec)
 │   └── gerar_pdf.py                     ← gera o PDF (reportlab + fontes Segoe UI do Windows)
 └── .claude/skills/dimensionamento-ntec/
     ├── SKILL.md                    ← orquestrador: procedimento, guardrails, formato da resposta
@@ -92,7 +92,7 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 2. **Conseguir a subpágina "Régua de Dimensionamento"** do Notion. Se tiver números, eles valem mais que os da skill.
 3. **Atualizar a calibração** quando o Projeto A (19/10/2026) e o Projeto B e o Projeto D (23/11/2026) terminarem. O passo a passo está em `exemplos/README.md`.
 4. **Conferir as regras de leitura da PRD** no primeiro projeto com PRD que terminar (principalmente "rotina agendada → RN específica").
-5. Atualizar `docs/gerar_pdf.py` e o PDF explicativo para mostrar a PRD como entrada.
+5. ~~Atualizar o PDF explicativo para mostrar a PRD como entrada.~~ Feito (v2, 16/10/2026).
 6. Testar a skill com um CN num lead real. (Publicada em https://github.com/matheusrpgomes-sketch/skill-dimensionamento-ntec, com os projetos anonimizados.)
 
 ### Onde está cada coisa
