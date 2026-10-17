@@ -194,7 +194,7 @@ s.append(Spacer(1, 10))
 toc = ["1. O que é a skill", "2. Onde ela entra no processo", "3. Como acessar e usar",
        "4. Arquitetura (o que tem dentro)", "5. Procedimento", "6. Da PRD para a régua",
        "7. Régua de dimensionamento (F1 a F6)", 
-       "8. Faixa final e cortes", "9. Perguntas para o CN", "10. Calibração com projetos reais",
+       "8. Faixa final e cortes", "9. Perguntas para o CN: Fathom e lacunas", "10. Calibração com projetos reais",
        "11. Exemplo: PetAgenda a partir da PRD", "12. Linha do tempo de exemplo (Projeto A)",
        "13. Parar e sinalizar", "14. Histórico, datas e pendências"]
 for t in toc:
@@ -291,9 +291,10 @@ s.append(table([
     ["Tempo real por push · relatório configurável pelo usuário", "Feature atípica (polling, tela fixa ou exportação = 0)"],
 ], [85, 85]))
 s.append(P("O que a PRD não responde", "h2"))
-s.append(P("A PRD descreve o produto, não o projeto. Depois de ler a PRD, a skill faz uma rodada curta ao CN sobre: "
-           "disponibilidade do cliente para testar, stack ou infra "
-           "exigida pelo cliente, app de referência (benchmark) e data de início (para contar as semanas off)."))
+s.append(P("A PRD descreve o produto, não o projeto. Ficam de fora: disponibilidade do cliente para testar, stack ou infra "
+           "exigida pelo cliente, app de referência (benchmark) e data de início (para contar as semanas off). "
+           "A skill procura esses quatro na <b>transcrição do Fathom</b> das reuniões; o que não achar vira <b>lacuna</b> "
+           "para o CN (seção 9)."))
 s.append(P("Integrações: peso fixo, sem perguntar ao CN", "h2"))
 s.append(P("O CN não tem como avaliar a API de outro sistema, e não há técnico para validar antes da proposta. Por isso a skill "
            "não pergunta sobre documentação: usa o sentido (uni ou bi) e <b>de quem é o sistema</b>, que a PRD já traz."))
@@ -387,9 +388,23 @@ s.append(P("Na dúvida entre duas linhas da régua, a skill vai sempre para a ma
            "explicando o ajuste (máximo de 3 ajustes por projeto). O histórico do NTec é vender para menos.", "small"))
 
 # 9
-s.append(P("9. Perguntas para o CN", "h1"))
-s.append(P("Com PRD, a maioria destas perguntas já está respondida no documento, e a skill pergunta só o que falta (seção 6). "
-           "Sem PRD, ela usa a lista inteira, pronta para repassar ao cliente:"))
+s.append(P("9. Perguntas para o CN: Fathom primeiro, lacunas depois", "h1"))
+s.append(P("Antes de perguntar qualquer coisa ao CN, a skill procura a resposta na <b>transcrição do Fathom</b> (ou no resumo) "
+           "das reuniões com o cliente. Só conta o que foi <b>dito explicitamente</b>, e a resposta sai com a reunião e o trecho: "
+           "<i>(origem: Fathom · 12/03 — \"a Carla testa toda sexta\")</i>. Dedução, silêncio ou fala vaga (\"vamos ver\") não contam."))
+s.append(table([
+    ["Fator (o que a PRD não responde)", "O que a skill procura na transcrição"],
+    ["Disponibilidade do cliente", "Quem testa e aprova, quantas horas, agenda (\"sou plantonista\", \"valida toda sexta\")"],
+    ["Stack e infra", "Tecnologia exigida, \"nossos servidores\", \"a nossa TI hospeda\""],
+    ["App de referência (benchmark)", "\"Tipo o…\", \"igual ao…\", \"vi um que…\""],
+    ["Data de início", "Mês ou data de início, prazo de lançamento"],
+], [55, 115]))
+s.append(Spacer(1, 4))
+s.append(callout("<b>Não achou no Fathom = lacuna.</b> A skill dimensiona mesmo assim, com o valor mais pesado, e devolve ao CN "
+                 "a seção <b>5. Lacunas para o CN</b>: o fator, o que foi procurado, a pergunta pronta para o cliente e o valor "
+                 "provisório usado na conta. Lacuna que mexe na faixa (disponibilidade, stack ou benchmark) deixa o status em "
+                 "<b>Revisar</b> até o CN responder. Lacuna só na data de início não muda a faixa.", YEL_BG, YEL))
+s.append(P("Sem PRD, a skill usa a lista inteira abaixo, também procurando cada resposta na transcrição antes de perguntar:"))
 s.append(table([
     ["Fator", "Pergunta"],
     ["Fluxos críticos", "Quais são as 3 a 6 coisas principais que alguém faz no sistema, do começo ao fim?"],
@@ -485,6 +500,7 @@ s.append(table([
     ["16/10/2026", "Leitura da skill do NCiv, do formulário Dimensionamento Tec e do levantamento no Notion; criação e calibração da skill (v1); instalação em ~/.claude/skills"],
     ["16/10/2026", "v2: a PRD da skill documento-requisitos-ntec vira a entrada padrão; projetos anonimizados; publicação no GitHub"],
     ["17/10/2026", "v3: integrações com peso fixo, sem perguntar ao CN; buffer de risco e negociação de prazo removidos"],
+    ["17/10/2026", "O que a PRD não responde vem da transcrição do Fathom; o que faltar volta ao CN como lacuna"],
     ["19/10/2026", "Fim previsto do Projeto A — confirmar se a calibração continua valendo"],
     ["23/11/2026", "Fim previsto do Projeto B e do Projeto D — atualizar a calibração com o realizado"],
 ], [28, 142]))

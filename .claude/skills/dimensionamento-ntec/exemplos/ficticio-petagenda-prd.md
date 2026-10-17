@@ -30,7 +30,22 @@ Este caso **não é um projeto real**. É o mesmo PetAgenda de `ficticio-petagen
 
 **Pontos para a imersão:** duração padrão de cada tipo de consulta; campos da carteirinha; texto dos lembretes.
 
-**Respostas do CN à rodada curta** (o que a PRD não responde): a clínica tem uma responsável com 2 horas por semana para validar; existe app parecido de referência; início previsto em fevereiro.
+**Transcrições do Fathom** (2 reuniões, coladas pelo CN). O que a PRD não responde foi procurado nelas (`leitura-prd.md`, Passo 4):
+
+| Fator | Achado no Fathom? | Valor | Origem |
+|---|---|---|---|
+| Disponibilidade do cliente | Sim | boa (`false`) | Fathom · 12/03 — "a Carla, da recepção, testa tudo toda sexta de manhã" |
+| Stack e infra | Sim | template, infra NTec (`false`) | Fathom · 12/03 — "a parte técnica vocês que decidem" |
+| Atípico | Sim | não (`false`) | Fathom · 19/03 — "tipo aquele app de agendar banho e tosa" |
+| Data de início | **Não** | lacuna: semanas off não somadas | Nenhuma das reuniões fala de início |
+
+**5. Lacunas para o CN** (como sai na resposta):
+
+| Fator | Procurado no Fathom e não achado | Pergunta para o cliente | Valor provisório na conta |
+|---|---|---|---|
+| Semanas off | Data ou mês de início, prazo de lançamento | "Qual é a data prevista de início? (para contar férias, provas e recesso)" | Semanas off não somadas |
+
+A única lacuna é a data de início, que não muda a faixa. Por isso o status não cai para ⚠️.
 
 ---
 
@@ -46,7 +61,7 @@ Este caso **não é um projeto real**. É o mesmo PetAgenda de `ficticio-petagen
 | Fluxos com RN específica | 1 (2.3) | Rotina agendada (lembrete na data da dose) → o módulo vira RN específica (`leitura-prd.md`, Passo 3) |
 | Integrações | Mercado Pago `bi_doc`; push `uni_doc`; login e e-mail `template` | PRD 2.2 e 2.3 + regra de peso fixo: Mercado Pago e push são serviços de mercado (sem pergunta ao CN) |
 | Demanda pouco detalhada | não | Tem PRD |
-| Disponibilidade do cliente | boa | CN |
+| Disponibilidade do cliente | boa | Fathom · 12/03 |
 
 **Exclusões conferidas:** nota fiscal, conciliação e migração não foram contadas. Também não podem aparecer em "O que cortar", porque já estão fora.
 

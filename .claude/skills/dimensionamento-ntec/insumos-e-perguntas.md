@@ -18,6 +18,8 @@ Este arquivo é o caminho **sem PRD**: o formulário **Dimensionamento Tec** (in
 
 ## Passo 2 — Preencher os fatores, perguntando o que faltar
 
+**Se veio transcrição do Fathom (ou de outra ferramenta):** procurar a resposta de cada pergunta nela antes de perguntar, com as mesmas regras do Passo 4 de `leitura-prd.md` (só vale o que foi dito explicitamente, citar a reunião e o trecho). O que não estiver lá vira **lacuna** na seção 5 da resposta.
+
 Perguntar **no máximo 5 por rodada**, primeiro as que mais mexem no prazo (na ordem da tabela). Usar as perguntas como estão: foram escritas para o CN repassar ao cliente sem precisar traduzir.
 
 | Fator da régua | Pergunta para o CN / cliente | Como traduzir a resposta |

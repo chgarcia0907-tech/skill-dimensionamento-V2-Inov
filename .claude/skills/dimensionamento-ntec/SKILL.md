@@ -15,7 +15,7 @@ A área de projetos sempre revisa o resultado antes de virar proposta. A skill e
 
 | Arquivo | Quando ler |
 |---|---|
-| `leitura-prd.md` | **Sempre primeiro quando houver PRD.** Onde está cada fator na PRD, como traduzir os fatores de complexidade dela e o que perguntar ao CN porque a PRD não responde |
+| `leitura-prd.md` | **Sempre primeiro quando houver PRD.** Onde está cada fator na PRD, como traduzir os fatores de complexidade dela e como tirar do Fathom o que a PRD não responde (o resto vira lacuna para o CN) |
 | `insumos-e-perguntas.md` | Quando **não** houver PRD (formulário, ficha, briefing, transcrição), e para o vocabulário de negócio → técnico |
 | `regua-dimensionamento.md` | Sempre: pesos de cada fase (F1 a F6), faixa final, quando parar |
 | `regra-fronteira-e-faixa.md` | Quando um fator encaixar em duas linhas da régua, e para a tabela de cortes de "O que cortar" |
@@ -27,7 +27,7 @@ A área de projetos sempre revisa o resultado antes de virar proposta. A skill e
 1. **Ler a entrada.**
    - **Com PRD** (PDF ou markdown "[Requisitos] {projeto}", com ou sem o bloco "Inventário para dimensionamento"): seguir `leitura-prd.md`. Se o inventário não veio, montar a partir do PDF.
    - **Sem PRD** (formulário Dimensionamento Tec, ficha, briefing ou transcrição): seguir `insumos-e-perguntas.md` e marcar a resposta como ⚠️ *Estimativa preliminar, sem PRD*.
-2. **Preencher os fatores** da régua. Com PRD, a rodada de perguntas ao CN cobre só o que a PRD não responde (disponibilidade do cliente, stack e infra, benchmark, data de início). **Integrações não geram pergunta:** recebem peso fixo pela regra de `regua-dimensionamento.md` (serviço de mercado = com documentação; sistema do cliente = sem documentação, com cláusula de contrato e plano B). No máximo 5 perguntas por rodada, as que mais mexem no prazo primeiro. Se o CN não souber, usar o valor mais pesado plausível e registrar em *Suposições*.
+2. **Preencher os fatores** da régua. Com PRD, o que ela não responde (disponibilidade do cliente, stack e infra, benchmark, data de início) é **procurado na transcrição do Fathom** (`leitura-prd.md`, Passo 4). O que não estiver lá vira **lacuna**: entra na conta com o valor mais pesado e volta para o CN na seção 5 da resposta, com a pergunta pronta. **Integrações não geram pergunta:** recebem peso fixo pela regra de `regua-dimensionamento.md` (serviço de mercado = com documentação; sistema do cliente = sem documentação, com cláusula de contrato e plano B). No máximo 5 perguntas por rodada, as que mais mexem no prazo primeiro. Se o CN não souber, usar o valor mais pesado plausível e registrar em *Suposições*.
 3. **Montar o JSON** de entrada (formato dos `exemplos/*.json`) e rodar:
    ```bash
    python scripts/calcular_faixa.py entrada.json
@@ -39,8 +39,8 @@ A área de projetos sempre revisa o resultado antes de virar proposta. A skill e
 
 ## Regras gerais
 
-- **Nunca inventar número nem fator.** Fator desconhecido → pergunta. Sem resposta → valor mais pesado + *Suposições*. No NTec, o erro histórico é vender para menos (Projeto C: vendido 11, levou ~14).
-- **Sempre marcar a origem** do dado: `(origem: PRD 2.3)`, `(origem: CN)`, `(origem: formulário)`, `(origem: transcrição da call)`, `(origem: palpite do CN)`, `(origem: suposição da skill)`.
+- **Nunca inventar número nem fator.** Fator desconhecido → procurar no Fathom. Não está lá → lacuna para o CN, com o valor mais pesado na conta + *Suposições*. No NTec, o erro histórico é vender para menos (Projeto C: vendido 11, levou ~14).
+- **Sempre marcar a origem** do dado: `(origem: PRD 2.3)`, `(origem: Fathom · 12/03 — "trecho")`, `(origem: lacuna — não está no Fathom)`, `(origem: CN)`, `(origem: formulário)`, `(origem: transcrição da call)`, `(origem: palpite do CN)`, `(origem: suposição da skill)`.
 - **Restrição técnica → parar, não aumentar prazo.** Multitenancy com instâncias isoladas, integração bidirecional que a PRD diz não ter API e feature sem benchmark nem documentação viram 🚩, não "+3 semanas".
 - **Sempre trazer a seção "O que cortar".** Com PRD, cada corte é um módulo ou uma integração da seção 2, e nunca algo que já está nas Exclusões Explícitas.
 - **A PRD é anexo de contrato.** Não acrescentar módulo, perfil ou integração que não estão nela. Se a skill achar que falta algo para o produto funcionar, isso vai para *Pontos de atenção* ("a PRD não cobre X"), e não para a conta.
@@ -82,7 +82,12 @@ Público: um CN que talvez nunca tenha programado. Frases curtas. Todo termo té
 
 **4. Pontos de atenção**, do mais grave para o menos grave. Cada um com o que fazer. Toda integração com sistema do cliente traz aqui a **cláusula de contrato** pronta de `regua-dimensionamento.md` ("depende de o cliente fornecer acesso à API até a sprint {n}; sem acesso, vira planilha, sem alteração de prazo").
 
-**5. Perguntas que faltam para o cliente** (se houver), em linguagem de cliente, prontas para mandar.
+**5. Lacunas para o CN**: o que não estava na PRD nem na transcrição do Fathom. Uma linha por lacuna, nesta tabela:
+
+| Fator | Procurado no Fathom e não achado | Pergunta para o cliente | Valor provisório na conta |
+|---|---|---|---|
+
+O que foi achado no Fathom **não** entra aqui: vai para o detalhamento com a origem (`Fathom · data — "trecho"`). Sem lacunas: `Sem lacunas: tudo veio da PRD e do Fathom.`
 
 **6. Detalhamento por fase**: a tabela F1 a F6 (mín / central / máx) com o critério usado em cada linha (ex.: "F2: 3 perfis com poucas diferenças → 2 a 6 com poucas diferenças"). Com PRD, citar a seção (ex.: "F3: módulos 2.2 a 2.5 = 4 fluxos comuns; 2.4 tem concorrência → RN específica").
 
@@ -97,10 +102,10 @@ Faixa: otimista X · provável X · conservador X semanas (+ N semanas off)
 ```
 
 **10. Observações**
-- *Suposições:* tudo que a skill decidiu sem resposta do CN. É o que a área de projetos mais precisa conferir.
+- *Suposições:* tudo que a skill decidiu sem resposta explícita (inclui o valor provisório de cada lacuna). É o que a área de projetos mais precisa conferir.
 - *Ajustes de fronteira:* os comentários de duas linhas de `regra-fronteira-e-faixa.md`, ou `Sem ajustes de fronteira.`
 - *Pontos para a imersão:* os do bloco da PRD, um por linha. Não somam prazo: viram atividades da imersão (F1). Sem o bloco, `Não informados.`
 
 ## Status da skill
 
-Versão inicial (16/10/2026). Entrada padrão passou a ser a PRD em 16/10/2026. Integrações com peso fixo, sem perguntar ao CN, desde 17/10/2026. Sem buffer percentual nem negociação de prazo desde 17/10/2026. Calibrada com Projeto A, Projeto D, Projeto C e Projeto B, que são anteriores ao formato de PRD: a contagem "1 módulo = 1 fluxo" ainda não foi conferida contra um projeto real com PRD. Pendente: (1) fichas técnicas de Projetos E e F para calibrar projetos grandes; (2) conteúdo da subpágina "Régua de Dimensionamento" do Notion, que não veio no PDF; (3) atualizar a calibração quando Projeto B e Projeto D terminarem.
+Versão inicial (16/10/2026). Entrada padrão passou a ser a PRD em 16/10/2026. Integrações com peso fixo, sem perguntar ao CN, desde 17/10/2026. Sem buffer percentual nem negociação de prazo desde 17/10/2026. O que a PRD não responde vem da transcrição do Fathom, e o que faltar volta ao CN como lacuna, desde 17/10/2026. Calibrada com Projeto A, Projeto D, Projeto C e Projeto B, que são anteriores ao formato de PRD: a contagem "1 módulo = 1 fluxo" ainda não foi conferida contra um projeto real com PRD. Pendente: (1) fichas técnicas de Projetos E e F para calibrar projetos grandes; (2) conteúdo da subpágina "Régua de Dimensionamento" do Notion, que não veio no PDF; (3) atualizar a calibração quando Projeto B e Projeto D terminarem.

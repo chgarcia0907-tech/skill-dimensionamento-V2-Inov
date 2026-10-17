@@ -54,6 +54,7 @@ Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para co
 
 ### Onde paramos (17/10/2026)
 - **Implementado:** integrações com **peso fixo, sem perguntar ao CN** (ver [Integrações: peso fixo](#integrações-peso-fixo-sem-perguntar-ao-cn-implementado)).
+- **Implementado:** o que a PRD não responde é tirado da **transcrição do Fathom**; o que não estiver lá volta ao CN como **lacuna** (`leitura-prd.md`, Passo 4).
 - **Removido (17/10/2026):** o buffer de risco percentual (desprezível; provável = soma dos centrais, conservador = soma dos máximos) e a negociação "quando o cliente pede menos prazo". A seção "O que cortar" continua. Só o Projeto B mudou na calibração (11 / 14 / 21).
 - **Próximo passo:** pendência 2 (avisar o Augustus) ou 3 (resto do levantamento), conforme a lista de pendências.
 - **Como trabalhar com o usuário:** quando faltar informação ou houver decisão a tomar, **perguntar antes de assumir**, com uma opção recomendada.
@@ -68,6 +69,7 @@ Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para co
 | 17/10/2026 | Explicação de onde vem o "Inventário para dimensionamento"; discussão sobre integrações sem documentação |
 | 17/10/2026 | Integrações com peso fixo, sem perguntar ao CN; PDF v3 (10 páginas) |
 | 17/10/2026 | Buffer de risco e negociação de prazo removidos |
+| 17/10/2026 | O que a PRD não responde vem do Fathom; o que faltar volta ao CN como lacuna |
 
 ### O que foi pedido (origem)
 Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em conta que somos uma **empresa júnior**, use os dados reais dos projetos e chegue a uma **faixa de semanas**. O uso deve ser **prático para CNs**, que em geral são fracos tecnicamente e mandam para a equipe de projetos prazos sem sentido.
@@ -91,7 +93,7 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 **PRD como entrada padrão**
 - A skill lê o PDF da PRD e, se o CN colar, o bloco "Inventário para dimensionamento". Sem o bloco, monta o inventário a partir do PDF.
 - **Sem PRD:** dimensiona, mas marca ⚠️ "Estimativa preliminar, sem PRD".
-- **O que a PRD não cobre** (documentação das APIs, disponibilidade do cliente, riscos do time, stack e infra, benchmark, data de início): uma rodada curta de perguntas ao CN. A documentação das APIs **saiu** dessa rodada (peso fixo, seção abaixo).
+- **O que a PRD não cobre** (disponibilidade do cliente, stack e infra, benchmark, data de início): a skill procura na **transcrição do Fathom** (só vale o que foi dito explicitamente, citando reunião e trecho). O que não achar vira **lacuna**: entra na conta com o valor mais pesado e volta ao CN na seção 5 da resposta, com a pergunta pronta. Lacuna que mexe na faixa deixa o status em ⚠️. A documentação das APIs **saiu** dessa rodada (peso fixo, seção abaixo).
 - **1 módulo = 1 fluxo.** 2.1 Autenticação vai para F2, e Disponibilização vai para F5 e F6.
 - **Fatores de complexidade da PRD encaixam nas linhas atuais**, sem peso novo. Pagamento, IA e push viram integração. Concorrência, imutabilidade e rotina agendada fazem o módulo virar RN específica. Tempo real por push e relatório configurável viram feature atípica. Tabela completa em `leitura-prd.md`.
 - **Papel da skill:** ocupa o lugar que a skill da PRD chama de `validacao-tecnica-ntec`, mas calcula **só o prazo, sem preço**.
