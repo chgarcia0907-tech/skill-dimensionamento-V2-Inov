@@ -21,7 +21,22 @@ Pesos usados para transformar o que o coordenador de negócios (CN) levantou em 
 ## Regras transversais
 
 ### Os pesos já assumem o time típico do NTec
-Membros de empresa júnior com 3 a 4 h/dia, sprints de 2 semanas e o template do monorepo NTec (Next.js + Expo + MongoDB/Prisma + Better Auth). **Não há buffer percentual:** o risco já está no intervalo mínimo / central / máximo de cada linha.
+Uma dupla de empresa júnior com **cerca de 20 horas por semana somadas**, codando com **Claude Code**, sprints de 2 semanas e o template do monorepo NTec (Next.js + Expo + MongoDB/Prisma + Better Auth).
+
+### Fator Claude Code (desde 17/10/2026)
+Todos os projetos do NTec agora são codados com Claude Code. O ganho aparece no código que o time escreve, e não no que depende de gente de fora:
+
+| O que muda | Mín | Central | Máx |
+|---|---|---|---|
+| Núcleo do F3 (fluxos comuns, fluxos com RN específica, features atípicas, já com o fator de formato) | x0,4 | x0,5 | x0,65 |
+| F2 (níveis de acesso, multitenancy, login) | x0,5 | x0,65 | x0,8 |
+| F1, extras do F3 (integrações, offline com sincronização, dependência de dados, volume alto), F4, F5 e F6 | x1 | x1 | x1 |
+
+- **Por que só esses:** imersão e validação dependem do cliente; integração depende da documentação de terceiros; offline com sincronização e dados são decisão de modelagem; testes dependem da agenda do cliente; deploy e lojas dependem de revisão externa.
+- **De onde vem o número:** Projeto B. Com a dupla, ~20 h/semana e Claude Code, o motor de cálculo das 3 faixas, a tela completa e a ligação entre os dois saíram em cerca de 1 semana de código (30/09 a 06/10/2026). A régua sem o fator dava 5,1 semanas de F3 no central. O central x0,5 deixa folga para o que ainda falta (preferências, testes do motor contra a planilha, ajustes).
+- **No JSON:** `"claude_code": true` é o padrão. Os projetos antigos da calibração usam `"claude_code": false`, porque foram feitos sem a ferramenta.
+- **Ainda não calibrado:** um projeto só, e ainda em execução. O F2 com fator não foi medido (o Projeto B não tem login). Conferir no primeiro projeto com login e no fim do Projeto B.
+ **Não há buffer percentual:** o risco já está no intervalo mínimo / central / máximo de cada linha.
 
 ### O que o template já entrega (não soma prazo)
 Login por e-mail e senha, recuperação de senha, login com Google, envio de e-mail (Resend), upload de arquivo para AWS S3, estrutura de API e painel admin básico. Quando uma "integração" é uma dessas, ela entra como `template` (0 semanas).
@@ -190,13 +205,14 @@ Rodando a régua sobre os projetos reais (detalhes em `exemplos/`):
 | Projeto A | 9 | 12 | 16 | 12 (+1 off) | No prazo, finalizando | ✅ Provável = vendido |
 | Projeto D | 13 | 17 → **18** | 23 | 18 (+3 off) | Em execução, sem atraso (47,6% do prazo) | ✅ Recomendação = vendido |
 | Projeto C | 13 | 18 | 23 | 11 (+2 off) | ~14 semanas, atrasou, testes não terminados | ⚠️ Vendido abaixo do piso → atrasou. Régua ~3 semanas acima do real |
-| Projeto B | 11 | 14 | 21 | 12 (+1 off) | Em execução (45% do prazo) | ⚠️ Vendido entre piso e provável; hand-off já registrou o prazo como apertado |
+| Projeto B | 11 | 14 | 21 | 12 (+1 off) | Em execução (45% do prazo), com Claude Code | ⚠️ Sem o fator, vendido entre piso e provável. **Com o fator Claude Code: 8 / 11 / 18, vender 12 = vendido.** F3 andou ~5x mais rápido que a régua antiga |
 | Projeto E | — | — | — | 34 | Em execução | Sem ficha técnica; não calibrado |
 | Projeto F | — | — | — | 38 (+3 off) | Em execução | Sem ficha técnica; não calibrado |
 
 Leituras:
 - **Projetos pequenos e médios (até ~20 semanas):** a régua acerta ou fica um pouco acima. É intencional que erre para cima.
 - **Viés conhecido:** quando o time aproveita bem o template, setup e login andam juntos e mais rápido (Projeto C fez os dois em 2 semanas). A régua não desconta isso automaticamente.
+- **Claude Code:** a calibração acima é sem o fator (projetos antigos). Com o fator, os mesmos projetos dariam: A 7 / 9 / 13, C 8 / 13 / 19, D 9 / 13 / 19. Não comparar esses números com o vendido deles, que foi feito sem a ferramenta.
 - **Projetos grandes (Projetos E, F, 30+ semanas):** sem dados de ficha, a régua **não está calibrada** para eles. Por isso o alerta acima de 26 semanas.
 
 ---
@@ -222,3 +238,4 @@ Leituras:
 | 17/10/2026 | Decisão do NTec: CNs não avaliam API e não há técnico para validar antes da proposta | Integração com peso fixo, sem perguntar ao CN: serviço de mercado = linha "com documentação", sistema do cliente = linha "sem documentação", com cláusula de contrato e plano B (planilha). Pesos inalterados |
 | 17/10/2026 | Decisão do NTec: buffer desprezível | Buffer de risco adaptável (seção 8 do formulário) removido: provável = soma dos centrais, conservador = soma dos máximos. Projeto B passa de 11 / 15 / 23 para 11 / 14 / 21. Também saiu a negociação "quando o cliente pede menos prazo" (a seção "O que cortar" continua) |
 | 17/10/2026 | Template "Proposta Técnica" do NTec (PDF, 2 páginas, 14 seções) | Entregável da skill: a faixa entra na caixa de status, no roadmap (10), nos pontos em aberto (11) e no cronograma sprint a sprint (13); a memória do dimensionamento vai num anexo. Pesos inalterados |
+| 17/10/2026 | Ritmo real do Projeto B no git (dupla, ~20 h/semana, Claude Code) | Fator Claude Code: núcleo do F3 x0,4 / 0,5 / 0,65 e F2 x0,5 / 0,65 / 0,8; demais fases iguais. Time típico passa a ser a dupla com ~20 h/semana somadas. Projetos antigos ficam com `claude_code: false` |

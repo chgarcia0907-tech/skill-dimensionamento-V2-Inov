@@ -54,6 +54,15 @@ F3_DEPENDENCIA_DADOS = (1, 1.5, 2)
 F3_OFFLINE = {"nao": (0, 0, 0), "local": (0, 0, 0), "sync": (1.5, 2, 3)}
 F3_VOLUME_ALTO = (1, 1.5, 2)
 
+# Fator Claude Code (17/10/2026): dupla com ~20 h/semana somadas, codando com Claude Code.
+# Multiplica só o que é código escrito pelo time: o núcleo do F3 e o F2. Imersão, extras
+# do F3 (integrações, offline com sincronização, dados, volume), testes com o cliente,
+# deploy e lojas dependem do cliente, de terceiros ou de revisão humana e ficam iguais.
+# Medido no Projeto B: motor das 3 faixas + tela completa em ~1 semana (régua: 5,1 no central).
+# Projetos antigos da calibração rodam com "claude_code": false.
+CLAUDE_CODE_F3_NUCLEO = (0.4, 0.5, 0.65)
+CLAUDE_CODE_F2 = (0.5, 0.65, 0.8)
+
 F4_BASE = (1, 1.5, 2)
 F4_RN_CRITICA = (0.5, 0.5, 1)
 F4_POUCA_DISPONIBILIDADE = (0.5, 0.5, 1)
@@ -110,6 +119,9 @@ def calcular(e):
     if multi == "isolado":
         alertas.append("Multitenancy com isolamento de dados: complexidade média/alta.")
     f2 = soma(F2_NIVEIS[niveis], F2_MULTITENANCY[multi])
+    claude = e.get("claude_code", True)
+    if claude:
+        f2 = tuple(v * k for v, k in zip(f2, CLAUDE_CODE_F2))
     if f2[2] > F2_TETO:
         alertas.append("Acesso/infra bateu no teto de 4 semanas: revisar com a área de projetos.")
     f2 = limita(f2, F2_TETO)
@@ -123,6 +135,8 @@ def calcular(e):
         vezes(F3_FEATURE_ATIPICA, e.get("features_atipicas", 0)),
     )
     nucleo = vezes(nucleo, fator)
+    if claude:
+        nucleo = tuple(v * k for v, k in zip(nucleo, CLAUDE_CODE_F3_NUCLEO))
     if e.get("features_atipicas", 0):
         alertas.append("Feature atípica: validar se é possível e se existe benchmark (pode exigir prova de conceito).")
 
@@ -192,6 +206,7 @@ def calcular(e):
     return {
         "fases": fases,
         "fator_formato": fator,
+        "claude_code": claude,
         "otimista": otimista,
         "provavel": provavel,
         "conservador": conservador,
@@ -223,7 +238,9 @@ def imprimir(e, r):
     print("|---|---|---|---|")
     for nome, (a, b, c) in r["fases"].items():
         print(f"| {nome} | {fmt(a)} | {fmt(b)} | {fmt(c)} |")
-    print(f"\nFator de formato no desenvolvimento: x{fmt(r['fator_formato'])}\n")
+    cc = (" · Claude Code: núcleo do F3 x0,4/0,5/0,65 e F2 x0,5/0,65/0,8" if r["claude_code"]
+          else " · sem fator Claude Code")
+    print(f"\nFator de formato no desenvolvimento: x{fmt(r['fator_formato'])}{cc}\n")
     print("| Cenário | Semanas | Sprints (2 sem) |")
     print("|---|---|---|")
     rotulos = {

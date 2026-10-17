@@ -15,6 +15,8 @@ Cada projeto tem uma ficha `.md` (o que era, como a régua classificou, compara�
 
 Os projetos reais desta tabela são **anteriores ao formato de PRD**: os fluxos foram contados a partir das tasks do Notion, e não pela regra "1 módulo = 1 fluxo". Quando um projeto com PRD terminar, ele vira o primeiro precedente para conferir essa regra.
 
+**Fator Claude Code:** as faixas da tabela são **sem** o fator (os projetos foram feitos antes, ou como estavam na ficha), e os `.json` deles têm `"claude_code": false`. Projeto novo usa o fator (padrão do script). Só a proposta modelo da PetAgenda já está com o fator.
+
 ## Como achar um precedente
 
 1. Mesmo **formato** primeiro (app com lojas, PWA, web).

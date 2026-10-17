@@ -40,3 +40,9 @@ Plano do hand-off: imersão (sem. 1–2), motor de cálculo em três etapas (3�
 1. **A ficha de qualificação subestimou o escopo** (variáveis clínicas e unidades que só apareceram depois). Por isso o "fluxo com RN específica" exige o documento da regra antes da proposta.
 2. **A stack (Expo) foi sugestão comercial, sem validação do time** → regra "o CN não promete stack".
 3. Testes, deploy e lojas de um app de saúde em 4 semanas está no limite inferior da régua (F4 + F5 + F6 no mínimo = 5).
+
+## Ritmo com Claude Code (17/10/2026)
+
+O projeto está sendo codado com Claude Code por uma dupla com cerca de 20 horas por semana somadas. Pelo git, o código começou em 30/09/2026 e, até 06/10, já tinha o motor das 3 faixas, a composição do soro, a tela completa com o modal de alerta e o hook ligando a tela ao motor. É quase todo o F3, que a régua antiga estimava em 5,1 semanas no central.
+
+Foi esse dado que criou o **fator Claude Code** (`regua-dimensionamento.md`). Com ele, a faixa do Projeto B fica em **8 / 11 / 18**, com recomendação de venda de **12 semanas**, igual ao vendido. O `projeto-b.json` continua com `claude_code: false` para guardar a calibração antiga; para rodar com o fator, trocar para `true`.
