@@ -115,9 +115,10 @@ def fluxo_processo():
     """Caixas do processo: reuniões → PRD → dimensionamento → área de projetos → proposta."""
     etapas = [
         ("Reuniões", "com o cliente", GREY_BG, TXT),
-        ("PRD", "documento-requisitos-ntec", BLUE_BG, BLUE),
+        ("PRD", "skill da PRD", BLUE_BG, BLUE),
         ("Dimensionamento", "esta skill", GREEN_BG, GREEN),
-        ("Área de projetos", "revisa", YEL_BG, YEL),
+        ("Proposta Técnica", "PDF no template", BLUE_BG, BLUE),
+        ("Área de projetos", "valida", YEL_BG, YEL),
         ("Proposta", "prazo vendido", GREY_BG, TXT),
     ]
     W, H, gap = 480, 54, 14
@@ -126,8 +127,8 @@ def fluxo_processo():
     for i, (titulo, sub, bg, fg) in enumerate(etapas):
         x = i * (bw + gap)
         d.add(Rect(x, 8, bw, 40, rx=5, ry=5, fillColor=bg, strokeColor=fg, strokeWidth=0.8))
-        d.add(String(x + bw / 2, 30, titulo, fontName="UI-SB", fontSize=8.5, fillColor=fg, textAnchor="middle"))
-        d.add(String(x + bw / 2, 17, sub, fontName="UI", fontSize=6.3, fillColor=MUTED, textAnchor="middle"))
+        d.add(String(x + bw / 2, 30, titulo, fontName="UI-SB", fontSize=7.2, fillColor=fg, textAnchor="middle"))
+        d.add(String(x + bw / 2, 17, sub, fontName="UI", fontSize=5.6, fillColor=MUTED, textAnchor="middle"))
         if i < len(etapas) - 1:
             ax = x + bw + 2
             d.add(Line(ax, 28, ax + gap - 4, 28, strokeColor=MUTED, strokeWidth=1))
@@ -176,7 +177,7 @@ def rodape(canvas, doc):
     canvas.saveState()
     canvas.setFont("UI", 7.5)
     canvas.setFillColor(MUTED)
-    canvas.drawString(20 * mm, 12 * mm, "Dimensionamento NTec — Skill · v2 · 16/10/2026")
+    canvas.drawString(20 * mm, 12 * mm, "Dimensionamento NTec — Skill · v4 · 17/10/2026")
     canvas.drawRightString(190 * mm, 12 * mm, str(doc.page))
     canvas.restoreState()
 
@@ -194,9 +195,9 @@ s.append(Spacer(1, 10))
 toc = ["1. O que é a skill", "2. Onde ela entra no processo", "3. Como acessar e usar",
        "4. Arquitetura (o que tem dentro)", "5. Procedimento", "6. Da PRD para a régua",
        "7. Régua de dimensionamento (F1 a F6)", 
-       "8. Faixa final e cortes", "9. Perguntas para o CN: Fathom e lacunas", "10. Calibração com projetos reais",
-       "11. Exemplo: PetAgenda a partir da PRD", "12. Linha do tempo de exemplo (Projeto A)",
-       "13. Parar e sinalizar", "14. Histórico, datas e pendências"]
+       "8. Faixa final e cortes", "9. O entregável: a Proposta Técnica", "10. Perguntas para o CN: Fathom e lacunas",
+       "11. Calibração com projetos reais", "12. Exemplo: PetAgenda a partir da PRD",
+       "13. Linha do tempo de exemplo (Projeto A)", "14. Parar e sinalizar", "15. Histórico, datas e pendências"]
 for t in toc:
     s.append(P(t, "toc"))
 
@@ -211,7 +212,8 @@ s.append(bullets([
     "<b>Entrega três números:</b> otimista (piso), provável (recomendado) e conservador (teto de risco), em semanas e sprints de 2 semanas.",
     "<b>Pergunta em linguagem de negócio</b> o que falta, e traduz a resposta para os fatores técnicos.",
     "<b>Mostra o que cortar</b>: cortes de escopo, com quantas semanas cada um economiza.",
-    "<b>Gera um bloco pronto</b> para colar na seção 7 (Baseline) do formulário. A régua não usa buffer percentual.",
+    "<b>Entrega a Proposta Técnica em PDF</b>, no template oficial do NTec (Comercial → Validação de Projeto): as 14 seções, o cronograma sprint a sprint, o checklist e a memória do dimensionamento (seção 9).",
+    "<b>Considera Claude Code:</b> os pesos supõem uma dupla com cerca de 20 horas por semana somadas, codando com Claude Code (seção 7). A régua não usa buffer percentual.",
 ]))
 
 # 2
@@ -244,13 +246,15 @@ s.append(P("4. Arquitetura (o que tem dentro)", "h1"))
 s.append(P("Igual à skill do NCiv: um arquivo curto que coordena, e arquivos de conhecimento lidos só quando precisa."))
 s.append(table([
     ["Arquivo", "O que faz", "Quando é lido"],
-    ["SKILL.md", "Orquestrador: procedimento, regras gerais, quando parar e o formato fixo da resposta", "Sempre"],
+    ["SKILL.md", "Orquestrador: procedimento, regras gerais, quando parar, o entregável e a resposta curta no chat", "Sempre"],
     ["leitura-prd.md", "Onde está cada fator na PRD, tradução dos fatores de complexidade dela e o que perguntar ao CN", "Sempre primeiro, quando há PRD"],
     ["insumos-e-perguntas.md", "Caminho sem PRD: como ler formulário, ficha ou transcrição; vocabulário negócio → técnico", "Quando não há PRD"],
     ["regua-dimensionamento.md", "Pesos de cada fase (F1 a F6), faixa final, calibração e fontes", "Sempre"],
     ["regra-fronteira-e-faixa.md", "Desempate quando um fator cabe em duas linhas; tabela de cortes", "Em caso de dúvida e para O que cortar"],
-    ["scripts/calcular_faixa.py", "Faz a conta (fonte da verdade dos pesos), para o número não sair de cabeça", "Sempre"],
-    ["exemplos/", "Precedentes reais anonimizados (Projetos A a D), Projetos E e F pendentes e o caso fictício PetAgenda (sem PRD e via PRD)", "Para comparar com projeto parecido"],
+    ["scripts/calcular_faixa.py", "Faz a conta (fonte da verdade dos pesos, incluindo o fator Claude Code), para o número não sair de cabeça", "Sempre"],
+    ["proposta-tecnica.md", "Como preencher cada uma das 14 seções da Proposta Técnica a partir da PRD e da conta", "Sempre, no fim"],
+    ["scripts/gerar_proposta.py", "Gera o PDF \"[Proposta Técnica] {projeto}\", recalcula a faixa e confere o checklist do template", "Sempre, no fim"],
+    ["exemplos/", "Precedentes reais anonimizados (Projetos A a D), Projetos E e F pendentes e o caso fictício PetAgenda (sem PRD, via PRD e o JSON modelo da proposta)", "Para comparar com projeto parecido"],
 ], [45, 90, 35]))
 
 # 5
@@ -260,7 +264,9 @@ s.append(ListFlowable([ListItem(P(t), leftIndent=14) for t in [
     "<b>Preencher os fatores</b> da régua. Com PRD, a rodada de perguntas ao CN cobre só o que a PRD não responde (até 5 por rodada, as que mais mexem no prazo primeiro). Sem resposta, usar o valor mais pesado e registrar em Suposições.",
     "<b>Rodar o script</b> com os fatores e obter as fases em mínimo, central e máximo.",
     "<b>Comparar com o precedente</b> mais parecido. Diferença acima de 30% precisa de explicação.",
-    "<b>Aplicar a regra de fronteira</b> se precisar, e responder no formato fixo: status, prazo em uma frase, faixa, resumo, pontos de atenção, perguntas, detalhamento, precedente, o que cortar, bloco do formulário e observações.",
+    "<b>Aplicar a regra de fronteira</b> se precisar.",
+    "<b>Montar a Proposta Técnica</b> (um JSON com as 14 seções e a memória do dimensionamento) e gerar o PDF com <font name='Courier'>gerar_proposta.py</font>.",
+    "<b>Responder no chat, curto:</b> status, prazo em uma frase, faixa, caminho do PDF, lacunas para o CN, itens pendentes do checklist e os 2 ou 3 pontos de atenção mais graves.",
 ]], bulletType="1", leftIndent=14, bulletFontName="UI", bulletFontSize=9.5))
 
 # 6
@@ -309,7 +315,7 @@ s.append(table([
 # 7
 s.append(P("7. Régua de dimensionamento (F1 a F6)", "h1"))
 s.append(P("Cada linha tem <b>mínimo / central / máximo</b> em semanas. Os pesos já consideram o time típico do NTec "
-           "(empresa júnior, 3 a 4 h/dia, sprints de 2 semanas, template Next.js + Expo + MongoDB + Better Auth). "
+           "(uma dupla com cerca de 20 horas por semana somadas, codando com Claude Code, sprints de 2 semanas, template Next.js + Expo + MongoDB + Better Auth). "
            "Login com Google, e-mail e upload para S3 já vêm no template e não somam prazo."))
 s.append(P("F1 — Imersão, refinamento, setup e acessos (teto 4)", "h2"))
 s.append(table([
@@ -349,6 +355,22 @@ s.append(table([
     ["Offline com sincronização (offline só local = 0)", "+1,5", "+2", "+3"],
     ["Volume de uso alto (milhares simultâneos)", "+1", "+1,5", "+2"],
 ], [110, 20, 20, 20]))
+s.append(P("Fator Claude Code (desde 17/10/2026)", "h2"))
+s.append(P("Todos os projetos do NTec agora são codados com Claude Code. O ganho aparece no código que o time escreve, e não no "
+           "que depende do cliente, de terceiros ou de revisão externa. Por isso o fator multiplica só duas partes:"))
+s.append(table([
+    ["O que muda", "Mín", "Central", "Máx"],
+    ["Núcleo do F3 (fluxos e features, já com o fator de formato)", "x0,6", "x0,75", "x0,9"],
+    ["F2 (níveis de acesso, multitenancy, login)", "x0,7", "x0,85", "x1"],
+    ["F1, extras do F3 (integrações, offline, dados, volume), F4, F5 e F6", "x1", "x1", "x1"],
+], [110, 20, 20, 20]))
+s.append(Spacer(1, 4))
+s.append(callout("<b>De onde vem o x0,75:</b> meio-termo entre dois projetos. No Projeto B, motor de cálculo e tela completa saíram "
+                 "em ~1 semana de código, contra 5,1 semanas da régua antiga. Num app + painel de 8 fluxos com offline, a área de "
+                 "projetos espera ~12 sprints. Um x0,5 acertava o pequeno e errava o grande (20 semanas). O x0,75 acerta os dois: "
+                 "o ganho da ferramenta é parcialmente comido pelas ~20 h/semana da dupla e pela coordenação de projetos maiores. "
+                 "Ainda falta conferir com o realizado final. Projetos antigos rodam com <font name='Courier'>claude_code: false</font>.",
+                 YEL_BG, YEL))
 s.append(P("F4, F5 e F6 — Testes, deploy e lojas", "h2"))
 s.append(table([
     ["Fase / fator", "Mín", "Central", "Máx"],
@@ -388,7 +410,31 @@ s.append(P("Na dúvida entre duas linhas da régua, a skill vai sempre para a ma
            "explicando o ajuste (máximo de 3 ajustes por projeto). O histórico do NTec é vender para menos.", "small"))
 
 # 9
-s.append(P("9. Perguntas para o CN: Fathom primeiro, lacunas depois", "h1"))
+s.append(P("9. O entregável: a Proposta Técnica", "h1"))
+s.append(P("O dimensionamento final sai no <b>template \"Proposta Técnica\" do NTec</b> (Comercial → Validação de Projeto), "
+           "o documento que o comercial manda para a validação técnica. O PDF \"[Proposta Técnica] {projeto}\" é gerado pelo "
+           "<font name='Courier'>scripts/gerar_proposta.py</font>, que recalcula a faixa a partir dos fatores, para a proposta "
+           "nunca divergir da régua."))
+s.append(table([
+    ["Parte da proposta", "O que leva"],
+    ["Caixa de status (topo)", "Status, prazo recomendado e a faixa otimista / provável / conservador"],
+    ["1 a 3. Problema, visão geral, entidades", "Tirados da Visão Geral e dos módulos da PRD"],
+    ["4. Perfis · 6. Regras · 8. Segurança (obrigatórias)", "PRD 2.1, as RNs e itens Hardcoded, PRD 3.4. O que a PRD não traz sai como \"não previsto no PRD\""],
+    ["5. Fluxo · 7. Arquitetura · 9. Módulos críticos", "Jornada etapa por etapa (com as decisões futuras marcadas), componentes, integrações e automações"],
+    ["10. Roadmap (obrigatória)", "Tudo que está na conta é Prioritário; A confirmar e Futuro nunca entram no cronograma"],
+    ["11. Pontos em aberto (obrigatória)", "Lacunas do Fathom e da PRD e dependências externas. Nunca vazio"],
+    ["12. Stack", "Template NTec, sempre como premissa a validar na Sprint de Refino"],
+    ["13. Cronograma sprint a sprint", "As fases F1 a F6 (centrais) em sprints de 2 semanas, somando a recomendação; sprint que depende da seção 11 vem marcada"],
+    ["14. Protótipo × regras (obrigatória)", "Só com protótipo recebido; sem ele, a seção sai com aviso para o comercial"],
+    ["Checklist final", "O script marca OK ou PENDENTE em cada item do template"],
+    ["Anexo — Memória do dimensionamento", "Faixa, F1 a F6 com critério, alertas, pontos de atenção, lacunas, precedente, O que cortar, suposições, fronteira e imersão"],
+], [60, 110]))
+s.append(Spacer(1, 4))
+s.append(P("O antigo bloco para colar na seção 7 do formulário Dimensionamento Tec saiu: o template de Proposta Técnica o substitui. "
+           "No chat fica só o resumo curto.", "small"))
+
+# 10
+s.append(P("10. Perguntas para o CN: Fathom primeiro, lacunas depois", "h1"))
 s.append(P("Antes de perguntar qualquer coisa ao CN, a skill procura a resposta na <b>transcrição do Fathom</b> (ou no resumo) "
            "das reuniões com o cliente. Só conta o que foi <b>dito explicitamente</b>, e a resposta sai com a reunião e o trecho: "
            "<i>(origem: Fathom · 12/03 — \"a Carla testa toda sexta\")</i>. Dedução, silêncio ou fala vaga (\"vamos ver\") não contam."))
@@ -401,8 +447,8 @@ s.append(table([
 ], [55, 115]))
 s.append(Spacer(1, 4))
 s.append(callout("<b>Não achou no Fathom = lacuna.</b> A skill dimensiona mesmo assim, com o valor mais pesado, e devolve ao CN "
-                 "a seção <b>5. Lacunas para o CN</b>: o fator, o que foi procurado, a pergunta pronta para o cliente e o valor "
-                 "provisório usado na conta. Lacuna que mexe na faixa (disponibilidade, stack ou benchmark) deixa o status em "
+                 "as <b>Lacunas para o CN</b> (no chat, na seção 11 e no anexo da proposta): o fator, o que foi procurado, a pergunta "
+                 "pronta para o cliente e o valor provisório usado na conta. Lacuna que mexe na faixa (disponibilidade, stack ou benchmark) deixa o status em "
                  "<b>Revisar</b> até o CN responder. Lacuna só na data de início não muda a faixa.", YEL_BG, YEL))
 s.append(P("Sem PRD, a skill usa a lista inteira abaixo, também procurando cada resposta na transcrição antes de perguntar:"))
 s.append(table([
@@ -417,10 +463,11 @@ s.append(table([
     ["Disponibilidade", "Quem vai testar e aprovar as entregas? Tem umas 2 horas por semana para isso?"],
 ], [32, 138]))
 
-# 10
-s.append(P("10. Calibração com projetos reais", "h1"))
+# 11
+s.append(P("11. Calibração com projetos reais", "h1"))
 s.append(P("A régua foi rodada sobre os projetos do NTec com dados levantados no Notion (estado em 16/10/2026). "
-           "Os projetos aparecem anonimizados (Projeto A a F). Faixa = otimista / provável / conservador, em semanas."))
+           "Os projetos aparecem anonimizados (Projeto A a F). Faixa = otimista / provável / conservador, em semanas, "
+           "<b>sem</b> o fator Claude Code (os projetos foram vendidos antes dele)."))
 s.append(table([
     ["Projeto", "Formato", "Início → fim previsto", "Vendido", "Faixa da régua", "Situação", "Leitura"],
     ["Projeto A", "PWA", "20/07/2026 → 19/10/2026", "12 (+1 off)", "9 / <b>12</b> / 16", "Finalizando, no prazo", P(OK, "cell")],
@@ -434,7 +481,7 @@ s.append(Spacer(1, 6))
 s.append(bullets([
     "<b>Projeto A e Projeto D:</b> a recomendação da régua bate com o vendido, e os dois estão no prazo.",
     "<b>Projeto C:</b> vendido abaixo do piso (11 contra 13) e atrasou. A régua ficou ~3 semanas acima do real, porque o time juntou setup e login em 2 semanas. É um viés conhecido, não corrigido com um único projeto.",
-    "<b>Projeto B:</b> vendido entre o piso e o provável. O hand-off já registrava o prazo como apertado. Resultado a confirmar em 23/11/2026.",
+    "<b>Projeto B:</b> sem o fator, vendido entre o piso e o provável. É codado com Claude Code: motor e tela saíram em ~1 semana de código. <b>Com o fator, a régua dá 9 / 12 / 20 e a recomendação (12) bate com o vendido.</b> Resultado a confirmar em 23/11/2026.",
     "<b>Projetos E e F:</b> sem ficha técnica. Por isso, todo provável acima de <b>26 semanas</b> sai com alerta de \"fora da faixa calibrada\".",
 ]))
 s.append(Spacer(1, 4))
@@ -442,8 +489,8 @@ s.append(callout("<b>Todos esses projetos são anteriores à PRD.</b> Os fluxos 
                  "regra \"1 módulo = 1 fluxo\". As regras de leitura da PRD ainda não foram conferidas contra um projeto real: o "
                  "primeiro projeto com PRD que terminar vira o precedente para isso.", YEL_BG, YEL))
 
-# 11
-s.append(P("11. Exemplo: PetAgenda a partir da PRD", "h1"))
+# 12
+s.append(P("12. Exemplo: PetAgenda a partir da PRD", "h1"))
 s.append(P("Caso fictício: app para tutores de pets (lojas) e painel web para uma rede de 3 clínicas. A PRD traz 4 perfis, "
            "os módulos 2.2 a 2.5, pagamento pelo Mercado Pago e lembrete de vacina por push, disparado na data da próxima dose."))
 s.append(table([
@@ -462,19 +509,20 @@ s.append(table([
     ["Desenvolvimento", "4 fluxos comuns", "3 comuns + 1 com RN (lembrete agendado)"],
     ["Faixa (otim. / prov. / cons.)", "14 / 19 / 25", "15 / 20 / 28"],
     ["Recomendação de venda", "20 semanas", "20 semanas"],
+    ["Com o fator Claude Code", "—", "12 / 18 / 26 (vender 18)"],
 ], [50, 60, 60]))
 s.append(P("O número quase não mudou, mas agora cada fator aponta para uma seção do anexo de contrato. A PRD também revelou o "
            "lembrete por rotina agendada, que a call não deixava claro.", "small"))
 
-# 12
-s.append(P("12. Linha do tempo de exemplo (Projeto A)", "h1"))
+# 13
+s.append(P("13. Linha do tempo de exemplo (Projeto A)", "h1"))
 s.append(P("As fases no valor central da régua, encaixadas no calendário real do projeto: início em 20/07/2026, 12 semanas de trabalho "
-           "+ 1 semana off entre a S4 e a S5, fim previsto em 19/10/2026."))
+           "+ 1 semana off entre a S4 e a S5, fim previsto em 19/10/2026. Régua sem o fator Claude Code."))
 s.append(gantt())
 s.append(P("Datas no topo = segunda-feira de cada sprint. A barra de deploy inclui o arredondamento de 11,5 para 12 semanas.", "small"))
 
-# 13
-s.append(P("13. Parar e sinalizar", "h1"))
+# 14
+s.append(P("14. Parar e sinalizar", "h1"))
 s.append(P("A skill não decide sozinha nestes casos. Ela marca e devolve para a área de projetos:"))
 s.append(bullets([
     f"{STOP} Multitenancy com instâncias e regras isoladas por cliente (\"beira o inviável\").",
@@ -489,8 +537,8 @@ s.append(bullets([
     f"{REV} Teto de fase atingido.",
 ]))
 
-# 14
-s.append(P("14. Histórico, datas e pendências", "h1"))
+# 15
+s.append(P("15. Histórico, datas e pendências", "h1"))
 s.append(table([
     ["Data", "O que aconteceu"],
     ["13/04/2026", "Início do Projeto C (primeiro projeto da base de calibração)"],
@@ -501,6 +549,8 @@ s.append(table([
     ["16/10/2026", "v2: a PRD da skill documento-requisitos-ntec vira a entrada padrão; projetos anonimizados; publicação no GitHub"],
     ["17/10/2026", "v3: integrações com peso fixo, sem perguntar ao CN; buffer de risco e negociação de prazo removidos"],
     ["17/10/2026", "O que a PRD não responde vem da transcrição do Fathom; o que faltar volta ao CN como lacuna"],
+    ["17/10/2026", "v4: o entregável passa a ser a Proposta Técnica no template do NTec (PDF gerado pela skill)"],
+    ["17/10/2026", "Fator Claude Code na régua: núcleo do F3 x0,75 e F2 x0,85 (meio-termo entre o Projeto B e um projeto de ~12 sprints)"],
     ["19/10/2026", "Fim previsto do Projeto A — confirmar se a calibração continua valendo"],
     ["23/11/2026", "Fim previsto do Projeto B e do Projeto D — atualizar a calibração com o realizado"],
 ], [28, 142]))
@@ -512,6 +562,7 @@ s.append(bullets([
     "Preencher as retrospectivas: hoje quase todas estão vazias, e sem elas não se sabe a causa dos atrasos.",
     "Avisar o autor da skill da PRD para trocar <i>validacao-tecnica-ntec</i> por <i>dimensionamento-ntec</i>.",
     "Conferir as regras de leitura da PRD (\"1 módulo = 1 fluxo\" e \"rotina agendada → RN específica\") no primeiro projeto com PRD que terminar.",
+    "Conferir o fator Claude Code com o realizado do Projeto B (23/11/2026) e do primeiro projeto com login que terminar (o F2 com fator ainda não foi medido).",
 ]))
 s.append(Spacer(1, 6))
 s.append(callout("<b>Manutenção:</b> pesos mudam no <font name='Courier'>scripts/calcular_faixa.py</font> <b>e</b> na "

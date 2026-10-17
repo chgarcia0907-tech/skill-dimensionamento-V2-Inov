@@ -12,7 +12,7 @@ Skill do Claude que ajuda coordenadores de negócios (CNs) do Núcleo de Tecnolo
 skill-dimensionamento-ntec/
 ├── README.md                       ← este arquivo
 ├── docs/
-│   ├── Dimensionamento-NTec-Skill.pdf   ← PDF explicativo (10 páginas, visual do Dimensionamento Tec)
+│   ├── Dimensionamento-NTec-Skill.pdf   ← PDF explicativo (v4, 11 páginas: Proposta Técnica e fator Claude Code)
 │   └── gerar_pdf.py                     ← gera o PDF (reportlab + fontes Segoe UI do Windows)
 └── .claude/skills/dimensionamento-ntec/
     ├── SKILL.md                    ← orquestrador: procedimento, guardrails, entregável e resposta no chat
@@ -59,7 +59,8 @@ skill-dimensionamento-ntec/
 Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para continuar em outra conversa sem precisar do histórico. **Comece por "Onde paramos".**
 
 ### Onde paramos (17/10/2026)
-- **Implementado:** o dimensionamento final sai no **template "Proposta Técnica" do NTec** (14 seções + checklist + anexo com a memória do dimensionamento), gerado por `scripts/gerar_proposta.py`. O bloco para colar no formulário Dimensionamento Tec saiu. Guia em `proposta-tecnica.md`. O PDF explicativo em `docs/` ainda descreve a resposta antiga.
+- **Implementado:** o dimensionamento final sai no **template "Proposta Técnica" do NTec** (14 seções + checklist + anexo com a memória do dimensionamento), gerado por `scripts/gerar_proposta.py`. O bloco para colar no formulário Dimensionamento Tec saiu. Guia em `proposta-tecnica.md`. O PDF explicativo em `docs/` (v4) já mostra a Proposta Técnica e o fator Claude Code.
+- **Implementado:** **fator Claude Code** na régua (todos os projetos do NTec agora são codados com Claude Code por uma dupla com ~20 h/semana somadas): núcleo do F3 x0,6 / 0,75 / 0,9 e F2 x0,7 / 0,85 / 1; imersão, extras do F3, testes, deploy e lojas ficam iguais. É um meio-termo: um x0,5 acertava o Projeto B (vender 12) mas dava 20 semanas para um app + painel de 8 fluxos com offline que a área de projetos espera em ~12 sprints. Projetos antigos rodam com `claude_code: false`.
 - **Implementado:** integrações com **peso fixo, sem perguntar ao CN** (ver [Integrações: peso fixo](#integrações-peso-fixo-sem-perguntar-ao-cn-implementado)).
 - **Implementado:** o que a PRD não responde é tirado da **transcrição do Fathom**; o que não estiver lá volta ao CN como **lacuna** (`leitura-prd.md`, Passo 4).
 - **Removido (17/10/2026):** o buffer de risco percentual (desprezível; provável = soma dos centrais, conservador = soma dos máximos) e a negociação "quando o cliente pede menos prazo". A seção "O que cortar" continua. Só o Projeto B mudou na calibração (11 / 14 / 21).
@@ -78,6 +79,7 @@ Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para co
 | 17/10/2026 | Buffer de risco e negociação de prazo removidos |
 | 17/10/2026 | O que a PRD não responde vem do Fathom; o que faltar volta ao CN como lacuna |
 | 17/10/2026 | Entregável passa a ser a Proposta Técnica no template do NTec (PDF) |
+| 17/10/2026 | Fator Claude Code (primeiro x0,5, depois o meio-termo x0,75 no núcleo do F3); PDF explicativo v4 |
 
 ### O que foi pedido (origem)
 Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em conta que somos uma **empresa júnior**, use os dados reais dos projetos e chegue a uma **faixa de semanas**. O uso deve ser **prático para CNs**, que em geral são fracos tecnicamente e mandam para a equipe de projetos prazos sem sentido.
@@ -91,7 +93,7 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 ### Decisões tomadas
 **Régua (v1)**
 - **Modelo:** fases F1–F6 do formulário, cada fator com mínimo / central / máximo. Faixa: otimista = soma dos mínimos; provável = soma dos centrais; conservador = soma dos máximos. A venda recomendada é o provável arredondado para sprints inteiras (2 semanas), mais as semanas off.
-- **Os pesos já embutem o "time júnior"** (3 a 4 h/dia, template NTec). **Sem buffer percentual** (removido em 17/10/2026 por ser desprezível): o risco fica no intervalo mín/central/máx.
+- **Os pesos já embutem o time do NTec:** uma dupla com ~20 h/semana somadas, codando com Claude Code, e o template NTec (fator Claude Code no núcleo do F3 e no F2; ver `regua-dimensionamento.md`). **Sem buffer percentual** (removido em 17/10/2026 por ser desprezível): o risco fica no intervalo mín/central/máx.
 - **Fronteira: sempre para o lado mais pesado.** O histórico do NTec é vender para menos (Projeto C).
 - **Atípico ≠ regra de negócio específica**, para não contar o mesmo motivo duas vezes (erro achado na calibração do Projeto C).
 - **A resposta sempre traz a seção "O que cortar"** (cortes de escopo com a economia em semanas). A negociação "quando o cliente pede menos prazo" foi removida em 17/10/2026.
@@ -144,9 +146,9 @@ Todos são **anteriores à PRD**: as regras de leitura da PRD ainda não foram c
 5. **Atualizar a calibração** quando o Projeto A (19/10/2026) e os Projetos B e D (23/11/2026) terminarem. Passo a passo em `exemplos/README.md`; atualizar também a ficha original em `privado/`.
 6. **Conferir as regras de leitura da PRD** no primeiro projeto com PRD que terminar (principalmente "rotina agendada → RN específica").
 7. Testar a skill com um CN num lead real.
-8. **Atualizar o PDF explicativo** (`docs/`) para mostrar a Proposta Técnica como entregável.
+8. **Conferir o fator Claude Code** com o realizado do Projeto B (23/11/2026) e do primeiro projeto com login que terminar (o F2 com fator não foi medido).
 
-Feito: PDF v2 com a PRD; publicação no GitHub com projetos anonimizados; integrações com peso fixo e PDF v3.
+Feito: PDF v2 com a PRD; publicação no GitHub com projetos anonimizados; integrações com peso fixo e PDF v3; Proposta Técnica como entregável, fator Claude Code e PDF v4.
 
 ### Onde está cada coisa
 | O quê | Caminho |
