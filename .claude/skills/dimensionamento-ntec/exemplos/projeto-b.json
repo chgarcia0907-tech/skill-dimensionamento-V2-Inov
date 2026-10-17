@@ -1,0 +1,21 @@
+{
+  "projeto": "Projeto B (app clínico offline)",
+  "demanda_pouco_detalhada": false,
+  "atipico": false,
+  "stack_fora_template": false,
+  "niveis_acesso": "nenhum",
+  "multitenancy": "nao",
+  "fluxos_comuns": 1,
+  "fluxos_rn_especifica": 1,
+  "features_atipicas": 0,
+  "formatos": ["app"],
+  "integracoes": [],
+  "dependencia_dados": false,
+  "offline": "local",
+  "volume_alto": false,
+  "rn_critica": true,
+  "cliente_pouca_disponibilidade": true,
+  "deploy_infra_cliente": false,
+  "lojas": "sensivel",
+  "riscos": {"time_novato": true, "terceiros": false, "troca_membros": 0}
+}

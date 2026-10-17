@@ -1,0 +1,218 @@
+# Régua de Dimensionamento — NTec
+
+Pesos usados para transformar o que o coordenador de negócios (CN) levantou em uma faixa de semanas. A estrutura de fases vem do **Baseline de Projeto** do formulário *Dimensionamento Tec* (seção 7). Os fatores vêm do **Perfil da demanda** (seção 6). Os pesos foram calibrados contra os projetos reais do NTec (ver `exemplos/`).
+
+**Fonte da verdade dos números:** `scripts/calcular_faixa.py`. Esta tabela e o script precisam bater. Se mudar um, mude o outro e registre no fim deste arquivo.
+
+**Índice:** Regras de uso · Regras transversais · F1 a F6 · Buffer de risco · Faixa final · Parar e sinalizar · Calibração · Lacunas · Registro das fontes
+
+---
+
+## Regras de uso (ler antes de dimensionar)
+
+1. **Não inventar fator.** Se o CN não sabe responder, a skill pergunta (ver `insumos-e-perguntas.md`). Se mesmo assim não houver resposta, usar o valor **mais pesado** plausível e registrar em *Suposições*. Uma empresa júnior erra muito mais para menos do que para mais.
+2. **Toda linha tem três valores: mínimo / central / máximo.** O mínimo é o cenário "tudo dá certo", o central é o que costuma acontecer no NTec e o máximo é "os riscos aparecem".
+3. **Somar fase a fase, na ordem F1 a F6.** As fases são sequenciais na régua, mesmo quando na prática se sobrepõem um pouco. A sobreposição é a folga natural do time.
+4. **Rodar o script para fechar a conta.** Não somar de cabeça.
+5. **Casos de fronteira** (o projeto encaixa em duas linhas): `regra-fronteira-e-faixa.md`.
+
+---
+
+## Regras transversais
+
+### Os pesos já assumem o time típico do NTec
+Membros de empresa júnior com 3 a 4 h/dia, sprints de 2 semanas e o template do monorepo NTec (Next.js + Expo + MongoDB/Prisma + Better Auth). **Não aplicar buffer só "porque o time é júnior"**: isso já está nos pesos. O buffer é para risco *a mais* (seção Buffer).
+
+### O que o template já entrega (não soma prazo)
+Login por e-mail e senha, recuperação de senha, login com Google, envio de e-mail (Resend), upload de arquivo para AWS S3, estrutura de API e painel admin básico. Quando uma "integração" é uma dessas, ela entra como `template` (0 semanas).
+
+### Formato conta por código separado, não por tela
+Um painel admin dentro do mesmo app web **não** é um formato a mais. Um app nativo + um painel web **são** dois formatos (dois códigos, duas publicações).
+
+### Semanas off e garantia ficam fora da régua
+- **Semanas off** (férias, provas, recesso de fim de ano, julho) entram por calendário, somadas depois da faixa. No histórico, de 1 a 3 por projeto.
+- **Garantia de 30 dias** é gratuita e não entra no prazo (vale para o que está no documento de requisitos).
+
+---
+
+## F1 — Imersão, refinamento, setup e acessos
+**Baseline do formulário:** 1 a 4 semanas. **Teto:** 4.
+
+| Fator | Mín | Central | Máx |
+|---|---|---|---|
+| Base (sempre) | 1,5 | 2 | 2,5 |
+| Demanda pouco detalhada (sem documento de requisitos nem protótipo) | +0,5 | +1 | +1 |
+| Setor ou produto atípico (sem benchmark parecido) | +0,5 | +0,5 | +1 |
+| Stack fora do template NTec (cliente exige outra tecnologia) | +1 | +1,5 | +2 |
+
+- **Atípico ≠ regra de negócio específica.** Uma fórmula científica ou clínica é *fluxo com RN específica* (F3), não "setor atípico". Não marcar os dois pelo mesmo motivo (erro encontrado na calibração do Projeto C).
+- **O CN não promete stack.** Se o cliente ouviu "vamos fazer em X", tratar como *premissa a validar* (aconteceu no Projeto B: Expo foi sugestão comercial, sem validação do time).
+
+## F2 — Infra, níveis de acesso, cadastro e login
+**Baseline do formulário:** 1 a 4 semanas. **Teto:** 4.
+
+| Níveis de acesso (formulário, seção 6) | Mín | Central | Máx |
+|---|---|---|---|
+| Nenhum (sem login, sem backend) | 0 | 0 | 0 |
+| 1 nível | 0,5 | 0,5 | 1 |
+| 2 a 6, com poucas diferenças entre eles | 0,5 | 1 | 1,5 |
+| 2 a 6, com grandes diferenças (telas e regras próprias por perfil, aprovação de cadastro) | 1,5 | 2 | 2,5 |
+| 6 ou mais | 2,5 | 3 | 4 |
+
+| Multitenancy | Mín | Central | Máx |
+|---|---|---|---|
+| Não | 0 | 0 | 0 |
+| Dados separados, mas não isolados | +0,5 | +0,5 | +1 |
+| Só para isolamento de dados | +1 | +1,5 | +2 |
+| Instâncias com features e regras isoladas por cliente | 🚩 **parar** | — | — |
+
+"Grandes diferenças" quer dizer que cada perfil tem telas próprias, regras próprias ou fluxo de aprovação (ex.: nutricionista com cadastro pendente ou rejeitado que bloqueia rotas). Só mudar o que aparece num menu é "poucas diferenças".
+
+## F3 — Desenvolvimento
+**Baseline do formulário:** 1 a X semanas. É a fase que mais varia.
+
+### Núcleo (multiplicado pelo fator de formato)
+
+| Item | Mín | Central | Máx |
+|---|---|---|---|
+| Cada fluxo crítico comum (CRUD, listagem, cadastro, mapa com filtros, agenda) | 1 | 1,25 | 1,5 |
+| Cada fluxo com regra de negócio muito específica (fórmula, cálculo que não pode errar, regra regulatória) | 2 | 3 | 4 |
+| Cada feature atípica (sem benchmark, sem saber se é possível) | 1 | 1,5 | 2 |
+
+**Fluxo crítico** = uma jornada completa, do início ao fim, que se quebrar torna o produto inútil. Exemplo: "cidadão fotografa a espécie → o app pega a localização → o registro aparece no mapa". Uma tela solta não é um fluxo.
+
+| Formato (fator sobre o núcleo) | Fator |
+|---|---|
+| Web | x1,0 |
+| WebApp ou PWA | x1,1 |
+| App mobile nativo | x1,2 |
+| Cada formato adicional em código separado | +0,1 |
+
+Exemplo: app nativo + painel web = 1,2 + 0,1 = **x1,3**.
+
+### Extras (somam depois do fator)
+
+| Item | Mín | Central | Máx | Observação |
+|---|---|---|---|---|
+| Integração que o template já tem (Google, S3, e-mail) | 0 | 0 | 0 | |
+| Integração unidirecional, API pública documentada (ex: Mapbox, push) | +0,5 | +0,5 | +1 | Validador olha a API |
+| Integração bidirecional, API documentada | +0,5 | +1 | +1,5 | Validador olha a API |
+| Integração unidirecional, API sem documentação | +1 | +1,5 | +2 | ⚠️ Pedir acesso antes do contrato **ou** escrever o risco no contrato |
+| Integração bidirecional, API sem documentação | +1,5 | +2,5 | +3,5 | ⚠️ Validador **precisa** avaliar a API |
+| Integração bidirecional sem API | 🚩 | — | — | Avaliar alternativa; potencial inviabilidade |
+| Dependência de dados (bases soltas, planilhas, CSV, tabelas externas) | +1 | +1,5 | +2 | ⚠️ Chamar o núcleo de Dados |
+| Offline só local (cálculo no aparelho, sem sincronizar) | 0 | 0 | 0 | |
+| Offline com sincronização | +1,5 | +2 | +3 | ⚠️ Revisar a estrutura do banco |
+| Volume de uso alto (milhares de usuários simultâneos, picos) | +1 | +1,5 | +2 | ⚠️ Requisitos de performance por escrito |
+
+## F4 — Testes com o cliente
+**Baseline do formulário:** 1 a 4 semanas. **Teto:** 4.
+
+| Fator | Mín | Central | Máx |
+|---|---|---|---|
+| Base | 1 | 1,5 | 2 |
+| Regra de negócio crítica (saúde, dinheiro, cálculo clínico ou legal) | +0,5 | +0,5 | +1 |
+| Cliente com pouca disponibilidade para validar (plantões, agenda cheia) | +0,5 | +0,5 | +1 |
+
+## F5 — Deploy
+**Baseline do formulário:** 1 a 4 semanas.
+
+| Fator | Mín | Central | Máx |
+|---|---|---|---|
+| Tem web (infra do NTec, ex: Vercel) | 0,5 | 0,5 | 1 |
+| Tem app, sem web | 0,5 | 0,5 | 1 |
+| Tem app, junto com web | +0 | +0,5 | +0,5 |
+| Deploy na infra do cliente ou com regras de deploy dele | +1 | +1 | +2 |
+
+## F6 — Publicação nas lojas (só app nativo)
+**Baseline do formulário:** 2 a 6 semanas.
+
+| Caso | Mín | Central | Máx |
+|---|---|---|---|
+| Não publica (PWA, web, ou app só para testes) | 0 | 0 | 0 |
+| App comum | 2 | 2,5 | 4 |
+| App sensível (saúde, finanças, público infantil): revisão mais rigorosa das lojas | 2,5 | 3 | 6 |
+
+Dica que reduz o risco: pedir ao cliente que abra a conta de desenvolvedor (Apple e Google) **já na imersão**. Conta de empresa pode levar semanas para ser aprovada.
+
+---
+
+## Buffer de risco adaptável (formulário, seção 8)
+
+Aplicado sobre o **central** e o **máximo** (o otimista não leva buffer).
+
+| Risco | Buffer |
+|---|---|
+| Maioria do time no primeiro projeto (menos de 6 meses de prática) | +10% |
+| Troca ou saída de membros prevista durante o projeto | +10% a +20% |
+| Terceiros envolvidos (outro fornecedor entrega uma parte, depende de entrega externa) | +10% |
+| 3 ou mais integrações fora do template | +10% (automático no script) |
+
+**Teto: 30%.** Acima disso, a skill para e manda para a área de projetos. O formulário dá um exemplo de +20% (projeto complexo, 10+ sprints, 2 analistas saindo na sprint 7).
+
+---
+
+## Faixa final
+
+| Cenário | Conta | Para que serve |
+|---|---|---|
+| **Otimista (piso)** | soma dos mínimos | Nunca vender abaixo disto. Só se chega nele com escopo congelado e cliente rápido |
+| **Provável (recomendado)** | soma dos centrais × (1 + buffer) | O valor para a proposta |
+| **Conservador (teto de risco)** | soma dos máximos × (1 + buffer) | O que acontece se os riscos listados se confirmarem |
+
+- **Arredondamento:** semanas sempre para cima. A **recomendação de venda** é o provável arredondado para cima até fechar sprints inteiras (número par de semanas).
+- **Depois somar as semanas off** do calendário.
+- **Prazo pedido pelo cliente abaixo do otimista** → não negociar prazo, negociar escopo (ver "O que cortar" em `SKILL.md`). No histórico, foi o que funcionou: o Projeto A saiu de 14 sprints propostas para um MVP de 6 e terminou no prazo.
+
+---
+
+## Parar e sinalizar (a skill não decide sozinha)
+
+- 🚩 Multitenancy com instâncias e regras isoladas por cliente → "beira o inviável" (formulário).
+- 🚩 Integração bidirecional sem API.
+- 🚩 Feature atípica sem benchmark **e** sem documentação → pode exigir prova de conceito antes de vender.
+- ⚠️ Dependência de dados → chamar o núcleo de Dados para avaliar se precisa de engenharia de dados.
+- ⚠️ Provável acima de **26 semanas** → fora da faixa calibrada (ver Calibração). Validar com a área de projetos e considerar quebrar em fases ou contratos.
+- ⚠️ Cliente Enterprise ou Grande com regras de deploy e restrição de stack → envolver a área de projetos antes da proposta.
+- ⚠️ Qualquer teto de fase atingido (F1, F2 ou F4 em 4 semanas) ou buffer acima de 30%.
+
+---
+
+## Calibração (estado em 16/10/2026)
+
+Rodando a régua sobre os projetos reais (detalhes em `exemplos/`):
+
+| Projeto | Otimista | Provável | Conservador | Vendido | Realizado / situação | Leitura |
+|---|---|---|---|---|---|---|
+| Projeto A | 9 | 12 | 16 | 12 (+1 off) | No prazo, finalizando | ✅ Provável = vendido |
+| Projeto D | 13 | 17 → **18** | 23 | 18 (+3 off) | Em execução, sem atraso (47,6% do prazo) | ✅ Recomendação = vendido |
+| Projeto C | 13 | 18 | 23 | 11 (+2 off) | ~14 semanas, atrasou, testes não terminados | ⚠️ Vendido abaixo do piso → atrasou. Régua ~3 semanas acima do real |
+| Projeto B | 11 | 15 → **16** | 23 | 12 (+1 off) | Em execução (45% do prazo) | ⚠️ Vendido entre piso e provável; hand-off já registrou o prazo como apertado |
+| Projeto E | — | — | — | 34 | Em execução | Sem ficha técnica; não calibrado |
+| Projeto F | — | — | — | 38 (+3 off) | Em execução | Sem ficha técnica; não calibrado |
+
+Leituras:
+- **Projetos pequenos e médios (até ~20 semanas):** a régua acerta ou fica um pouco acima. É intencional que erre para cima.
+- **Viés conhecido:** quando o time aproveita bem o template, setup e login andam juntos e mais rápido (Projeto C fez os dois em 2 semanas). A régua não desconta isso automaticamente.
+- **Projetos grandes (Projetos E, F, 30+ semanas):** sem dados de ficha, a régua **não está calibrada** para eles. Por isso o alerta acima de 26 semanas.
+
+---
+
+## Lacunas
+
+- **Amostra pequena:** 4 projetos com dados, 2 ainda em execução. Os pesos são um ponto de partida, não uma regressão.
+- **Contagem de fluxos dos projetos antigos é estimada** a partir das tasks do Notion (marcada como palpite nos exemplos).
+- **Regras de tradução da PRD ainda não calibradas:** "1 módulo = 1 fluxo" e "concorrência, imutabilidade ou rotina agendada → módulo com RN específica" (`leitura-prd.md`) não foram conferidas contra um projeto real, porque todos os projetos da calibração são anteriores à PRD.
+- **A "Régua de Dimensionamento" citada no formulário é uma subpágina do Notion** que não veio no PDF. Se ela tiver números diferentes, ela vence e este arquivo precisa ser atualizado.
+- **Retrospectivas quase sempre vazias:** as causas de atraso não estão registradas, então os buffers ainda não têm base histórica.
+
+---
+
+## Registro das fontes
+
+| Data | Fonte | O que trouxe |
+|---|---|---|
+| 16/10/2026 | Formulário *Dimensionamento Tec* (PDF, 5 páginas) | Estrutura de fases (baseline 1–4 semanas por fase, lojas 2–6), fatores do perfil da demanda, níveis de multitenancy e integração, buffer adaptável, checklist da área de projetos |
+| 16/10/2026 | Levantamento no Notion do NTec (base de projetos: Projeto C, Projeto A, Projeto B, Projeto D, Projetos E, F) | Semanas vendidas, sprints realizadas, fases por task, riscos dos hand-offs |
+| 16/10/2026 | Calibração inicial (Matheus Padilha + Claude) | Pesos mín/central/máx; regra "atípico ≠ RN específica"; corte de calibração em 26 semanas |
+| 16/10/2026 | Skill `documento-requisitos-ntec` ([repositório](https://github.com/rivasaugustus/documento-requisitos-ntec)) | PRD vira a entrada padrão. Mapeamento da PRD para os fatores, sem peso novo: 1 módulo = 1 fluxo; fatores de complexidade da PRD encaixados nas linhas existentes (`leitura-prd.md`) |

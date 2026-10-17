@@ -1,0 +1,21 @@
+{
+  "projeto": "Projeto A (PWA de guia local)",
+  "demanda_pouco_detalhada": false,
+  "atipico": false,
+  "stack_fora_template": false,
+  "niveis_acesso": "2-6-baixa",
+  "multitenancy": "nao",
+  "fluxos_comuns": 4,
+  "fluxos_rn_especifica": 0,
+  "features_atipicas": 0,
+  "formatos": ["pwa"],
+  "integracoes": ["uni_doc", "uni_doc", "template", "template"],
+  "dependencia_dados": false,
+  "offline": "nao",
+  "volume_alto": false,
+  "rn_critica": false,
+  "cliente_pouca_disponibilidade": false,
+  "deploy_infra_cliente": false,
+  "lojas": "nao",
+  "riscos": {"time_novato": false, "terceiros": false, "troca_membros": 0}
+}

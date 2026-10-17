@@ -1,0 +1,21 @@
+{
+  "projeto": "Projeto D (app de ciência cidadã)",
+  "demanda_pouco_detalhada": false,
+  "atipico": false,
+  "stack_fora_template": false,
+  "niveis_acesso": "2-6-baixa",
+  "multitenancy": "nao",
+  "fluxos_comuns": 5,
+  "fluxos_rn_especifica": 0,
+  "features_atipicas": 0,
+  "formatos": ["app", "web"],
+  "integracoes": ["uni_doc", "template"],
+  "dependencia_dados": false,
+  "offline": "nao",
+  "volume_alto": false,
+  "rn_critica": false,
+  "cliente_pouca_disponibilidade": false,
+  "deploy_infra_cliente": false,
+  "lojas": "normal",
+  "riscos": {"time_novato": false, "terceiros": false, "troca_membros": 0}
+}
