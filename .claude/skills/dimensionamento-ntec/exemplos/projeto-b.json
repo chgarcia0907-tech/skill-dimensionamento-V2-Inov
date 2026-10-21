@@ -1,6 +1,16 @@
 {
-  "claude_code": false,
   "projeto": "Projeto B (app clínico offline)",
+  "f0": {
+    "stack_exigida_fora_da_lista": false,
+    "offline_sync_com_mongodb_exigido": false,
+    "sla_ou_sustentacao": false,
+    "infra_cliente_sem_acesso": false,
+    "multa_por_atraso": false,
+    "sem_validador_nomeado": false,
+    "feature_sem_referencia_nem_doc": false,
+    "hardware": false,
+    "prazo_exigido_semanas": null
+  },
   "demanda_pouco_detalhada": false,
   "atipico": false,
   "stack_fora_template": false,
@@ -9,13 +19,14 @@
   "fluxos_comuns": 1,
   "fluxos_rn_especifica": 1,
   "features_atipicas": 0,
-  "formatos": ["app"],
+  "formatos": [
+    "app"
+  ],
   "integracoes": [],
   "dependencia_dados": false,
   "offline": "local",
   "volume_alto": false,
   "rn_critica": true,
-  "cliente_pouca_disponibilidade": true,
   "deploy_infra_cliente": false,
   "lojas": "sensivel"
 }
