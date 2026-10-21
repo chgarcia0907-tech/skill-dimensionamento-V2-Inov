@@ -18,7 +18,11 @@ Este arquivo é o caminho **sem PRD**: o formulário **Dimensionamento Tec** (in
 
 ## Passo 2 — Preencher os fatores, perguntando o que faltar
 
-**Se veio transcrição do Fathom (ou de outra ferramenta):** procurar a resposta de cada pergunta nela antes de perguntar, com as mesmas regras do Passo 4 de `leitura-prd.md` (só vale o que foi dito explicitamente, citar a reunião e o trecho). O que não estiver lá vira **lacuna** em *Lacunas para o CN*. Disponibilidade do cliente, stack, infra e referência de produto que ficarem como lacuna seguem o Passo 4 de `leitura-prd.md`: valor mais pesado na conta, o fator em `lacunas_fathom` no JSON e o "+" na venda.
+**Se veio transcrição do Fathom (ou de outra ferramenta):** procurar a resposta de cada pergunta nela antes de perguntar, com as mesmas regras do Passo 4 de `leitura-prd.md` (só vale o que foi dito explicitamente, citar a reunião e o trecho). O que não estiver lá vira **lacuna** em *Lacunas para o CN*. Stack, infra e referência de produto que ficarem como lacuna seguem o Passo 4 de `leitura-prd.md`: valor mais pesado na conta, o fator em `lacunas_fathom` no JSON e o "+" na venda. Quem valida sem resposta vira `f0.sem_validador_nomeado: true` (🚩).
+
+**Critérios completos e pesos:** no arquivo de cada fase em `fatores/`. A tabela abaixo é o atalho das perguntas para o CN. **O JSON exige todos os campos**, inclusive o bloco `"f0"` (formato em `exemplos/*.json`): o que ninguém respondeu entra com o valor mais pesado e vai para *Suposições*.
+
+**Primeiro o F0** (`fatores/F0-viabilidade.md`): se o cliente exige tecnologia fora da lista aceita, offline com sincronização em MongoDB, SLA ou sustentação, ou infra sem acesso do NTec, o projeto é rejeitado e não há o que perguntar do resto.
 
 Perguntar **no máximo 5 por rodada**, primeiro as que mais mexem no prazo (na ordem da tabela). Usar as perguntas como estão: foram escritas para o CN repassar ao cliente sem precisar traduzir.
 
@@ -27,14 +31,16 @@ Perguntar **no máximo 5 por rodada**, primeiro as que mais mexem no prazo (na o
 | **Fluxos críticos** (F3) | "Quais são as 3 a 6 coisas principais que alguém faz no sistema, do começo ao fim? Ex.: 'o paciente preenche o diário e a nutricionista vê o relatório'." | Cada jornada completa = 1 fluxo. Telas soltas não contam. Mais de 8 fluxos num MVP → sugerir cortar |
 | **Regra de negócio específica** (F3, F4) | "Tem algum cálculo, fórmula ou regra que, se o sistema errar, causa prejuízo, risco à saúde ou problema legal? Já existe isso escrito (planilha, artigo, norma)?" | Sim → fluxo com RN específica + RN crítica no F4. Pedir o documento da regra **antes** da proposta |
 | **Formato** (F3, F5, F6) | "As pessoas vão usar pelo navegador, por um app baixado da loja, ou os dois? Precisa estar na App Store / Play Store?" | Navegador = web. "Ícone na tela do celular, mas sem loja" = PWA. Loja = app + F6 |
-| **Níveis de acesso** (F2) | "Quantos tipos diferentes de pessoa usam o sistema? Cada tipo vê telas diferentes ou só algumas opções a mais? Alguém precisa aprovar o cadastro de outro?" | Contar os tipos. Telas e regras próprias ou aprovação → "grandes diferenças" |
+| **Níveis de acesso** (F2) | "Quantos tipos diferentes de pessoa usam o sistema? Cada tipo vê telas diferentes ou só algumas opções a mais? Alguém precisa aprovar o cadastro de outro?" | Contar os tipos (admin conta). 6 ou mais → `6+`. De 2 a 5: tela exclusiva, aprovação de cadastro ou cada um só vê os próprios registros → "grandes diferenças"; senão "poucas" (`fatores/F2-acesso-multitenancy.md`) |
 | **Integrações** (F3) | "O sistema precisa conversar com algum outro sistema (pagamento, ERP, planilha, mapa, WhatsApp)? Ele só *puxa* dados, só *manda*, ou os dois? Esse outro sistema é um serviço conhecido (Mercado Pago, Google Maps…) ou um sistema próprio do cliente?" | Só puxa ou só manda = unidirecional. Os dois = bidirecional. **Não perguntar sobre documentação:** peso fixo da régua (serviço de mercado = com documentação; sistema do cliente ou dúvida = sem documentação, com cláusula e plano B). Google, e-mail e upload de arquivo = template |
 | **Dependência de dados** (F3) | "O sistema vai usar dados que hoje estão em planilhas, tabelas públicas ou bases de outros lugares?" | Sim → dependência de dados + chamar o núcleo de Dados |
 | **Offline** (F3) | "Precisa funcionar sem internet? Se sim, o que acontece quando a internet volta: os dados precisam subir para algum lugar?" | Sem internet e nada sobe = offline local (0). Precisa sincronizar = offline com sincronização |
-| **Multitenancy** (F2) | "O sistema vai ser usado por várias empresas ou unidades diferentes? Cada uma precisa de regras e funções próprias, ou só não pode ver os dados da outra?" | Regras próprias por empresa = 🚩. Só não ver os dados da outra = isolamento |
+| **Multitenancy** (F2) | "O sistema vai ser usado por várias empresas ou unidades diferentes? Cada uma precisa de regras e funções próprias, ou só não pode ver os dados da outra?" | Uma empresa só = não. Regra ou função própria por empresa = `instancias` (🚩 F0). Vazamento quebra contrato ou LGPD = isolado. Admin geral vê tudo = separado. Sem resposta = isolado |
 | **Volume** (F3) | "Quantas pessoas devem usar ao mesmo tempo, no pior dia?" | Centenas = normal. Milhares simultâneos ou picos (evento, lançamento) = volume alto |
-| **Disponibilidade do cliente** (F4) | "Quem vai testar e aprovar as entregas? Essa pessoa tem umas 2 horas por semana para isso?" | Não, ou "depende da agenda" = pouca disponibilidade |
-| **Stack e deploy** (F1, F5) | "O cliente exige alguma tecnologia ou que o sistema fique nos servidores dele?" | Sim → stack fora do template e/ou infra do cliente |
+| **Quem valida** (F0) | "Quem do cliente vai testar e aprovar as entregas?" | Ninguém nomeado, ou "depende" = `sem_validador_nomeado: true` (🚩) |
+| **Condições de contrato** (F0) | "O contrato vai ter multa por atraso, exigência de suporte 24/7 ou SLA, ou uma data limite de entrega?" | Multa = 🚩. SLA ou sustentação = 🚫. Data limite = `prazo_exigido_semanas` (abaixo do otimista = 🚩) |
+| **Hardware** (F0) | "O sistema precisa conversar com algum aparelho (leitor, impressora fiscal, sensor, Bluetooth)?" | Sim = `hardware: true` (🚩) |
+| **Stack e deploy** (F0, F1, F5) | "O cliente exige alguma tecnologia ou que o sistema fique nos servidores dele? Se ficar nos servidores dele, o nosso time vai ter acesso para publicar e corrigir?" | Tecnologia fora da lista do F0 = 🚫. Dentro da lista mas fora do template (ex.: Supabase) = `stack_fora_template`. Servidores do cliente com acesso = `deploy_infra_cliente`; sem acesso = 🚫 |
 | **Documentação da demanda** (F1) | "Já existe documento de requisitos, protótipo ou referência de app parecido?" | Nada disso → demanda pouco detalhada |
 | **Atípico** (F1, F3) | "Existe algum app ou site parecido que a gente possa usar de referência?" | Nenhum benchmark → atípico. Não marcar só porque o *setor* é incomum se o produto é comum |
 
@@ -57,7 +63,7 @@ Perguntar **no máximo 5 por rodada**, primeiro as que mais mexem no prazo (na o
 Todo fator preenchido leva a origem entre parênteses:
 
 ```
-Níveis de acesso: 2 a 6 com grandes diferenças (origem: formulário, seção 6)
+Níveis de acesso: 2 a 5 com grandes diferenças (origem: formulário, seção 6)
 Fluxos críticos: 4 (origem: transcrição da call, cliente descreveu 4 jornadas)
 Integração com ERP: bidirecional com sistema do cliente (origem: transcrição da call + regra de peso fixo)
 ```

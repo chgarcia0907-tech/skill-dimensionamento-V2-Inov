@@ -12,14 +12,16 @@ Skill do Claude que ajuda coordenadores de negócios (CNs) do Núcleo de Tecnolo
 skill-dimensionamento-ntec/
 ├── README.md                       ← este arquivo
 ├── docs/
-│   ├── Dimensionamento-NTec-Skill.pdf   ← PDF explicativo (v4, 11 páginas: Proposta Técnica e fator Claude Code)
+│   ├── Dimensionamento-NTec-Skill.pdf   ← PDF explicativo (v4, anterior à revisão de 20/10: ainda mostra o fator Claude Code)
 │   └── gerar_pdf.py                     ← gera o PDF (reportlab + fontes Segoe UI do Windows)
 └── .claude/skills/dimensionamento-ntec/
     ├── SKILL.md                    ← orquestrador: procedimento, guardrails, entregável e resposta no chat
     ├── proposta-tecnica.md         ← como preencher as 14 seções da Proposta Técnica (o entregável)
     ├── leitura-prd.md              ← entrada padrão: onde está cada fator na PRD + o que perguntar ao CN
     ├── insumos-e-perguntas.md      ← caminho sem PRD (formulário, ficha, transcrição) + vocabulário
-    ├── regua-dimensionamento.md    ← pesos por fase (F1 a F6), faixa final, calibração, fontes
+    ├── fatores/                    ← um arquivo por fase (F0 viabilidade a F6 lojas) com critérios e pesos,
+    │                                 glossário e README com as decisões em aberto D1 a D5
+    ├── regua-dimensionamento.md    ← regras de uso, faixa final, quando parar, calibração, fontes
     ├── regra-fronteira-e-faixa.md  ← desempate entre linhas + tabela de cortes ("O que cortar")
     ├── scripts/calcular_faixa.py   ← faz a conta (fonte da verdade dos pesos)
     ├── scripts/gerar_proposta.py   ← gera o PDF "[Proposta Técnica] {projeto}" no template do NTec (reportlab)
@@ -58,9 +60,14 @@ skill-dimensionamento-ntec/
 
 Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para continuar em outra conversa sem precisar do histórico. **Comece por "Onde paramos".**
 
-### Onde paramos (17/10/2026)
+### Onde paramos (21/10/2026)
+- **Revisão de 20/10 (reunião "Validação Skill NTec" + LLM Council):** **F0 de viabilidade** antes de tudo (🚫 rejeita ou 🚩 para para a área de projetos); critérios e pesos em **`fatores/`**, um arquivo por fase; **nenhum campo do JSON com padrão** (o script para se faltar um); tetos de fase não cortam a soma; **fator Claude Code e "cliente com pouca disponibilidade" removidos** (quem valida passou para o F0); F2 em 2 a 5 / 6+; formato extra +0,2; `bi_sem_doc` com mínimo 4. `SKILL.md`, `regua-dimensionamento.md`, `leitura-prd.md` e `insumos-e-perguntas.md` já apontam para `fatores/`.
+- **Em aberto:** decisões D1 a D5 (`fatores/README.md`) e os pesos marcados 🔎, a validar com Augusto e Frank. Até lá, o script usa os valores provisórios.
+- **Ainda com números antigos:** textos de `exemplos/*.md`, o cronograma de `exemplos/ficticio-petagenda-proposta.json`, `regra-fronteira-e-faixa.md` e o PDF explicativo em `docs/`.
+
+Histórico de 17/10/2026:
 - **Implementado:** o dimensionamento final sai no **template "Proposta Técnica" do NTec** (14 seções + checklist + anexo com a memória do dimensionamento), gerado por `scripts/gerar_proposta.py`. O bloco para colar no formulário Dimensionamento Tec saiu. Guia em `proposta-tecnica.md`. O PDF explicativo em `docs/` (v4) já mostra a Proposta Técnica e o fator Claude Code.
-- **Implementado:** **fator Claude Code** na régua (todos os projetos do NTec agora são codados com Claude Code por uma dupla com ~20 h/semana somadas): núcleo do F3 x0,6 / 0,75 / 0,9 e F2 x0,7 / 0,85 / 1; imersão, extras do F3, testes, deploy e lojas ficam iguais. É um meio-termo: um x0,5 acertava o Projeto B (vender 12) mas dava 20 semanas para um app + painel de 8 fluxos com offline que a área de projetos espera em ~12 sprints. Projetos antigos rodam com `claude_code: false`.
+- **Removido em 20/10/2026:** **fator Claude Code** na régua (todos os projetos do NTec agora são codados com Claude Code por uma dupla com ~20 h/semana somadas): núcleo do F3 x0,6 / 0,75 / 0,9 e F2 x0,7 / 0,85 / 1; imersão, extras do F3, testes, deploy e lojas ficam iguais. É um meio-termo: um x0,5 acertava o Projeto B (vender 12) mas dava 20 semanas para um app + painel de 8 fluxos com offline que a área de projetos espera em ~12 sprints. Projetos antigos rodam com `claude_code: false`.
 - **Implementado:** integrações com **peso fixo, sem perguntar ao CN** (ver [Integrações: peso fixo](#integrações-peso-fixo-sem-perguntar-ao-cn-implementado)).
 - **Implementado:** o que a PRD não responde é tirado da **transcrição do Fathom**; o que não estiver lá volta ao CN como **lacuna** (`leitura-prd.md`, Passo 4).
 - **Implementado:** a venda mostra com **"+"** quanto depende das lacunas do Fathom: *"vender 14 semanas = 12 + 2 que dependem do Fathom (disponibilidade do cliente, referência de produto)"*. Vende com as lacunas no valor mais pesado (o erro do NTec é vender para menos) e mostra a parte delas em sprints inteiras. Vale também quando há Fathom, mas ele não fala do assunto ("dependem de confirmar com o cliente"). No JSON: `lacunas_fathom` e `fathom`. A página "Régua de Dimensionamento NTec" faz igual.
@@ -82,6 +89,7 @@ Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para co
 | 17/10/2026 | Entregável passa a ser a Proposta Técnica no template do NTec (PDF) |
 | 17/10/2026 | Fator Claude Code (primeiro x0,5, depois o meio-termo x0,75 no núcleo do F3); PDF explicativo v4 |
 | 17/10/2026 | Venda com "+" para as lacunas do Fathom ("14 = 12 + 2 que dependem do Fathom"), igual na skill e na página |
+| 21/10/2026 | Revisão de 20/10: F0, `fatores/` por fase, JSON sem padrões, tetos sem corte, fator Claude Code e disponibilidade do cliente removidos; documentos apontando para `fatores/` |
 
 ### O que foi pedido (origem)
 Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em conta que somos uma **empresa júnior**, use os dados reais dos projetos e chegue a uma **faixa de semanas**. O uso deve ser **prático para CNs**, que em geral são fracos tecnicamente e mandam para a equipe de projetos prazos sem sentido.
@@ -95,7 +103,7 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 ### Decisões tomadas
 **Régua (v1)**
 - **Modelo:** fases F1–F6 do formulário, cada fator com mínimo / central / máximo. Faixa: otimista = soma dos mínimos; provável = soma dos centrais; conservador = soma dos máximos. A venda recomendada é o provável arredondado para sprints inteiras (2 semanas), mais as semanas off.
-- **Os pesos já embutem o time do NTec:** uma dupla com ~20 h/semana somadas, codando com Claude Code, e o template NTec (fator Claude Code no núcleo do F3 e no F2; ver `regua-dimensionamento.md`). **Sem buffer percentual** (removido em 17/10/2026 por ser desprezível): o risco fica no intervalo mín/central/máx.
+- **Os pesos já embutem o time do NTec:** uma dupla com ~20 h/semana somadas e o template NTec, sem multiplicador por ferramenta (o fator Claude Code saiu em 20/10/2026). **Sem buffer percentual** (removido em 17/10/2026 por ser desprezível): o risco fica no intervalo mín/central/máx.
 - **Fronteira: sempre para o lado mais pesado.** O histórico do NTec é vender para menos (Projeto C).
 - **Atípico ≠ regra de negócio específica**, para não contar o mesmo motivo duas vezes (erro achado na calibração do Projeto C).
 - **A resposta sempre traz a seção "O que cortar"** (cortes de escopo com a economia em semanas). A negociação "quando o cliente pede menos prazo" foi removida em 17/10/2026.
@@ -105,7 +113,7 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 **PRD como entrada padrão**
 - A skill lê o PDF da PRD e, se o CN colar, o bloco "Inventário para dimensionamento". Sem o bloco, monta o inventário a partir do PDF.
 - **Sem PRD:** dimensiona, mas marca ⚠️ "Estimativa preliminar, sem PRD".
-- **O que a PRD não cobre** (disponibilidade do cliente, stack e infra, benchmark, data de início): a skill procura na **transcrição do Fathom** (só vale o que foi dito explicitamente, citando reunião e trecho). O que não achar vira **lacuna**: entra na conta com o valor mais pesado e volta ao CN na seção 5 da resposta, com a pergunta pronta. Lacuna que mexe na faixa deixa o status em ⚠️. A documentação das APIs **saiu** dessa rodada (peso fixo, seção abaixo).
+- **O que a PRD não cobre** (quem valida, condições de contrato, stack e infra, benchmark, data de início): a skill procura na **transcrição do Fathom** (só vale o que foi dito explicitamente, citando reunião e trecho). O que não achar vira **lacuna**: entra na conta com o valor mais pesado e volta ao CN na seção 5 da resposta, com a pergunta pronta. Lacuna que mexe na faixa deixa o status em ⚠️. A documentação das APIs **saiu** dessa rodada (peso fixo, seção abaixo).
 - **1 módulo = 1 fluxo.** 2.1 Autenticação vai para F2, e Disponibilização vai para F5 e F6.
 - **Fatores de complexidade da PRD encaixam nas linhas atuais**, sem peso novo. Pagamento, IA e push viram integração. Concorrência, imutabilidade e rotina agendada fazem o módulo virar RN específica. Tempo real por push e relatório configurável viram feature atípica. Tabela completa em `leitura-prd.md`.
 - **Papel da skill:** ocupa o lugar que a skill da PRD chama de `validacao-tecnica-ntec`, mas calcula **só o prazo, sem preço**.
@@ -133,9 +141,9 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 | Projeto | Faixa da régua (otim. / prov. / cons.) | Vendido | Situação |
 |---|---|---|---|
 | Projeto A | 9 / 12 / 16 | 12 | No prazo ✅ |
-| Projeto D | 13 / 17 → vender 18 / 23 | 18 | Sem atraso ✅ (fatores com palpite) |
-| Projeto C | 13 / 18 / 23 | 11 | Atrasou (~14). Régua ~3 semanas acima do real (viés conhecido) |
-| Projeto B | 11 / 14 / 21 | 12 | Em execução; fim previsto em 23/11/2026 |
+| Projeto D | 13 / 18 / 23 | 18 | Sem atraso ✅ (fatores com palpite) |
+| Projeto C | 13 / 18 / 24 | 11 | Atrasou (~14). Régua ~3 semanas acima do real (viés conhecido) |
+| Projeto B | 10 / 13 → vender 14 / 20 | 12 | Em execução; fim previsto em 23/11/2026 |
 | Projetos E e F | não calibrado | 34 / 38 | Sem ficha. Alerta automático acima de 26 semanas |
 
 Todos são **anteriores à PRD**: as regras de leitura da PRD ainda não foram conferidas contra um projeto real.
@@ -148,7 +156,7 @@ Todos são **anteriores à PRD**: as regras de leitura da PRD ainda não foram c
 5. **Atualizar a calibração** quando o Projeto A (19/10/2026) e os Projetos B e D (23/11/2026) terminarem. Passo a passo em `exemplos/README.md`; atualizar também a ficha original em `privado/`.
 6. **Conferir as regras de leitura da PRD** no primeiro projeto com PRD que terminar (principalmente "rotina agendada → RN específica").
 7. Testar a skill com um CN num lead real.
-8. **Conferir o fator Claude Code** com o realizado do Projeto B (23/11/2026) e do primeiro projeto com login que terminar (o F2 com fator não foi medido).
+8. **Fechar as decisões D1 a D5** e os pesos 🔎 com a área técnica, fazer o teste de concordância (2 CNs + Claude nos Projetos A a D) e atualizar os textos dos exemplos e o PDF explicativo.
 
 Feito: PDF v2 com a PRD; publicação no GitHub com projetos anonimizados; integrações com peso fixo e PDF v3; Proposta Técnica como entregável, fator Claude Code e PDF v4.
 

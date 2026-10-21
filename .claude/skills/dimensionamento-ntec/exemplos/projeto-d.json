@@ -1,21 +1,36 @@
 {
-  "claude_code": false,
   "projeto": "Projeto D (app de ciência cidadã)",
+  "f0": {
+    "stack_exigida_fora_da_lista": false,
+    "offline_sync_com_mongodb_exigido": false,
+    "sla_ou_sustentacao": false,
+    "infra_cliente_sem_acesso": false,
+    "multa_por_atraso": false,
+    "sem_validador_nomeado": false,
+    "feature_sem_referencia_nem_doc": false,
+    "hardware": false,
+    "prazo_exigido_semanas": null
+  },
   "demanda_pouco_detalhada": false,
   "atipico": false,
   "stack_fora_template": false,
-  "niveis_acesso": "2-6-baixa",
+  "niveis_acesso": "2-5-poucas",
   "multitenancy": "nao",
   "fluxos_comuns": 5,
   "fluxos_rn_especifica": 0,
   "features_atipicas": 0,
-  "formatos": ["app", "web"],
-  "integracoes": ["uni_doc", "template"],
+  "formatos": [
+    "app",
+    "web"
+  ],
+  "integracoes": [
+    "uni_doc",
+    "template"
+  ],
   "dependencia_dados": false,
   "offline": "nao",
   "volume_alto": false,
   "rn_critica": false,
-  "cliente_pouca_disponibilidade": false,
   "deploy_infra_cliente": false,
   "lojas": "normal"
 }

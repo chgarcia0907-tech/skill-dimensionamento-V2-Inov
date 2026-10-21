@@ -21,7 +21,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from calcular_faixa import calcular, fmt, parte_lacunas, semanas, sprints  # noqa: E402
+from calcular_faixa import EntradaInvalida, calcular, fmt, parte_lacunas, semanas, sprints  # noqa: E402
 
 try:
     from reportlab.lib import colors
@@ -391,10 +391,18 @@ def main():
     with open(a.proposta, encoding="utf-8") as f:
         d = json.load(f)
     sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
     entrada = d.get("dimensionamento", {}).get("entrada")
     if not entrada:
         sys.exit("Erro: falta dimensionamento.entrada (o JSON da régua).")
-    r = calcular(entrada)
+    try:
+        r = calcular(entrada)
+    except EntradaInvalida as erro:
+        sys.exit(f"Erro em dimensionamento.entrada: {erro}")
+    if r["rejeicoes"]:
+        motivos = "\n  - ".join(r["rejeicoes"])
+        sys.exit(f"REJEITADO NO F0, nenhum PDF gerado:\n  - {motivos}\n"
+                 "Responder ao CN com o critério, a citação e o que precisaria mudar (fatores/F0-viabilidade.md).")
     projeto = d.get("projeto", entrada.get("projeto", "Projeto"))
     pasta = a.saida or os.path.dirname(os.path.abspath(a.proposta))
     os.makedirs(pasta, exist_ok=True)
@@ -417,6 +425,8 @@ def main():
         print(f"  [{'x' if ok else ' '}] {texto}")
     if r["paradas"]:
         print("PARADO:", *r["paradas"], sep="\n  - ")
+    if r["avisos_internos"]:
+        print("Avisos da revisão da régua (fora do PDF):", *r["avisos_internos"], sep="\n  - ")
 
 
 if __name__ == "__main__":
