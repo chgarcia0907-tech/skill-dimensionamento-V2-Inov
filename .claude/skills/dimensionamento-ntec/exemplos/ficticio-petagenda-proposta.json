@@ -311,6 +311,23 @@
         "app",
         "web"
       ],
+      "fluxos_por_formato": {
+        "app": {
+          "comuns": 0,
+          "rn_especifica": 1,
+          "atipicas": 0
+        },
+        "web": {
+          "comuns": 2,
+          "rn_especifica": 0,
+          "atipicas": 0
+        },
+        "compartilhado": {
+          "comuns": 1,
+          "rn_especifica": 0,
+          "atipicas": 0
+        }
+      },
       "integracoes": [
         "bi_doc",
         "uni_doc",

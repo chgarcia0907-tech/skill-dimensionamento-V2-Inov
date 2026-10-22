@@ -23,6 +23,23 @@
     "web",
     "app"
   ],
+  "fluxos_por_formato": {
+    "web": {
+      "comuns": 0,
+      "rn_especifica": 0,
+      "atipicas": 0
+    },
+    "app": {
+      "comuns": 0,
+      "rn_especifica": 0,
+      "atipicas": 0
+    },
+    "compartilhado": {
+      "comuns": 3,
+      "rn_especifica": 1,
+      "atipicas": 0
+    }
+  },
   "integracoes": [
     "template"
   ],

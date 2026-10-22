@@ -23,6 +23,23 @@
     "app",
     "web"
   ],
+  "fluxos_por_formato": {
+    "app": {
+      "comuns": 0,
+      "rn_especifica": 0,
+      "atipicas": 0
+    },
+    "web": {
+      "comuns": 0,
+      "rn_especifica": 0,
+      "atipicas": 0
+    },
+    "compartilhado": {
+      "comuns": 5,
+      "rn_especifica": 0,
+      "atipicas": 0
+    }
+  },
   "integracoes": [
     "uni_doc",
     "template"

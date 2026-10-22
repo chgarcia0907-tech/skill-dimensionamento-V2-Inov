@@ -13,6 +13,8 @@ Cada projeto tem uma ficha `.md` (o que era, como a régua classificou, compara�
 | [PetAgenda via PRD (fictício)](ficticio-petagenda-prd.md) | App + painel web | 4 | 3 + 1 | 15 / 20 / 28 | — | Como ler a PRD e traduzir para a régua |
 | [PetAgenda proposta (fictício)](ficticio-petagenda-proposta.json) | App + painel web | 4 | 3 + 1 | 15 / 20 / 28 | — | JSON modelo da Proposta Técnica (`scripts/gerar_proposta.py`) |
 
+**`fluxos_por_formato` (desde 22/10/2026):** com mais de um formato, o JSON diz em que código cada fluxo existe. Nos Projetos C e D, todos os fluxos estão como `compartilhado` (mesmo resultado de antes), porque as fichas não dizem onde cada jornada vive. É um palpite a conferir no hand-off: se as jornadas forem de um código só, a régua do C cai (o que aproxima do realizado) e a do D pode ficar abaixo do vendido. Os PetAgenda já usam a distribuição pela Superfície da PRD.
+
 Os projetos reais desta tabela são **anteriores ao formato de PRD**: os fluxos foram contados a partir das tasks do Notion, e não pela regra "1 módulo = 1 fluxo". Quando um projeto com PRD terminar, ele vira o primeiro precedente para conferir essa regra.
 
 **Fator Claude Code:** as faixas da tabela são **sem** o fator (os projetos foram feitos antes, ou como estavam na ficha), e os `.json` deles têm `"claude_code": false`. Projeto novo usa o fator (padrão do script). Só a proposta modelo da PetAgenda já está com o fator.
