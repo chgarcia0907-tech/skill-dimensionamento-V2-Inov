@@ -38,3 +38,62 @@ Calcula um índice científico a partir de diários preenchidos pelo usuário e 
 2. **Viés conhecido da régua:** o provável (18) ficou ~3 semanas acima do realizado (~14 + testes pendentes), porque o time juntou setup e login. Não corrigido com um único projeto. Se outros projetos repetirem o padrão, reduzir F1 + F2 quando o template for usado sem mudanças.
 3. Os dados externos foram justamente a sprint em *Underdelivery* → o fator "dependência de dados" se justifica.
 4. Retro S1: codar na main, cuidado com IA, dailies faltando. As outras retros estão vazias, então a causa do atraso não foi registrada.
+
+## Entrada da régua
+
+O JSON que o script lê (`python ../scripts/calcular_faixa.py projeto-c.md`). O script usa o primeiro bloco `json` deste arquivo.
+
+```json
+{
+  "projeto": "Projeto C (plataforma de saúde web + app)",
+  "f0": {
+    "stack_exigida_fora_da_lista": false,
+    "offline_sync_com_mongodb_exigido": false,
+    "sla_ou_sustentacao": false,
+    "infra_cliente_sem_acesso": false,
+    "multa_por_atraso": false,
+    "sem_validador_nomeado": false,
+    "feature_sem_referencia_nem_doc": false,
+    "hardware": false,
+    "prazo_exigido_semanas": null
+  },
+  "demanda_pouco_detalhada": false,
+  "atipico": false,
+  "stack_fora_template": false,
+  "niveis_acesso": "2-5-grandes",
+  "multitenancy": "nao",
+  "fluxos_comuns": 3,
+  "fluxos_rn_especifica": 1,
+  "features_atipicas": 0,
+  "formatos": [
+    "web",
+    "app"
+  ],
+  "fluxos_por_formato": {
+    "web": {
+      "comuns": 0,
+      "rn_especifica": 0,
+      "atipicas": 0
+    },
+    "app": {
+      "comuns": 0,
+      "rn_especifica": 0,
+      "atipicas": 0
+    },
+    "compartilhado": {
+      "comuns": 3,
+      "rn_especifica": 1,
+      "atipicas": 0
+    }
+  },
+  "integracoes": [
+    "template"
+  ],
+  "dependencia_dados": true,
+  "offline": "nao",
+  "volume_alto": false,
+  "rn_critica": true,
+  "deploy_infra_cliente": false,
+  "lojas": "nao"
+}
+```

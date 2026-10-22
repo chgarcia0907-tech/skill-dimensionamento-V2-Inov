@@ -45,4 +45,43 @@ Plano do hand-off: imersão (sem. 1–2), motor de cálculo em três etapas (3�
 
 O projeto está sendo codado com Claude Code por uma dupla com cerca de 20 horas por semana somadas. Pelo git, o código começou em 30/09/2026 e, até 06/10, já tinha o motor das 3 faixas, a composição do soro, a tela completa com o modal de alerta e o hook ligando a tela ao motor. É quase todo o F3, que a régua antiga estimava em 5,1 semanas no central.
 
-Foi esse dado que criou o **fator Claude Code** (`regua-dimensionamento.md`). Com ele (meio-termo x0,75 no núcleo do F3), a faixa do Projeto B fica em **9 / 12 / 20**, com recomendação de venda de **12 semanas**, igual ao vendido. O `projeto-b.json` continua com `claude_code: false` para guardar a calibração antiga; para rodar com o fator, trocar para `true`.
+Foi esse dado que criou o **fator Claude Code** (`regua-dimensionamento.md`). Com ele (meio-termo x0,75 no núcleo do F3), a faixa do Projeto B fica em **9 / 12 / 20**, com recomendação de venda de **12 semanas**, igual ao vendido. O JSON em *Entrada da régua* (fim deste arquivo) continua com `claude_code: false` para guardar a calibração antiga; para rodar com o fator, trocar para `true`.
+
+## Entrada da régua
+
+O JSON que o script lê (`python ../scripts/calcular_faixa.py projeto-b.md`). O script usa o primeiro bloco `json` deste arquivo.
+
+```json
+{
+  "projeto": "Projeto B (app clínico offline)",
+  "f0": {
+    "stack_exigida_fora_da_lista": false,
+    "offline_sync_com_mongodb_exigido": false,
+    "sla_ou_sustentacao": false,
+    "infra_cliente_sem_acesso": false,
+    "multa_por_atraso": false,
+    "sem_validador_nomeado": false,
+    "feature_sem_referencia_nem_doc": false,
+    "hardware": false,
+    "prazo_exigido_semanas": null
+  },
+  "demanda_pouco_detalhada": false,
+  "atipico": false,
+  "stack_fora_template": false,
+  "niveis_acesso": "nenhum",
+  "multitenancy": "nao",
+  "fluxos_comuns": 1,
+  "fluxos_rn_especifica": 1,
+  "features_atipicas": 0,
+  "formatos": [
+    "app"
+  ],
+  "integracoes": [],
+  "dependencia_dados": false,
+  "offline": "local",
+  "volume_alto": false,
+  "rn_critica": true,
+  "deploy_infra_cliente": false,
+  "lojas": "sensivel"
+}
+```

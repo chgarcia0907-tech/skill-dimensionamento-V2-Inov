@@ -1,3 +1,10 @@
+# Proposta Técnica — Projeto H
+
+Proposta completa do Projeto H, montada a partir das transcrições da AT Diag e da AT Aprof (`leitura-transcricoes.md`). Ficha do caso: [projeto-h.md](projeto-h.md).
+
+Gerar o PDF: `python ../scripts/gerar_proposta.py projeto-h-proposta.md --saida <pasta>`. O script usa o primeiro bloco `json` deste arquivo.
+
+```json
 {
   "projeto": "Projeto H",
   "status": "atencao",
@@ -196,3 +203,4 @@
     ]
   }
 }
+```

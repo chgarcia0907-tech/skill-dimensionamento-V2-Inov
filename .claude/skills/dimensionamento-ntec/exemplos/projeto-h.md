@@ -2,7 +2,7 @@
 
 **Primeiro projeto dimensionado pelas transcrições** da AT Diagnóstico (19 min) e da AT Aprofundamento (11 min), sem PRD. Serve de exemplo completo de `leitura-transcricoes.md`. Em negociação: ainda não há realizado.
 
-Arquivos: `projeto-h.json` (entrada da régua) e `projeto-h-proposta.json` (Proposta Técnica completa).
+Arquivos: a entrada da régua está no fim deste arquivo, e a Proposta Técnica completa em [projeto-h-proposta.md](projeto-h-proposta.md).
 
 ## O que é
 
@@ -55,3 +55,45 @@ O peso está em F4 e F6 (testes da regra crítica e loja sensível), não no des
 
 - Se 1 jornada com RN específica + RN crítica (F3 + F4) acertou o tempo de construir e validar um cálculo clínico.
 - Se o app sensível (F6 central 3) acertou o tempo de aprovação nas lojas.
+
+## Entrada da régua
+
+O JSON que o script lê (`python ../scripts/calcular_faixa.py projeto-h.md`). O script usa o primeiro bloco `json` deste arquivo.
+
+```json
+{
+  "projeto": "Projeto H — calculadora clínica (app nativo, a partir da AT Diag e da AT Aprof)",
+  "f0": {
+    "stack_exigida_fora_da_lista": false,
+    "offline_sync_com_mongodb_exigido": false,
+    "sla_ou_sustentacao": false,
+    "infra_cliente_sem_acesso": false,
+    "multa_por_atraso": false,
+    "sem_validador_nomeado": false,
+    "feature_sem_referencia_nem_doc": false,
+    "hardware": false,
+    "prazo_exigido_semanas": null
+  },
+  "demanda_pouco_detalhada": false,
+  "atipico": false,
+  "stack_fora_template": false,
+  "niveis_acesso": "1",
+  "multitenancy": "nao",
+  "fluxos_comuns": 0,
+  "fluxos_rn_especifica": 1,
+  "features_atipicas": 0,
+  "formatos": ["app"],
+  "integracoes": ["bi_doc"],
+  "dependencia_dados": false,
+  "offline": "local",
+  "volume_alto": false,
+  "rn_critica": true,
+  "deploy_infra_cliente": false,
+  "lojas": "sensivel",
+  "fathom": true,
+  "lacunas_fathom": {
+    "niveis_acesso": "nenhum",
+    "integracoes": []
+  }
+}
+```

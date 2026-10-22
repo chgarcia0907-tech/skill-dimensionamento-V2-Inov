@@ -2,9 +2,11 @@
 
 Uso:
     python calcular_faixa.py entrada.json
+    python calcular_faixa.py exemplos/projeto-a.md
 
 A entrada é um JSON com os fatores levantados (ver `fatores/*.md` e os exemplos
-em `exemplos/*.json`). A saída é o F0 (viabilidade), o detalhamento por fase em
+em `exemplos/*.md`). Pode vir num `.json` ou num `.md`; no `.md`, vale o primeiro
+bloco ```json do arquivo (ver `ler_entrada`). A saída é o F0 (viabilidade), o detalhamento por fase em
 (mínimo / central / máximo) e a faixa final: otimista, provável e conservador.
 
 Nenhum fator tem valor padrão: campo ausente ou com valor desconhecido faz a
@@ -27,10 +29,14 @@ V2-Inov (22/10/2026): a entrada padrão passou a ser a transcrição da AT Diag 
 AT Aprof, sem PRD (leitura-transcricoes.md). `lacunas_fathom` aceita também um
 objeto {campo: valor leve}, para as lacunas que as calls deixam mais (login e
 integrações). Pesos inalterados.
+
+Exemplos em Markdown (22/10/2026): os `.json` de `exemplos/` viraram um bloco
+```json dentro do `.md` de cada projeto, para a skill ler ficha e entrada juntas.
 """
 
 import json
 import math
+import re
 import sys
 
 # (mínimo, central, máximo) em semanas
@@ -151,6 +157,18 @@ LACUNAS_LEVE = {"atipico": False, "stack_fora_template": False, "deploy_infra_cl
 
 class EntradaInvalida(ValueError):
     pass
+
+
+def ler_entrada(caminho):
+    """Lê o JSON de um `.json` ou do primeiro bloco ```json de um `.md`."""
+    with open(caminho, encoding="utf-8") as f:
+        texto = f.read()
+    if caminho.lower().endswith(".md"):
+        bloco = re.search(r"^```json[ \t]*\n(.*?)^```", texto, re.S | re.M)
+        if not bloco:
+            sys.exit(f"Erro: {caminho} não tem bloco ```json.")
+        texto = bloco.group(1)
+    return json.loads(texto)
 
 
 def validar_f0(e):
@@ -533,8 +551,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print(__doc__)
         sys.exit(1)
-    with open(sys.argv[1], encoding="utf-8") as f:
-        entrada = json.load(f)
+    entrada = ler_entrada(sys.argv[1])
     sys.stdout.reconfigure(encoding="utf-8")
     try:
         resultado = calcular(entrada)
