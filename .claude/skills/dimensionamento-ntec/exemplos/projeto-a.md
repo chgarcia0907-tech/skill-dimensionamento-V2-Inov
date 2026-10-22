@@ -33,3 +33,47 @@ Guia de eventos, gastronomia e hospedagem de uma região, centrado num mapa. Web
 
 ## Lição para a régua
 A proposta original tinha **14 sprints** e foi cortada para um MVP de 6. Esse é o exemplo de "negociar escopo, não prazo": o corte foi no escopo, e o prazo do MVP foi cumprido.
+
+## Entrada da régua
+
+O JSON que o script lê (`python ../scripts/calcular_faixa.py projeto-a.md`). O script usa o primeiro bloco `json` deste arquivo.
+
+```json
+{
+  "projeto": "Projeto A (PWA de guia local)",
+  "f0": {
+    "stack_exigida_fora_da_lista": false,
+    "offline_sync_com_mongodb_exigido": false,
+    "sla_ou_sustentacao": false,
+    "infra_cliente_sem_acesso": false,
+    "multa_por_atraso": false,
+    "sem_validador_nomeado": false,
+    "feature_sem_referencia_nem_doc": false,
+    "hardware": false,
+    "prazo_exigido_semanas": null
+  },
+  "demanda_pouco_detalhada": false,
+  "atipico": false,
+  "stack_fora_template": false,
+  "niveis_acesso": "2-5-poucas",
+  "multitenancy": "nao",
+  "fluxos_comuns": 4,
+  "fluxos_rn_especifica": 0,
+  "features_atipicas": 0,
+  "formatos": [
+    "pwa"
+  ],
+  "integracoes": [
+    "uni_doc",
+    "uni_doc",
+    "template",
+    "template"
+  ],
+  "dependencia_dados": false,
+  "offline": "nao",
+  "volume_alto": false,
+  "rn_critica": false,
+  "deploy_infra_cliente": false,
+  "lojas": "nao"
+}
+```

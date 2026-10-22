@@ -1,6 +1,6 @@
 # Exemplo de resposta completa (caso fictício)
 
-Este caso **não é um projeto real**. Serve para mostrar ao CN como a resposta da skill fica do começo ao fim. Entrada: `ficticio-petagenda.json`.
+Este caso **não é um projeto real**. Serve para mostrar ao CN como a resposta da skill fica do começo ao fim. Entrada: o bloco JSON em *Entrada da régua*, no fim deste arquivo.
 
 **O que o CN mandou:**
 > "Rede de 3 clínicas veterinárias quer um app pro tutor marcar consulta, ver a carteirinha de vacina do pet e receber lembrete. A clínica quer um painel pra recepção e pro veterinário. Querem pagar a consulta pelo app (Mercado Pago). Não tem documento, foi só uma call."
@@ -72,3 +72,64 @@ Faixa: otimista 14 · provável 19 (vender 20) · conservador 25 semanas (+ sema
   F2 níveis de acesso: 2-6 poucas diferenças → 2-6 grandes diferenças (+1)
   Motivo: veterinário e recepção têm telas e permissões próprias (registro de atendimento × agenda); na dúvida, a régua vai para o mais pesado.
   ```
+
+## Entrada da régua
+
+O JSON que o script lê (`python ../scripts/calcular_faixa.py ficticio-petagenda.md`). O script usa o primeiro bloco `json` deste arquivo.
+
+```json
+{
+  "projeto": "PetAgenda (exemplo fictício)",
+  "f0": {
+    "stack_exigida_fora_da_lista": false,
+    "offline_sync_com_mongodb_exigido": false,
+    "sla_ou_sustentacao": false,
+    "infra_cliente_sem_acesso": false,
+    "multa_por_atraso": false,
+    "sem_validador_nomeado": false,
+    "feature_sem_referencia_nem_doc": false,
+    "hardware": false,
+    "prazo_exigido_semanas": null
+  },
+  "demanda_pouco_detalhada": true,
+  "atipico": false,
+  "stack_fora_template": false,
+  "niveis_acesso": "2-5-grandes",
+  "multitenancy": "separado",
+  "fluxos_comuns": 4,
+  "fluxos_rn_especifica": 0,
+  "features_atipicas": 0,
+  "formatos": [
+    "app",
+    "web"
+  ],
+  "fluxos_por_formato": {
+    "app": {
+      "comuns": 1,
+      "rn_especifica": 0,
+      "atipicas": 0
+    },
+    "web": {
+      "comuns": 2,
+      "rn_especifica": 0,
+      "atipicas": 0
+    },
+    "compartilhado": {
+      "comuns": 1,
+      "rn_especifica": 0,
+      "atipicas": 0
+    }
+  },
+  "integracoes": [
+    "bi_doc",
+    "uni_doc",
+    "template"
+  ],
+  "dependencia_dados": false,
+  "offline": "nao",
+  "volume_alto": false,
+  "rn_critica": false,
+  "deploy_infra_cliente": false,
+  "lojas": "normal"
+}
+```

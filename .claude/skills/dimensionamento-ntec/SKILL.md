@@ -26,7 +26,7 @@ A área de projetos sempre revisa o resultado antes de virar proposta. A skill e
 | `scripts/calcular_faixa.py` | Sempre, para fazer a conta (não somar de cabeça) |
 | `proposta-tecnica.md` | Sempre, no fim: como preencher cada uma das 14 seções da **Proposta Técnica** (o entregável) a partir das calls e da conta |
 | `scripts/gerar_proposta.py` | Sempre, no fim: gera o PDF "[Proposta Técnica] {projeto}" no template do NTec |
-| `exemplos/ficticio-petagenda-proposta.json` | Modelo do JSON da proposta, para copiar a estrutura |
+| `exemplos/ficticio-petagenda-proposta.md` | Modelo do JSON da proposta, para copiar a estrutura |
 
 ## Procedimento
 
@@ -36,7 +36,7 @@ A área de projetos sempre revisa o resultado antes de virar proposta. A skill e
    - **Sem transcrição** (formulário Dimensionamento Tec, ficha, briefing, texto do CN): seguir `insumos-e-perguntas.md` e marcar ⚠️ *Estimativa preliminar, sem transcrição das calls*.
 2. **F0 — Viabilidade** (`fatores/F0-viabilidade.md`). Responder cada critério com citação da call. Critério de 🚫 rejeição → **parar aqui**: não preencher F1 a F6, não gerar PDF e responder ao CN no formato do fim do F0 (critério, motivo, o que precisaria mudar). Critério de 🚩 parada → seguir dimensionando, mas o status fica 🚩 e a proposta não vai para o cliente antes da área de projetos responder.
 3. **Preencher os fatores de F1 a F6**, cada um pelo seu arquivo em `fatores/`, com a tabela do Passo 5 de `leitura-transcricoes.md`. **Regra de citação:** a linha mais leve só entra com o trecho da call que a justifica (call, minuto e fala); sem citação, vai a mais pesada. O que as calls não respondem vira **lacuna**: entra na conta com o valor mais pesado, vai para `lacunas_fathom` no JSON (o script mostra quantas semanas da venda dependem dela) e volta para o CN em *Lacunas para o CN* (no chat, na seção 11 e no anexo da proposta), com a pergunta pronta. **Integrações não geram pergunta sobre documentação:** recebem peso fixo pelo teste de `fatores/F3-integracoes.md`. No máximo 5 perguntas por rodada, as que mais mexem no prazo primeiro.
-4. **Montar o JSON** de entrada no formato dos `exemplos/*.json`: o bloco `"f0"` e **todos** os campos de F1 a F6. Nenhum campo tem padrão: se faltar um, o script para e diz qual. Rodar:
+4. **Montar o JSON** de entrada no formato da seção *Entrada da régua* dos `exemplos/*.md`: o bloco `"f0"` e **todos** os campos de F1 a F6. Nenhum campo tem padrão: se faltar um, o script para e diz qual. Rodar:
    ```bash
    python scripts/calcular_faixa.py entrada.json
    ```

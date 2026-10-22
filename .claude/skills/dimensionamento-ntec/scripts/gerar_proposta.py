@@ -2,9 +2,11 @@
 
 Uso:
     python gerar_proposta.py proposta.json [--saida PASTA]
+    python gerar_proposta.py exemplos/ficticio-petagenda-proposta.md [--saida PASTA]
 
 A entrada é um JSON com as 14 seções do template e o bloco `dimensionamento`
-(ver `proposta-tecnica.md` e `exemplos/ficticio-petagenda-proposta.json`).
+(ver `proposta-tecnica.md` e `exemplos/ficticio-petagenda-proposta.md`). Pode vir
+num `.json` ou no primeiro bloco ```json de um `.md`.
 A faixa de semanas NÃO é digitada: o script roda `calcular_faixa.calcular`
 sobre `dimensionamento.entrada`, para que a proposta e a régua nunca divirjam.
 
@@ -15,13 +17,12 @@ Precisa de `reportlab` (pip install reportlab).
 """
 
 import argparse
-import json
 import os
 import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from calcular_faixa import EntradaInvalida, calcular, fmt, parte_lacunas, semanas, sprints  # noqa: E402
+from calcular_faixa import EntradaInvalida, calcular, fmt, ler_entrada, parte_lacunas, semanas, sprints  # noqa: E402
 
 try:
     from reportlab.lib import colors
@@ -403,10 +404,9 @@ def pagina(projeto):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("proposta")
-    ap.add_argument("--saida", default=None, help="pasta do PDF (padrão: a pasta do JSON)")
+    ap.add_argument("--saida", default=None, help="pasta do PDF (padrão: a pasta da entrada)")
     a = ap.parse_args()
-    with open(a.proposta, encoding="utf-8") as f:
-        d = json.load(f)
+    d = ler_entrada(a.proposta)
     sys.stdout.reconfigure(encoding="utf-8")
     sys.stderr.reconfigure(encoding="utf-8")
     entrada = d.get("dimensionamento", {}).get("entrada")

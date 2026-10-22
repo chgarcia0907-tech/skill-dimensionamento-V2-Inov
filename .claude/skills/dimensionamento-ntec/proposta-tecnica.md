@@ -2,7 +2,7 @@
 
 O entregável da skill é a **Proposta Técnica** no template oficial do NTec ("Comercial → Validação de Projeto"). É o documento que o comercial manda para a validação técnica. A skill monta um JSON e roda `scripts/gerar_proposta.py`, que gera o PDF no visual do template: faixa azul-marinho no topo, selo laranja OBRIGATÓRIO, as 14 seções, o checklist final e um **Anexo — Memória do dimensionamento**.
 
-Modelo completo do JSON: `exemplos/ficticio-petagenda-proposta.json`.
+Modelo completo do JSON: `exemplos/ficticio-petagenda-proposta.md` (bloco ```json).
 
 ## Regras do preenchimento
 

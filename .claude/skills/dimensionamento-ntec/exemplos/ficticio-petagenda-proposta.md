@@ -1,3 +1,10 @@
+# Proposta Técnica modelo — PetAgenda (fictício)
+
+Modelo completo da entrada do `scripts/gerar_proposta.py`: as 14 seções do template e o bloco `dimensionamento`. Copiar a estrutura para um projeto novo. Ficha do caso: [ficticio-petagenda.md](ficticio-petagenda.md).
+
+Gerar o PDF: `python ../scripts/gerar_proposta.py ficticio-petagenda-proposta.md --saida <pasta>`. O script usa o primeiro bloco `json` deste arquivo.
+
+```json
 {
   "projeto": "PetAgenda (exemplo fictício)",
   "status": "pronto",
@@ -391,3 +398,4 @@
     ]
   }
 }
+```

@@ -36,3 +36,63 @@ O cidadão registra avistagens de espécies com foto e geolocalização. App nat
 
 ## Lição para a régua
 Se o hand-off mostrar que o app precisa funcionar **offline com sincronização** (comum em uso de campo), a régua soma +2 no central (faixa 14 / 19 / 26, recomendação de venda 20). Vale como alerta para futuros apps de campo: perguntar sempre.
+
+## Entrada da régua
+
+O JSON que o script lê (`python ../scripts/calcular_faixa.py projeto-d.md`). O script usa o primeiro bloco `json` deste arquivo.
+
+```json
+{
+  "projeto": "Projeto D (app de ciência cidadã)",
+  "f0": {
+    "stack_exigida_fora_da_lista": false,
+    "offline_sync_com_mongodb_exigido": false,
+    "sla_ou_sustentacao": false,
+    "infra_cliente_sem_acesso": false,
+    "multa_por_atraso": false,
+    "sem_validador_nomeado": false,
+    "feature_sem_referencia_nem_doc": false,
+    "hardware": false,
+    "prazo_exigido_semanas": null
+  },
+  "demanda_pouco_detalhada": false,
+  "atipico": false,
+  "stack_fora_template": false,
+  "niveis_acesso": "2-5-poucas",
+  "multitenancy": "nao",
+  "fluxos_comuns": 5,
+  "fluxos_rn_especifica": 0,
+  "features_atipicas": 0,
+  "formatos": [
+    "app",
+    "web"
+  ],
+  "fluxos_por_formato": {
+    "app": {
+      "comuns": 0,
+      "rn_especifica": 0,
+      "atipicas": 0
+    },
+    "web": {
+      "comuns": 0,
+      "rn_especifica": 0,
+      "atipicas": 0
+    },
+    "compartilhado": {
+      "comuns": 5,
+      "rn_especifica": 0,
+      "atipicas": 0
+    }
+  },
+  "integracoes": [
+    "uni_doc",
+    "template"
+  ],
+  "dependencia_dados": false,
+  "offline": "nao",
+  "volume_alto": false,
+  "rn_critica": false,
+  "deploy_infra_cliente": false,
+  "lojas": "normal"
+}
+```

@@ -20,7 +20,7 @@ Este arquivo é o caminho **sem transcrição**: o formulário **Dimensionamento
 
 **Se aparecer uma transcrição no meio do caminho:** passar para `leitura-transcricoes.md`. As lacunas seguem o Passo 6 de lá: valor mais pesado na conta, o fator em `lacunas_fathom` no JSON e o "+" na venda. Quem valida sem resposta vira `f0.sem_validador_nomeado: true` (🚩).
 
-**Critérios completos e pesos:** no arquivo de cada fase em `fatores/`. A tabela abaixo é o atalho das perguntas para o CN. **O JSON exige todos os campos**, inclusive o bloco `"f0"` (formato em `exemplos/*.json`): o que ninguém respondeu entra com o valor mais pesado e vai para *Suposições*.
+**Critérios completos e pesos:** no arquivo de cada fase em `fatores/`. A tabela abaixo é o atalho das perguntas para o CN. **O JSON exige todos os campos**, inclusive o bloco `"f0"` (formato na seção *Entrada da régua* de `exemplos/*.md`): o que ninguém respondeu entra com o valor mais pesado e vai para *Suposições*.
 
 **Primeiro o F0** (`fatores/F0-viabilidade.md`): se o cliente exige tecnologia fora da lista aceita, offline com sincronização em MongoDB, SLA ou sustentação, ou infra sem acesso do NTec, o projeto é rejeitado e não há o que perguntar do resto.
 
