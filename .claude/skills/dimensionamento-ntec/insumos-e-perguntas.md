@@ -1,8 +1,8 @@
 # Insumos e perguntas — como tirar os fatores do CN
 
-**A entrada padrão é a PRD** (documento de requisitos gerado pela skill `documento-requisitos-ntec`). Se o CN mandou a PRD, siga `leitura-prd.md`; deste arquivo, use só o vocabulário do Passo 3 quando precisar.
+**A entrada padrão são as transcrições na íntegra da AT Diagnóstico e da AT Aprofundamento** (Fathom). Se o CN mandou alguma transcrição, siga `leitura-transcricoes.md`; deste arquivo, use só o vocabulário do Passo 3 quando precisar.
 
-Este arquivo é o caminho **sem PRD**: o formulário **Dimensionamento Tec** (inteiro ou em parte), uma ficha de qualificação, um briefing solto ou a transcrição de uma call. Ele diz o que extrair de cada uma, o que perguntar quando faltar e como traduzir a fala do cliente para os fatores da régua. Toda resposta feita por este caminho sai como ⚠️ **Estimativa preliminar, sem PRD**, com a recomendação de rodar a skill da PRD antes de fechar a proposta.
+Este arquivo é o caminho **sem transcrição**: o formulário **Dimensionamento Tec** (inteiro ou em parte), uma ficha de qualificação, um briefing solto ou notas do CN. Ele diz o que extrair de cada um, o que perguntar quando faltar e como traduzir a fala do cliente para os fatores da régua. Toda resposta feita por este caminho sai como ⚠️ **Estimativa preliminar, sem transcrição das calls**, com a recomendação de mandar as transcrições da AT Diag e da AT Aprof antes de fechar a proposta.
 
 ---
 
@@ -10,15 +10,15 @@ Este arquivo é o caminho **sem PRD**: o formulário **Dimensionamento Tec** (in
 
 | Entrada | O que aproveitar | Cuidado |
 |---|---|---|
-| **PRD ("[Requisitos] {projeto}")** | Tudo | Não é este arquivo: ir para `leitura-prd.md` |
+| **Transcrição da AT Diag ou da AT Aprof** (Fathom, na íntegra) | Tudo | Não é este arquivo: ir para `leitura-transcricoes.md` |
 | Formulário Dimensionamento Tec | Seções 1 (perfis de usuário), 3 (fluxos críticos, features atípicas), 5 (porte e maturidade do cliente) e 6 (perfil da demanda: formato, níveis, multitenancy, integrações, dados, offline) | Seções 7 e 8 (baseline e buffer) preenchidas pelo CN são **palpite**: não usar como entrada, só comparar no fim |
 | Ficha de qualificação ou proposta | Produto, setor, porte, o que o cliente pediu | Costuma **subestimar o escopo** (Projeto B: o escopo real ficou maior que o da ficha) |
-| Transcrição de call (Fathom, Granola, notas) | Fluxos descritos pelo cliente, integrações citadas, urgência, quem aprova | Filtrar a conversa: só o que mexe em prazo. Desejo vago ("seria legal ter…") não é escopo até o CN confirmar |
+| Resumo de call (Granola, notas do CN, resumo do Fathom) | Fluxos descritos pelo cliente, integrações citadas, urgência, quem aprova | Não é fala do cliente: tudo é `origem: palpite do CN` até confirmar. Desejo vago ("seria legal ter…") não é escopo até o CN confirmar. Se existir a transcrição na íntegra, pedir |
 | Texto livre do CN | O que tiver | Tudo é `origem: palpite do CN` até ser confirmado |
 
 ## Passo 2 — Preencher os fatores, perguntando o que faltar
 
-**Se veio transcrição do Fathom (ou de outra ferramenta):** procurar a resposta de cada pergunta nela antes de perguntar, com as mesmas regras do Passo 4 de `leitura-prd.md` (só vale o que foi dito explicitamente, citar a reunião e o trecho). O que não estiver lá vira **lacuna** em *Lacunas para o CN*. Stack, infra e referência de produto que ficarem como lacuna seguem o Passo 4 de `leitura-prd.md`: valor mais pesado na conta, o fator em `lacunas_fathom` no JSON e o "+" na venda. Quem valida sem resposta vira `f0.sem_validador_nomeado: true` (🚩).
+**Se aparecer uma transcrição no meio do caminho:** passar para `leitura-transcricoes.md`. As lacunas seguem o Passo 6 de lá: valor mais pesado na conta, o fator em `lacunas_fathom` no JSON e o "+" na venda. Quem valida sem resposta vira `f0.sem_validador_nomeado: true` (🚩).
 
 **Critérios completos e pesos:** no arquivo de cada fase em `fatores/`. A tabela abaixo é o atalho das perguntas para o CN. **O JSON exige todos os campos**, inclusive o bloco `"f0"` (formato em `exemplos/*.json`): o que ninguém respondeu entra com o valor mais pesado e vai para *Suposições*.
 
@@ -64,13 +64,13 @@ Todo fator preenchido leva a origem entre parênteses:
 
 ```
 Níveis de acesso: 2 a 5 com grandes diferenças (origem: formulário, seção 6)
-Fluxos críticos: 4 (origem: transcrição da call, cliente descreveu 4 jornadas)
-Integração com ERP: bidirecional com sistema do cliente (origem: transcrição da call + regra de peso fixo)
+Fluxos críticos: 4 (origem: palpite do CN, a partir das notas da call)
+Integração com ERP: bidirecional com sistema do cliente (origem: formulário, seção 6 + regra de peso fixo)
 ```
 
 ## Passo 5 — Conferir declarado × encontrado
 
-Se o CN escreveu uma coisa e a transcrição ou os documentos mostram outra, registrar as duas e não corrigir em silêncio:
+Se o CN escreveu uma coisa e as notas ou os documentos mostram outra, registrar as duas e não corrigir em silêncio:
 
 ```
 Divergência: formulário diz "sem integrações", mas na call o cliente pediu emissão de nota fiscal.

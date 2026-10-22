@@ -2,7 +2,7 @@
 
 Skill do Claude que ajuda coordenadores de negócios (CNs) do Núcleo de Tecnologia a chegar a uma **faixa de semanas** realista (otimista / provável / conservador) antes de mandar a proposta para a área de projetos. A arquitetura segue a skill de dimensionamento do NCiv (Gabrielle Lobo, [repositório](https://github.com/gabriellelobo-pj/skill-dimensionamento)). A régua segue o formulário *Dimensionamento Tec* e foi calibrada nos projetos reais do NTec.
 
-**Entrada padrão: a PRD.** A skill roda logo depois da `documento-requisitos-ntec` ([repositório do Augustus](https://github.com/rivasaugustus/documento-requisitos-ntec)), que gera o documento de requisitos "[Requisitos] {projeto}". Esta skill ocupa o lugar que a skill da PRD chama de `validacao-tecnica-ntec`, mas calcula só o prazo, sem preço. Sem PRD, ela dimensiona mesmo assim, e o resultado sai como ⚠️ estimativa preliminar.
+**V2-Inov — entrada padrão: as transcrições da AT Diagnóstico e da AT Aprofundamento.** Esta versão é uma cópia de [skill-dimensionamento-ntec](https://github.com/chgarcia0907-tech/skill-dimensionamento-ntec) em que a skill deixa de ler a PRD: ela lê a transcrição na íntegra das duas calls no Fathom e dimensiona pelo que foi discutido nelas (`leitura-transcricoes.md`). Calcula só o prazo, sem preço. Com uma call só, ou sem transcrição, ela dimensiona mesmo assim, e o resultado sai como ⚠️ estimativa preliminar.
 
 > **Retomando em outra conversa?** Leia a seção [Contexto para retomar](#contexto-para-retomar) no fim deste arquivo.
 
@@ -12,15 +12,16 @@ Skill do Claude que ajuda coordenadores de negócios (CNs) do Núcleo de Tecnolo
 skill-dimensionamento-ntec/
 ├── README.md                       ← este arquivo
 ├── docs/
-│   ├── Dimensionamento-NTec-Skill.pdf   ← PDF explicativo (v4, anterior à revisão de 20/10: ainda mostra o fator Claude Code)
+│   ├── Dimensionamento-NTec-Skill.pdf   ← PDF explicativo (v4, anterior à revisão de 20/10 e à V2-Inov: ainda mostra a PRD e o fator Claude Code)
 │   ├── gerar_pdf.py                     ← gera o PDF (reportlab + fontes Segoe UI do Windows)
 │   └── revisao-20-10/                   ← insumos da revisão de 20/10: análise do Council, testes comparativos,
 │                                          patches v1 e v2 e o contexto de 21/10
 └── .claude/skills/dimensionamento-ntec/
     ├── SKILL.md                    ← orquestrador: procedimento, guardrails, entregável e resposta no chat
     ├── proposta-tecnica.md         ← como preencher as 14 seções da Proposta Técnica (o entregável)
-    ├── leitura-prd.md              ← entrada padrão: onde está cada fator na PRD + o que perguntar ao CN
-    ├── insumos-e-perguntas.md      ← caminho sem PRD (formulário, ficha, transcrição) + vocabulário
+    ├── leitura-transcricoes.md     ← entrada padrão: como ler a AT Diag e a AT Aprof, o que conta como escopo,
+    │                                 inventário de jornadas, onde está cada fator nas calls e as lacunas
+    ├── insumos-e-perguntas.md      ← caminho sem transcrição (formulário, ficha, briefing) + vocabulário
     ├── fatores/                    ← um arquivo por fase (F0 viabilidade a F6 lojas) com critérios e pesos,
     │                                 glossário e README com as decisões em aberto D1 a D5
     ├── regua-dimensionamento.md    ← regras de uso, faixa final, quando parar, calibração, fontes
@@ -28,8 +29,8 @@ skill-dimensionamento-ntec/
     ├── scripts/calcular_faixa.py   ← faz a conta (fonte da verdade dos pesos)
     ├── scripts/gerar_proposta.py   ← gera o PDF "[Proposta Técnica] {projeto}" no template do NTec (reportlab)
     └── exemplos/                   ← precedentes (.md + .json): Projeto A, Projeto B, Projeto C, Projeto D,
-                                      Projetos E e F (pendente), PetAgenda (fictício, resposta completa)
-                                      PetAgenda via PRD (fictício, leitura da PRD) e PetAgenda proposta (JSON modelo)
+                                      Projetos E e F (pendente), Projeto H (primeiro pelas transcrições, com a
+                                      proposta completa), PetAgenda (fictício) e PetAgenda proposta (JSON modelo)
 ```
 
 **Projetos anonimizados.** Os precedentes reais do NTec aparecem como Projeto A a F, só com o tipo de produto e os fatores da régua. Quem é cada um, as fichas originais e os links internos ficam numa pasta `privado/` que não vai para o repositório.
@@ -37,7 +38,7 @@ skill-dimensionamento-ntec/
 ## Como usar
 
 - **Instalada em:** `~\.claude\skills\dimensionamento-ntec\` (pasta pessoal; vale em qualquer projeto do Claude Code).
-- **Chamar:** `/dimensionamento-ntec`, ou pedir "dimensiona esse projeto" mandando o PDF da PRD (e, se tiver, o bloco "Inventário para dimensionamento"). Sem PRD, aceita o formulário, a ficha ou a transcrição, mas a estimativa sai como preliminar.
+- **Chamar:** `/dimensionamento-ntec`, ou pedir "dimensiona esse projeto" colando a transcrição na íntegra (Fathom, modo transcrição) da AT Diag e da AT Aprof, mais o link do protótipo, se tiver. Com uma call só, ou só o formulário, a ficha ou o briefing, a estimativa sai como preliminar.
 - **claude.ai:** compactar a pasta `dimensionamento-ntec` em .zip e enviar em *Settings → Capabilities → Skills*.
 - **Rodar a conta direto:**
   ```bash
@@ -62,7 +63,14 @@ skill-dimensionamento-ntec/
 
 Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para continuar em outra conversa sem precisar do histórico. **Comece por "Onde paramos".**
 
-### Onde paramos (21/10/2026)
+### Onde paramos (22/10/2026, V2-Inov)
+- **Entrada trocada:** a skill não lê mais a PRD. Lê a transcrição na íntegra da **AT Diag** e da **AT Aprof** no Fathom (`leitura-transcricoes.md`, que substitui `leitura-prd.md`). Só conta o que o cliente confirmou; a skill monta o inventário de jornadas; prazo e preço falados pelo CN na call ficam fora da conta e são comparados em *Observações*.
+- **Script:** `lacunas_fathom` aceita um objeto com o valor leve (`{"niveis_acesso": "nenhum", "integracoes": []}`), porque as calls deixam login e cobrança em aberto mais do que a PRD deixava. A lista antiga continua valendo. Pesos inalterados; A a D e PetAgenda com os mesmos números.
+- **Proposta Técnica:** cabeçalho e checklist pedem as duas transcrições em vez da PRD (`cabecalho.transcricoes`); o anexo ganhou o inventário de jornadas e as observações; o link do protótipo sai sem token de acesso.
+- **Primeiro caso:** Projeto H (app de cálculo clínico, `exemplos/projeto-h.md`): 10 / 13 / 20, vender 14 = 12 + 2 (login e cobrança). A CN tinha falado "2 a 3 meses".
+- **Ainda com a PRD:** o PDF explicativo em `docs/` e `docs/gerar_pdf.py`, e o histórico abaixo.
+
+### Onde paramos antes (21/10/2026)
 - **Revisão de 20/10 (reunião "Validação Skill NTec" + LLM Council):** **F0 de viabilidade** antes de tudo (🚫 rejeita ou 🚩 para para a área de projetos); critérios e pesos em **`fatores/`**, um arquivo por fase; **nenhum campo do JSON com padrão** (o script para se faltar um); tetos de fase não cortam a soma; **fator Claude Code e "cliente com pouca disponibilidade" removidos** (quem valida passou para o F0); F2 em 2 a 5 / 6+; formato extra +0,2; `bi_sem_doc` com mínimo 4. `SKILL.md`, `regua-dimensionamento.md`, `leitura-prd.md` e `insumos-e-perguntas.md` já apontam para `fatores/`.
 - **Em aberto:** decisões D1 a D5 (`fatores/README.md`) e os pesos marcados 🔎, a validar com Augusto e Frank. Até lá, o script usa os valores provisórios.
 - **Ainda com números antigos:** textos de `exemplos/*.md`, o cronograma de `exemplos/ficticio-petagenda-proposta.json`, `regra-fronteira-e-faixa.md` e o PDF explicativo em `docs/`.
@@ -92,6 +100,7 @@ Histórico de 17/10/2026:
 | 17/10/2026 | Fator Claude Code (primeiro x0,5, depois o meio-termo x0,75 no núcleo do F3); PDF explicativo v4 |
 | 17/10/2026 | Venda com "+" para as lacunas do Fathom ("14 = 12 + 2 que dependem do Fathom"), igual na skill e na página |
 | 21/10/2026 | Revisão de 20/10: F0, `fatores/` por fase, JSON sem padrões, tetos sem corte, fator Claude Code e disponibilidade do cliente removidos; documentos apontando para `fatores/` |
+| 22/10/2026 | V2-Inov: cópia do repositório; entrada passa a ser a transcrição da AT Diag e da AT Aprof, sem PRD; Projeto H como primeiro caso |
 
 ### O que foi pedido (origem)
 Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em conta que somos uma **empresa júnior**, use os dados reais dos projetos e chegue a uma **faixa de semanas**. O uso deve ser **prático para CNs**, que em geral são fracos tecnicamente e mandam para a equipe de projetos prazos sem sentido.
@@ -166,7 +175,7 @@ Feito: PDF v2 com a PRD; publicação no GitHub com projetos anonimizados; integ
 | O quê | Caminho |
 |---|---|
 | Cópia de trabalho (esta pasta, repositório git) | `~\OneDrive\Área de Trabalho\Projetos\skill-dimensionamento-ntec\` |
-| Repositório no GitHub (público) | https://github.com/matheusrpgomes-sketch/skill-dimensionamento-ntec |
+| Repositório no GitHub (público) | https://github.com/chgarcia0907-tech/skill-dimensionamento-V2-Inov (esta versão); original: https://github.com/chgarcia0907-tech/skill-dimensionamento-ntec |
 | Skill instalada (não sincroniza sozinha) | `~\.claude\skills\dimensionamento-ntec\` |
 | Mapa dos projetos reais (fora do git) | `privado\mapa-projetos.md` e `privado\exemplos-originais\` |
 | PDF | `docs\Dimensionamento-NTec-Skill.pdf` (cópia também em `~\Downloads\`) |

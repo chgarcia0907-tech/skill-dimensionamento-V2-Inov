@@ -27,7 +27,7 @@ Se nenhum critério bater, segue para o F1.
 
 | Pergunta | Onde ler | Sem resposta |
 |---|---|---|
-| O cliente **exige** alguma tecnologia fora da tabela acima? | PRD 3.1; Fathom ("tem que ser em…", "nossa TI só aceita…") | Segue para o F1. Registrar em *Suposições* que a stack será a do template, como premissa a validar na Sprint de Refino |
+| O cliente **exige** alguma tecnologia fora da tabela acima? | Calls ("tem que ser em…", "nossa TI só aceita…") | Segue para o F1. Registrar em *Suposições* que a stack será a do template, como premissa a validar na Sprint de Refino |
 
 Exemplos de **rejeição** (✅ Reunião 20/10): .NET, Angular, COBOL, Delphi. Também: Java/Spring, PHP/Laravel, Vue, Flutter, Django, Ruby on Rails (🔎 Proposta: estão fora da lista, confirmar).
 
@@ -41,7 +41,7 @@ Exemplos de **rejeição** (✅ Reunião 20/10): .NET, Angular, COBOL, Delphi. T
 
 | Pergunta | Onde ler | Resultado |
 |---|---|---|
-| O app **grava** dados sem internet para subir depois **e** o cliente exige MongoDB? | PRD (termo "offline"); 3.1; Fathom | 🚫 Rejeitado, até o cliente aceitar Postgres |
+| O app **grava** dados sem internet para subir depois **e** o cliente exige MongoDB? | Calls ("sem internet", "no interior não pega") | 🚫 Rejeitado, até o cliente aceitar Postgres |
 | O app grava sem internet e o cliente **não** exige banco | — | Segue. A proposta registra "Postgres" como premissa (ver ⏳ **D5**) |
 
 > ⏳ **D5 — em aberto:** quando a troca para Postgres é obrigatória por causa do offline, isso soma como "stack fora do template" no F1? **Provisório:** não soma, vira só premissa da Sprint de Refino.
@@ -52,11 +52,11 @@ Exemplos de **rejeição** (✅ Reunião 20/10): .NET, Angular, COBOL, Delphi. T
 
 | Pergunta | Onde ler | Resultado |
 |---|---|---|
-| O cliente exige um prazo **menor que o cenário otimista** da skill? | Fathom; briefing do CN | 🚩 Parar e consultar (a skill dimensiona, mas o status fica 🚩) |
-| O contrato prevê **multa por atraso**? | Fathom; minuta | 🚩 Parar e consultar |
-| O cliente exige **suporte 24/7, SLA ou sustentação** além da garantia de 30 dias? | Fathom; PRD 3 | 🚫 Rejeitado (o NTec não oferece) |
-| O sistema vai rodar na infra do cliente **sem acesso do time do NTec** para publicar e corrigir? | PRD 3.1; Fathom | 🚫 Rejeitado |
-| **Ninguém do cliente** foi nomeado para testar e aprovar as entregas? | Fathom | 🚩 Parar e consultar |
+| O cliente exige um prazo **menor que o cenário otimista** da skill? | Calls (data exigida pelo **cliente**; o prazo que o CN falou não conta); briefing do CN | 🚩 Parar e consultar (a skill dimensiona, mas o status fica 🚩) |
+| O contrato prevê **multa por atraso**? | Calls; minuta | 🚩 Parar e consultar |
+| O cliente exige **suporte 24/7, SLA ou sustentação** além da garantia de 30 dias? | Calls ("suporte", "manutenção", "24h") | 🚫 Rejeitado (o NTec não oferece) |
+| O sistema vai rodar na infra do cliente **sem acesso do time do NTec** para publicar e corrigir? | Calls ("nossos servidores", "a nossa TI publica") | 🚫 Rejeitado |
+| **Ninguém do cliente** foi nomeado para testar e aprovar as entregas? | Calls (pessoa nomeada; cliente pessoa física que acompanha os ajustes conta, ver `leitura-transcricoes.md`, Passo 5) | 🚩 Parar e consultar |
 
 ## 0.4 Restrições técnicas que antes eram 🚩 nas fases
 
@@ -64,10 +64,10 @@ Estes casos estavam espalhados em F2 e F3. Agora são conferidos aqui, antes de 
 
 | Pergunta | Onde ler | Resultado |
 |---|---|---|
-| Algum tenant tem **código ou regra de negócio diferente** dos outros? (ver *Instâncias* no glossário) | Visão Geral, 2.1, RNs, 3.4 | 🚩 Parar e consultar |
-| Alguma integração é com sistema que, segundo a PRD ou o Fathom, **não tem API**? (unidirecional **ou** bidirecional) | Itens SID "integrar com…"; Fathom | 🚩 Parar e consultar. Alternativa a sugerir: importação/exportação de planilha |
-| Alguma feature não tem **nenhuma** referência citada **e** não tem documentação técnica pública? | PRD fatores de complexidade; Fathom | 🚩 Parar e consultar. Pode exigir prova de conceito paga antes da proposta |
-| O produto depende de **hardware** (Bluetooth com dispositivo próprio, IoT, leitor, impressora fiscal)? | PRD; Fathom | 🚩 Parar e consultar (🔎 Proposta) |
+| Algum tenant tem **código ou regra de negócio diferente** dos outros? (ver *Instâncias* no glossário) | Calls ("cada unidade tem a sua regra") | 🚩 Parar e consultar |
+| Alguma integração é com sistema que, segundo o cliente, **não tem API**? (unidirecional **ou** bidirecional) | Calls (sistemas citados) | 🚩 Parar e consultar. Alternativa a sugerir: importação/exportação de planilha |
+| Alguma feature não tem **nenhuma** referência citada **e** não tem documentação técnica pública? | Calls | 🚩 Parar e consultar. Pode exigir prova de conceito paga antes da proposta |
+| O produto depende de **hardware** (Bluetooth com dispositivo próprio, IoT, leitor, impressora fiscal)? | Calls | 🚩 Parar e consultar (🔎 Proposta) |
 
 ## 0.5 Demanda pouco detalhada
 
@@ -79,7 +79,7 @@ Não rejeita. Ver o alerta de discovery em `F1-imersao-setup.md`, item 1.2.
 
 ```
 🚫 Projeto rejeitado no F0 — {critério}
-Motivo: {citação da PRD ou do Fathom}
+Motivo: {citação da call, com o minuto}
 O que precisaria mudar: {ex.: cliente aceitar Next.js em vez de Angular}
 ```
 

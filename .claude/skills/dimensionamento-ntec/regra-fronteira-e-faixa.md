@@ -57,7 +57,7 @@ F3 formato: PWA → app nativo (+x0,1 no núcleo, +2,5 de lojas)
 Motivo: cliente quer "baixar na loja"; na dúvida entre PWA e app, a régua vai para o mais pesado.
 
 F3 integração ERP: parada, sem valor
-Motivo: a PRD diz que o sistema do cliente não tem API e ele quer enviar e receber dados; potencial inviabilidade, a skill não decide.
+Motivo: o cliente disse na call que o sistema dele não tem API e ele quer enviar e receber dados; potencial inviabilidade, a skill não decide.
 ```
 
 Se a regra não mexeu em nada: `Sem ajustes de fronteira.`

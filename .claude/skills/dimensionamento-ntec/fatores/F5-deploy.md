@@ -23,8 +23,8 @@ Os itens 5.1 a 5.3 saem direto do formato (`F3-desenvolvimento.md`, item 3.2). N
 
 | Pergunta | Onde ler | Sem resposta |
 |---|---|---|
-| A conta de nuvem ou o servidor onde o sistema vai rodar é **do cliente**? | PRD 3.1; Fathom ("nossos servidores", "a nossa TI hospeda") | `false`, se a PRD 3.1 existe e não fala de infra. Sem PRD → lacuna: "O sistema vai ficar nos servidores ou na nuvem do cliente?" |
-| A TI do cliente precisa **aprovar cada publicação**, ou exige um pipeline de deploy próprio? | Fathom | Idem |
+| A conta de nuvem ou o servidor onde o sistema vai rodar é **do cliente**? | Calls ("nossos servidores", "a nossa TI hospeda") | `false` se o cliente é pessoa física ou não tem TI própria. Empresa com TI e ninguém falou → lacuna: "O sistema vai ficar nos servidores ou na nuvem do cliente?" |
+| A TI do cliente precisa **aprovar cada publicação**, ou exige um pipeline de deploy próprio? | Calls | Idem |
 
 Infra do cliente **sem acesso do time do NTec** para publicar e corrigir → **F0** (rejeitado).
 
