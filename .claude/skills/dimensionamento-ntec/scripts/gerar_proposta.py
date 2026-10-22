@@ -330,7 +330,7 @@ def montar(d, r):
     for nome, (a, b, c) in r["fases"].items():
         linhas.append([nome, fmt(a), fmt(b), fmt(c), crit.get(nome.split()[0], "")])
     linhas.append(["**Total**", f"**{fmt(r['otimista'])}**", f"**{fmt(r['provavel'])}**",
-                   f"**{fmt(r['conservador'])}**", f"Fator de formato no desenvolvimento: x{fmt(r['fator_formato'])}"])
+                   f"**{fmt(r['conservador'])}**", f"Fator de formato no desenvolvimento: {r['fator_formato_detalhe']}"])
     s.append(tabela(["Fase", "Mín", "Central", "Máx", "Critério"], linhas, [0.25, 0.07, 0.08, 0.07, 0.53]))
     if r["paradas"] or r["alertas"]:
         s.append(P("Alertas da régua", "h2"))

@@ -17,6 +17,11 @@ Revisão de 21/10/2026 (reunião de validação de 20/10/2026): F0 criado, fator
 Claude Code e "cliente com pouca disponibilidade" removidos, F2 em duas tabelas
 (2 a 5 e 6+), formato extra e `bi_sem_doc` revistos, tetos não cortam mais.
 As decisões em aberto (D1 a D5, `fatores/README.md`) usam o valor provisório.
+
+Revisão de 22/10/2026 (dimensionamento do Projeto G, primeiro projeto com PRD de dois
+níveis): fator de formato por fluxo (`fluxos_por_formato`): cada fluxo recebe o
+fator do código em que existe, e o formato extra só pesa nos fluxos que existem
+em mais de um código. Publicação nas lojas pode ser lacuna do Fathom ("+").
 """
 
 import json
@@ -53,7 +58,9 @@ F3_FLUXO_COMUM = (1, 1.25, 1.5)
 F3_FLUXO_RN = (2, 3, 4)
 F3_FEATURE_ATIPICA = (1, 1.5, 2)
 F3_FORMATO = {"web": 1.0, "pwa": 1.1, "app": 1.2}
-F3_FORMATO_EXTRA = 0.2  # D1: provisório (+0,2 por formato extra em código separado; antes +0,1)
+F3_FORMATO_EXTRA = 0.2  # D1: provisório (+0,2 por formato extra; antes +0,1). Só nos fluxos "compartilhado"
+F3_COMPARTILHADO = "compartilhado"  # chave de `fluxos_por_formato` para fluxo que existe em mais de um código
+F3_TIPOS_FLUXO = {"comuns": "fluxos_comuns", "rn_especifica": "fluxos_rn_especifica", "atipicas": "features_atipicas"}
 F3_INTEGRACAO = {
     "template": (0, 0, 0),
     "uni_doc": (0.5, 0.5, 1),
@@ -127,7 +134,10 @@ LACUNAS_FATHOM = {
     "atipico": "referência de produto",
     "stack_fora_template": "tecnologia exigida",
     "deploy_infra_cliente": "servidores do cliente",
+    "lojas": "publicação nas lojas",
 }
+# Valor leve de cada lacuna: com ele o script refaz a conta para mostrar o "+".
+LACUNAS_LEVE = {"atipico": False, "stack_fora_template": False, "deploy_infra_cliente": False, "lojas": "nao"}
 
 
 class EntradaInvalida(ValueError):
@@ -189,8 +199,43 @@ def validar(e):
     for campo, motivo in REMOVIDOS.items():
         if campo in e:
             erros.append(f"{campo}: tirar do JSON ({motivo})")
+    if not erros:
+        erros += validar_fluxos_por_formato(e)
     if erros:
         raise EntradaInvalida("Entrada incompleta ou inválida:\n  - " + "\n  - ".join(erros))
+
+
+def validar_fluxos_por_formato(e):
+    """Com mais de um formato, cada fluxo diz em que código existe (fatores/F3-desenvolvimento.md, 3.2)."""
+    erros = []
+    formatos = e["formatos"]
+    dist = e.get("fluxos_por_formato")
+    if len(formatos) == 1:
+        if dist is not None:
+            erros.append("fluxos_por_formato: só se usa com mais de um formato (tirar do JSON)")
+        return erros
+    if not isinstance(dist, dict):
+        return ["fluxos_por_formato: ausente. Com mais de um formato, dizer em que código cada fluxo existe: "
+                f"chaves {', '.join(formatos)} e '{F3_COMPARTILHADO}' (fluxo que existe em mais de um código), "
+                "cada uma com {\"comuns\", \"rn_especifica\", \"atipicas\"}"]
+    aceitas = set(formatos) | {F3_COMPARTILHADO}
+    for chave, cont in dist.items():
+        if chave not in aceitas:
+            erros.append(f"fluxos_por_formato.{chave}: não é um destes: {', '.join(sorted(aceitas))}")
+            continue
+        if not isinstance(cont, dict) or set(cont) != set(F3_TIPOS_FLUXO):
+            erros.append(f"fluxos_por_formato.{chave}: precisa ter exatamente comuns, rn_especifica e atipicas")
+            continue
+        for tipo, v in cont.items():
+            if not isinstance(v, int) or isinstance(v, bool) or v < 0:
+                erros.append(f"fluxos_por_formato.{chave}.{tipo}: não é um inteiro >= 0")
+    if erros:
+        return erros
+    for tipo, total in F3_TIPOS_FLUXO.items():
+        s = sum(cont[tipo] for cont in dist.values())
+        if s != e[total]:
+            erros.append(f"fluxos_por_formato: soma de '{tipo}' é {s}, mas {total} é {e[total]}")
+    return erros
 
 
 def soma(*partes):
@@ -254,13 +299,27 @@ def calcular(e):
 
     # F3 — Desenvolvimento
     formatos = e["formatos"]
-    fator = max(F3_FORMATO[f] for f in formatos) + F3_FORMATO_EXTRA * (len(formatos) - 1)
-    nucleo = soma(
-        vezes(F3_FLUXO_COMUM, e["fluxos_comuns"]),
-        vezes(F3_FLUXO_RN, e["fluxos_rn_especifica"]),
-        vezes(F3_FEATURE_ATIPICA, e["features_atipicas"]),
-    )
-    nucleo = vezes(nucleo, fator)
+    # Fator por fluxo: o fluxo recebe o fator do código em que existe. O formato extra (D1) só pesa
+    # nos fluxos que existem em mais de um código ("compartilhado"). Um formato só: todos os fluxos nele.
+    fator_compartilhado = max(F3_FORMATO[f] for f in formatos) + F3_FORMATO_EXTRA * (len(formatos) - 1)
+    if len(formatos) == 1:
+        dist = {formatos[0]: {t: e[c] for t, c in F3_TIPOS_FLUXO.items()}}
+    else:
+        dist = e["fluxos_por_formato"]
+    nucleo_bruto, nucleo, detalhe = (0, 0, 0), (0, 0, 0), []
+    for chave, cont in dist.items():
+        f = fator_compartilhado if chave == F3_COMPARTILHADO else F3_FORMATO[chave]
+        parte = soma(
+            vezes(F3_FLUXO_COMUM, cont["comuns"]),
+            vezes(F3_FLUXO_RN, cont["rn_especifica"]),
+            vezes(F3_FEATURE_ATIPICA, cont["atipicas"]),
+        )
+        nucleo_bruto = soma(nucleo_bruto, parte)
+        nucleo = soma(nucleo, vezes(parte, f))
+        n = sum(cont.values())
+        if n:
+            detalhe.append(f"{chave} x{fmt(f)} ({n} {'fluxo' if n == 1 else 'fluxos'})")
+    fator = nucleo[1] / nucleo_bruto[1] if nucleo_bruto[1] else fator_compartilhado
     if e["features_atipicas"]:
         alertas.append("Feature atípica: validar se é possível e se existe benchmark (pode exigir prova de conceito).")
 
@@ -332,15 +391,16 @@ def calcular(e):
                        "não vender sem a área de projetos.")
 
     # Parte da venda que depende das lacunas do Fathom (em sprints inteiras)
-    lacunas = [k for k in e.get("lacunas_fathom", []) if k in LACUNAS_FATHOM and e[k]]
+    lacunas = [k for k in e.get("lacunas_fathom", []) if k in LACUNAS_FATHOM and e[k] != LACUNAS_LEVE[k]]
     venda_confirmada = None
     if lacunas:
-        confirmada = dict(e, lacunas_fathom=[], **{k: False for k in lacunas})
+        confirmada = dict(e, lacunas_fathom=[], **{k: LACUNAS_LEVE[k] for k in lacunas})
         venda_confirmada = venda(calcular(confirmada)["provavel"])
 
     return {
         "fases": fases,
         "fator_formato": fator,
+        "fator_formato_detalhe": " · ".join(detalhe) or f"x{fmt(fator)}",
         "otimista": otimista,
         "provavel": provavel,
         "conservador": conservador,
@@ -397,7 +457,8 @@ def imprimir(e, r):
     print("|---|---|---|---|")
     for nome, (a, b, c) in r["fases"].items():
         print(f"| {nome} | {fmt(a)} | {fmt(b)} | {fmt(c)} |")
-    print(f"\nFator de formato no desenvolvimento: x{fmt(r['fator_formato'])}\n")
+    print(f"\nFator de formato no desenvolvimento: {r['fator_formato_detalhe']} "
+          f"(médio x{fmt(round(r['fator_formato'], 2))})\n")
     print("| Cenário | Semanas | Sprints (2 sem) |")
     print("|---|---|---|")
     rotulos = {
