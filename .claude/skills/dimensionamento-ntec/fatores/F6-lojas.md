@@ -19,7 +19,7 @@ Fazer na ordem. A primeira resposta que decide encerra o teste.
 | # | Pergunta | Onde ler | Resultado |
 |---|---|---|---|
 | 1 | O formato é app nativo? (ver glossário) | F3, item 3.2 | Não → **não publica** |
-| 2 | O app vai para a App Store ou a Play Store abertas ao público? | Módulo *Disponibilização do Produto*; 3.1 | Não (só uso interno ou teste) → **não publica** |
+| 2 | O app vai para a App Store ou a Play Store abertas ao público? | Módulo *Disponibilização do Produto*; 3.1; Fathom | Não (só uso interno ou teste) → **não publica**. Sem resposta → segue para a 3 (publica) + `"lojas"` em `lacunas_fathom`: a venda mostra com "+" quanto depende disso (`leitura-prd.md`, Passo 4) |
 | 3 | O app é **sensível**? (qualquer item abaixo) | 3.4; RNs; Fathom | Sim → **app sensível**. Não → **app comum** |
 
 **App sensível** se qualquer um for sim:

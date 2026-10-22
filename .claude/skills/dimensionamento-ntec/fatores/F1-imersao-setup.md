@@ -26,7 +26,7 @@ Antes, com PRD, este fator era sempre `false` e o alerta nunca disparava. Agora 
 | Pergunta | Onde ler | Sem resposta |
 |---|---|---|
 | Não há PRD gerada pela skill `documento-requisitos-ntec`? | Entrada da skill | — |
-| Algum módulo da PRD não tem a linha **Superfície**? | Seção 2 | Sim |
+| Algum módulo da PRD não tem a linha **Superfície**, nem no próprio módulo nem no título da seção-mãe (ex.: "2.2 Fluxo do Consultor (Aplicativo Mobile)" vale para 2.2.1 a 2.2.5)? | Seção 2 | Sim |
 | Alguma integração da PRD não tem **Sentido**, **Dados** ou **Meio**? | Itens SID | Sim |
 | Algum fluxo de dados não tem **Origem**, **Processamento** ou **Destino**? | Seção 2 | Sim |
 | Algum módulo marcado com fator de complexidade não tem a seção **Regras de Negócio**? | Seção 2 | Sim |

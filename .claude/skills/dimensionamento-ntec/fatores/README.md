@@ -50,7 +50,7 @@ Todo critério segue o mesmo formato, para que o Claude não precise interpretar
 
 | # | Decisão | Onde aparece | Provisório até decidir |
 |---|---|---|---|
-| **D1** | "Formato extra pelo menos 1,2" é **+0,2 por formato extra** (app + web = 1,4) ou **×1,2 sobre o fator** (app + web = 1,44)? | `F3-desenvolvimento.md` | +0,2 por formato extra |
+| **D1** | "Formato extra pelo menos 1,2" é **+0,2 por formato extra** (app + web = 1,4) ou **×1,2 sobre o fator** (app + web = 1,44)? Desde 22/10/2026 vale só para fluxos `compartilhado` (com tela em mais de um código) | `F3-desenvolvimento.md` | +0,2 por formato extra |
 | **D2** | Novos valores para as linhas que a reunião mandou aumentar sem dizer quanto: "2 a 5 com grandes diferenças" (F2a), "isolado" (F2b), "RN crítica" (F4) e central/máximo do `bi_sem_doc` (mínimo já é 4) | `F2-acesso-multitenancy.md`, `F4-testes.md`, `F3-integracoes.md` | Valores atuais, com sugestão ao lado |
 | **D3** | Margem de segurança ("gordura") explícita: percentual sobre o F3, sobre o total, ou embutida nos centrais? Quanto? | `F3-desenvolvimento.md` | Sem margem extra (como hoje) e aviso na resposta |
 | **D4** | Quando a soma de uma fase passa do teto: **manter a soma e marcar ⚠️** ou **parar** para a área de projetos? | `F1`, `F2`, `F4` | Manter a soma e marcar ⚠️ (não cortar) |

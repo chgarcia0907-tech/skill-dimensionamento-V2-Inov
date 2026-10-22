@@ -9,8 +9,8 @@
 **Conta do F3:**
 
 ```
-F3 = (núcleo × fator de formato) + integrações + extras [+ margem, ver D3]
-núcleo = fluxos comuns + fluxos com RN específica + features atípicas
+F3 = Σ (fluxos de cada código × fator daquele código) + integrações + extras [+ margem, ver D3]
+fluxos = fluxos comuns + fluxos com RN específica + features atípicas
 ```
 
 ---
@@ -19,12 +19,19 @@ núcleo = fluxos comuns + fluxos com RN específica + features atípicas
 
 ### Passo 1: quantos fluxos
 
-| Pergunta | Onde ler | Sem resposta |
-|---|---|---|
-| Quantos módulos a seção 2 da PRD tem, fora 2.1 Autenticação e Disponibilização do Produto? | PRD seção 2 | Sem PRD: perguntar ao CN as jornadas completas (`insumos-e-perguntas.md`). Sem fluxos, **não dimensionar** |
-| Algum módulo tem **mais de 8 itens A(cli)D**? Se sim, ele conta como **2 fluxos** | PRD seção 2 | — |
+A unidade é a **jornada**, não a numeração da PRD. A mesma PRD numerada em dois ou em três níveis tem de dar o mesmo número de fluxos (no Projeto G, contar por seção dava 26 semanas e contar por subseção dava 40). A regra completa está no glossário (*Fluxo*); o resumo:
 
-> 🔎 **Proposta:** o limite de 8 itens por fluxo resolve o "1 módulo = 1 fluxo", em que um módulo com 15 itens pesava o mesmo que um com 2. O número 8 precisa ser calibrado nos exemplos.
+| # | Passo | Onde ler |
+|---|---|---|
+| 1 | Listar as **folhas** da seção 2: a subseção mais funda que tem itens A(cli)D (2.2.1, 2.2.2… se existirem; senão 2.2, 2.3…). Fora: 2.1 Autenticação (F2) e Disponibilização do Produto (F5 e F6) | PRD seção 2 |
+| 2 | Tirar as folhas de **offline e sincronização** quando `offline` for `sync` ou `local`: o custo delas está no extra de offline (3.3), não em fluxo | PRD (termo "offline") |
+| 3 | **Juntar** folhas que são a mesma jornada: mesma entidade principal, mesmo código e uma é a continuação da outra (lista + detalhe da mesma coisa; criar + gerenciar a mesma coisa). Folha com **até 2 itens A(cli)D** que só existe para servir outra jornada (ex.: cadastrar pessoa durante a anotação) entra nela | PRD seção 2 |
+| 4 | Jornada com **mais de 8 itens A(cli)D** conta como **2 fluxos** | PRD seção 2 |
+| 5 | Registrar cada junção em *Suposições*, com as folhas juntadas (ex.: "2.2.1 + 2.2.2 = Auditorias") | — |
+
+**Sem PRD:** perguntar ao CN as jornadas completas (`insumos-e-perguntas.md`). Sem fluxos, **não dimensionar**.
+
+> 🔎 **Proposta:** o limite de 8 itens por fluxo e o "até 2 itens se junta" precisam ser calibrados quando o primeiro projeto com PRD terminar.
 
 ### Passo 2: cada fluxo é comum ou tem RN específica?
 
@@ -36,7 +43,9 @@ núcleo = fluxos comuns + fluxos com RN específica + features atípicas
 
 **Sem resposta:** fluxo comum, desde que a PRD não marque fator de complexidade no módulo. Se marca e não explica → RN específica + alerta de discovery (F1, item 1.2).
 
-**Não é RN específica:** validação padrão de mercado (CPF, CNPJ, CEP, e-mail), "cálculo que não pode errar" sem documento, ou só envolver dinheiro.
+**Não é RN específica:** validação padrão de mercado (CPF, CNPJ, CEP, e-mail), "cálculo que não pode errar" sem documento, só envolver dinheiro, ou **gerar um documento num template fixo** (relatório, contrato, certificado), inclusive em mais de um formato (PDF, Word, Excel). Template fixo e exportação fazem parte do módulo: o fluxo é comum (`leitura-prd.md`, Passo 3). Template que o usuário monta ou edita é *relatório configurável* (feature atípica).
+
+**Não usar a fronteira aqui.** "Na dúvida, linha mais pesada" (`regra-fronteira-e-faixa.md`) só vale quando as perguntas acima não decidem. Se a resposta das perguntas é "não", o fluxo é comum, mesmo que o módulo pareça trabalhoso.
 
 **Conta uma vez por módulo**, mesmo com várias RNs.
 
@@ -73,16 +82,39 @@ núcleo = fluxos comuns + fluxos com RN específica + features atípicas
 
 **Sem resposta entre PWA e app:** app.
 
-| Formato principal | Fator |
+| Formato | Fator |
 |---|---|
 | Web | ×1,0 |
 | PWA | ×1,1 |
 | App nativo | ×1,2 |
-| Cada formato extra em código separado | ⏳ **D1** |
+| Fluxo que existe em mais de um código (`compartilhado`) | fator do formato mais pesado + ⏳ **D1** por formato extra |
 
 O `webapp` do script deixa de existir: vira PWA se instala, web se não instala.
 
-✅ **Reunião 20/10:** o antigo "+0,1 por formato extra" é pouco. Deve ser **pelo menos 1,2**.
+### Fator por fluxo (revisão de 22/10/2026)
+
+**Cada fluxo recebe o fator do código em que existe.** Com mais de um formato, o JSON leva `fluxos_por_formato`, dizendo quantos fluxos estão em cada código:
+
+| Pergunta (para cada fluxo) | Onde ler | Chave |
+|---|---|---|
+| O fluxo só existe no app (ou só no painel)? | Linha **Superfície** do módulo, ou o título da seção-mãe ("Fluxo do Consultor (Aplicativo Mobile)") | O formato daquele código (`app`, `pwa`, `web`) |
+| O fluxo tem tela nos dois códigos (ex.: o tutor agenda no app e a recepção gerencia a mesma agenda no painel)? | Superfície "app mobile e painel web" | `compartilhado` |
+| Não dá para saber | — | `compartilhado` (linha mais pesada) |
+
+```json
+"formatos": ["app", "pwa"],
+"fluxos_por_formato": {
+  "app":           {"comuns": 3, "rn_especifica": 0, "atipicas": 0},
+  "pwa":           {"comuns": 5, "rn_especifica": 1, "atipicas": 0},
+  "compartilhado": {"comuns": 0, "rn_especifica": 0, "atipicas": 0}
+}
+```
+
+A soma de cada coluna tem de bater com `fluxos_comuns`, `fluxos_rn_especifica` e `features_atipicas` (o script confere). Com um formato só, o campo não entra.
+
+**Por quê:** antes, o fator de app + painel (×1,4) multiplicava **todos** os fluxos. Quando cada jornada vive num código só (consultor só no app, admin só no painel), o segundo código já está pago pelos fluxos dele, e o ×1,4 cobrava de novo. No Projeto G isso somava ~4 semanas. O custo de ter dois códigos que não está nos fluxos (setup e deploy do segundo código) já está no F1 e no F5.
+
+✅ **Reunião 20/10:** o antigo "+0,1 por formato extra" é pouco. Deve ser **pelo menos 1,2**. Agora ele vale só para os fluxos `compartilhado`.
 
 > ⏳ **D1 — em aberto:** "pelo menos 1,2" quer dizer:
 > - (a) **+0,2 por formato extra**: app + painel web = 1,2 + 0,2 = **×1,4**; ou
@@ -107,7 +139,11 @@ Os prazos de desenvolvimento **não** incluem a publicação nas lojas (que é F
 
 | Pergunta | Onde ler | Sem resposta |
 |---|---|---|
-| Algum dado vem de planilha, CSV, base pública ou sistema antigo e **uma pessoa dispara** a importação (uma vez ou de tempos em tempos)? | Fluxos com **Origem** / **Processamento** / **Destino** | `true` se a PRD citar importação ou migração |
+| O projeto depende de dados que **já existem fora do sistema** (planilha legada, base pública, sistema antigo) e precisam ser **migrados, limpos ou convertidos** para o produto funcionar? | Fluxos com **Origem** / **Processamento** / **Destino**; Exclusões | `true` se a PRD citar migração ou carga de base existente sem dizer o formato |
+
+**Não é dependência de dados** (é parte do módulo, 0 a mais): um **upload simples feito pelo usuário dentro do produto**, com formato definido na PRD, que vira registros na hora (ex.: planilha de uma coluna em que cada linha vira uma pergunta). Sinais: a PRD fixa o formato do arquivo, não pede conversão de unidades nem cruzamento com outra base, e a importação é uma tela do produto, não uma tarefa do projeto.
+
+É dependência de dados quando há pelo menos um destes: migração do histórico do cliente; base pública ou externa a tratar; conversão de unidades ou de formatos; cruzamento entre bases; dado sujo que precisa de limpeza. Nesses casos chamar o núcleo de Dados.
 
 Se a importação roda **sozinha**, sem ninguém disparar, é integração (`F3-integracoes.md`), não dependência de dados.
 

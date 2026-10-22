@@ -10,9 +10,19 @@ Definição única de cada termo usado nos arquivos F0 a F6. Se outro arquivo da
 
 **Item A(cli)D** — Cada linha de requisito "Adicionar, Consultar, Listar, Inativar, Deletar" dentro de um módulo da PRD.
 
-**Fluxo** — Unidade de esforço do F3. Uma jornada completa, do início ao fim, que se quebrar torna o produto inútil. Na PRD: **1 módulo com até 8 itens A(cli)D = 1 fluxo; acima de 8, conta 2 fluxos.** (🔎 Proposta: o limite 8 precisa ser calibrado nos exemplos.) Não contam como fluxo: 2.1 Autenticação (vai para F2) e Disponibilização do Produto (vai para F5 e F6). Uma tela solta não é fluxo.
+**Folha** — A subseção mais funda da seção 2 que tem itens A(cli)D. Numa PRD de dois níveis são 2.2, 2.3…; numa de três níveis, 2.2.1, 2.2.2…
+
+**Fluxo** — Unidade de esforço do F3. Uma **jornada** completa, do início ao fim, que se quebrar torna o produto inútil. Não depende de como a PRD foi numerada. Na PRD:
+1. Partir das **folhas**, fora 2.1 Autenticação (vai para F2), Disponibilização do Produto (vai para F5 e F6) e, quando `offline` for `sync` ou `local`, as folhas de offline e sincronização (vão para o extra de offline).
+2. **Juntar** folhas da mesma jornada: mesma entidade principal, mesmo código, e uma é continuação da outra (lista + detalhe; criar + gerenciar). Folha com até 2 itens A(cli)D que só serve a outra jornada entra nela (ex.: cadastrar pessoa durante a anotação).
+3. Jornada com **mais de 8 itens A(cli)D** conta 2 fluxos.
+4. Cada junção vai para *Suposições*.
+
+Exemplo (Projeto G, PRD de três níveis, 14 folhas): 2.3.1 e 2.3.2 (offline) saem para o extra; 2.2.1 + 2.2.2, 2.2.4 + 2.2.5 e 2.4.2 + 2.4.3 se juntam; ficam **9 fluxos**. Uma tela solta não é fluxo. (🔎 Proposta: os limites 8 e 2 precisam ser calibrados.)
 
 **Formato** — Cada **código separado** que vai para o ar. Painel admin dentro do mesmo app web é o mesmo formato. App nativo + painel web são dois formatos.
+
+**Fluxo compartilhado** — Fluxo com tela em mais de um código (ex.: o tutor agenda no app e a recepção gerencia a mesma agenda no painel). Só ele recebe o formato extra (D1). Fluxo que vive num código só recebe só o fator daquele código (`F3-desenvolvimento.md`, 3.2).
 
 **Web** — Abre no navegador, sem instalar.
 
@@ -46,7 +56,7 @@ Definição única de cada termo usado nos arquivos F0 a F6. Se outro arquivo da
 
 ## Regras de negócio
 
-**RN específica** (F3) — Regra que o cliente precisa entregar **escrita**: fórmula, tabela, norma, protocolo. Também: concorrência ("o primeiro que aceitar leva") e imutabilidade/versionamento. Validação padrão de mercado (CPF, CNPJ, e-mail, CEP) não é RN específica.
+**RN específica** (F3) — Regra que o cliente precisa entregar **escrita**: fórmula, tabela, norma, protocolo. Também: concorrência ("o primeiro que aceitar leva") e imutabilidade/versionamento. **Não são** RN específica: validação padrão de mercado (CPF, CNPJ, e-mail, CEP) e documento gerado num **template fixo** (relatório em PDF, Word ou Excel), mesmo em mais de um formato.
 
 **RN crítica** (F4) — **O código do NTec calcula** valor em dinheiro, dose, dado clínico, prazo legal ou dado fiscal, e um erro causa dano ao usuário final. Só repassar um valor para o gateway de pagamento não é RN crítica.
 
@@ -76,7 +86,7 @@ Definição única de cada termo usado nos arquivos F0 a F6. Se outro arquivo da
 
 **Sem API** — A PRD ou o Fathom dizem explicitamente que o outro sistema não tem API.
 
-**Dependência de dados** — Dados que vêm de planilha, CSV, base pública ou sistema antigo e **uma pessoa dispara** a importação (carga única ou recorrente).
+**Dependência de dados** — Dados que **já existem fora do sistema** (planilha legada, base pública, sistema antigo) e precisam ser migrados, limpos, convertidos ou cruzados para o produto funcionar; **uma pessoa dispara** a importação (carga única ou recorrente). **Não é:** upload simples feito pelo usuário dentro do produto, com formato fixado na PRD, que vira registros na hora (ex.: planilha de uma coluna, uma pergunta por linha). Isso é parte do módulo.
 
 **Offline local** — O app **só lê** sem internet o que já está no aparelho, sem gravar nada para subir depois.
 
