@@ -1,0 +1,1593 @@
+[
+ {
+  "caso": "H1 Marketplace B2B: 6+ perfis, isolado, ERP bidirecional sem doc, RN crítica",
+  "resultados": {
+   "Original (sem Claude Code)": {
+    "status": "ok",
+    "faixa": [
+     17.0,
+     22.5,
+     29.0
+    ],
+    "venda": 24,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      3.5,
+      4,
+      4
+     ],
+     "F3": [
+      10.0,
+      14.0,
+      18.5
+     ],
+     "F4": [
+      1.5,
+      2.0,
+      3
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "6+ níveis de acesso: complexidade alta, confirmar se todos são mesmo necessários no MVP.",
+     "Multitenancy com isolamento de dados: complexidade média/alta.",
+     "Acesso/infra bateu no teto de 4 semanas: revisar com a área de projetos.",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'."
+    ],
+    "internos": []
+   },
+   "Original (com Claude Code, padrão)": {
+    "status": "ok",
+    "faixa": [
+     12.8,
+     19.6,
+     27.6
+    ],
+    "venda": 20,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      2.45,
+      3.82,
+      4
+     ],
+     "F3": [
+      6.8,
+      11.25,
+      17.1
+     ],
+     "F4": [
+      1.5,
+      2.0,
+      3
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "6+ níveis de acesso: complexidade alta, confirmar se todos são mesmo necessários no MVP.",
+     "Multitenancy com isolamento de dados: complexidade média/alta.",
+     "Acesso/infra bateu no teto de 4 semanas: revisar com a área de projetos.",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'."
+    ],
+    "internos": []
+   },
+   "v1 (patch de 21/10)": {
+    "status": "ok",
+    "faixa": [
+     19.5,
+     24.5,
+     32.5
+    ],
+    "venda": 26,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      3.5,
+      4.5,
+      6
+     ],
+     "F3": [
+      12.5,
+      15.5,
+      20.0
+     ],
+     "F4": [
+      1.5,
+      2.0,
+      3
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "6+ níveis de acesso: complexidade alta, confirmar se todos são mesmo necessários no MVP.",
+     "Multitenancy com isolamento de dados: complexidade média/alta.",
+     "F2 (acesso e multitenancy) passou do teto de 4 semanas (6 no máximo): revisar com a área de projetos (D4: a soma foi mantida, não cortada).",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'.",
+     "Margem de segurança ainda não definida pelo NTec (D3): a faixa não tem margem extra."
+    ],
+    "internos": []
+   },
+   "v2 (corrigida, valores provisórios)": {
+    "status": "ok",
+    "faixa": [
+     19.5,
+     24.5,
+     32.5
+    ],
+    "venda": 26,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      3.5,
+      4.5,
+      6
+     ],
+     "F3": [
+      12.5,
+      15.5,
+      20.0
+     ],
+     "F4": [
+      1.5,
+      2.0,
+      3
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "6+ níveis de acesso: complexidade alta, confirmar se todos são mesmo necessários no MVP.",
+     "Multitenancy com isolamento de dados: complexidade média/alta.",
+     "F2 (acesso e multitenancy) passou do teto de 4 semanas (6 no máximo): revisar com a área de projetos (a soma foi mantida, não cortada).",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'."
+    ],
+    "internos": [
+     "D3 em aberto: margem de segurança 0, a faixa não tem margem extra."
+    ]
+   },
+   "v2 + sugestões D2/D3": {
+    "status": "ok",
+    "faixa": [
+     22.1,
+     28.0,
+     37.1
+    ],
+    "venda": 28,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      4.0,
+      5,
+      7
+     ],
+     "F3": [
+      14.06,
+      18.0,
+      23.06
+     ],
+     "F4": [
+      2,
+      2.5,
+      3.5
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "6+ níveis de acesso: complexidade alta, confirmar se todos são mesmo necessários no MVP.",
+     "Multitenancy com isolamento de dados: complexidade média/alta.",
+     "F2 (acesso e multitenancy) passou do teto de 4 semanas (7 no máximo): revisar com a área de projetos (a soma foi mantida, não cortada).",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'.",
+     "Provável acima de 26 semanas: fora da faixa calibrada da régua; validar com a área de projetos e considerar quebrar em fases."
+    ],
+    "internos": []
+   }
+  }
+ },
+ {
+  "caso": "H2 App de campo: offline com sync, troca Mongo→Supabase, demanda vaga, atípico",
+  "resultados": {
+   "Original (sem Claude Code)": {
+    "status": "ok",
+    "faixa": [
+     17.0,
+     22.1,
+     28.7
+    ],
+    "venda": 24,
+    "fases": {
+     "F1": [
+      3.5,
+      4,
+      4
+     ],
+     "F2": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F3": [
+      8.5,
+      11.6,
+      15.2
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Setor ou feature atípica: pedir benchmark ou referência antes de fechar o prazo.",
+     "Stack fora do template NTec: confirmar com a área de projetos se o time domina.",
+     "Imersão/setup bateu no teto de 4 semanas: revisar com a área de projetos.",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'.",
+     "Offline com sincronização: revisar a estrutura do banco antes de fechar o prazo."
+    ],
+    "internos": []
+   },
+   "Original (com Claude Code, padrão)": {
+    "status": "ok",
+    "faixa": [
+     14.1,
+     19.8,
+     27.7
+    ],
+    "venda": 20,
+    "fases": {
+     "F1": [
+      3.5,
+      4,
+      4
+     ],
+     "F2": [
+      1.05,
+      1.7,
+      2.5
+     ],
+     "F3": [
+      6.1,
+      9.57,
+      14.18
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Setor ou feature atípica: pedir benchmark ou referência antes de fechar o prazo.",
+     "Stack fora do template NTec: confirmar com a área de projetos se o time domina.",
+     "Imersão/setup bateu no teto de 4 semanas: revisar com a área de projetos.",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'.",
+     "Offline com sincronização: revisar a estrutura do banco antes de fechar o prazo."
+    ],
+    "internos": []
+   },
+   "v1 (patch de 21/10)": {
+    "status": "ok",
+    "faixa": [
+     17.0,
+     23.1,
+     31.2
+    ],
+    "venda": 24,
+    "fases": {
+     "F1": [
+      3.5,
+      5.0,
+      6.5
+     ],
+     "F2": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F3": [
+      8.5,
+      11.6,
+      15.2
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Demanda pouco detalhada: recomendar ao comercial uma fase de discovery antes da proposta.",
+     "Produto atípico: pedir benchmark ou referência antes de fechar o prazo.",
+     "Troca de stack aceita no F0: confirmar com a área de projetos se o time domina.",
+     "F1 (imersão e setup) passou do teto de 4 semanas (6,5 no máximo): revisar com a área de projetos (D4: a soma foi mantida, não cortada).",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'.",
+     "Offline com sincronização: banco em Postgres, não MongoDB (premissa da Sprint de Refino; D5: não soma como troca de stack no F1).",
+     "Margem de segurança ainda não definida pelo NTec (D3): a faixa não tem margem extra."
+    ],
+    "internos": []
+   },
+   "v2 (corrigida, valores provisórios)": {
+    "status": "ok",
+    "faixa": [
+     17.0,
+     23.1,
+     31.2
+    ],
+    "venda": 24,
+    "fases": {
+     "F1": [
+      3.5,
+      5.0,
+      6.5
+     ],
+     "F2": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F3": [
+      8.5,
+      11.6,
+      15.2
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Demanda pouco detalhada: recomendar ao comercial uma fase de discovery antes da proposta.",
+     "Produto atípico: pedir benchmark ou referência antes de fechar o prazo.",
+     "Troca de stack aceita no F0: confirmar com a área de projetos se o time domina.",
+     "F1 (imersão e setup) passou do teto de 4 semanas (6,5 no máximo): revisar com a área de projetos (a soma foi mantida, não cortada).",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'.",
+     "Offline com sincronização: banco em Postgres, não MongoDB (premissa da Sprint de Refino)."
+    ],
+    "internos": [
+     "D5 em aberto: a troca para Postgres por causa do sync não soma no F1.",
+     "D3 em aberto: margem de segurança 0, a faixa não tem margem extra."
+    ]
+   },
+   "v2 + sugestões D2/D3": {
+    "status": "ok",
+    "faixa": [
+     19.7,
+     26.2,
+     34.7
+    ],
+    "venda": 28,
+    "fases": {
+     "F1": [
+      3.5,
+      5.0,
+      6.5
+     ],
+     "F2": [
+      2,
+      2.5,
+      3
+     ],
+     "F3": [
+      10.69,
+      14.17,
+      18.22
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Demanda pouco detalhada: recomendar ao comercial uma fase de discovery antes da proposta.",
+     "Produto atípico: pedir benchmark ou referência antes de fechar o prazo.",
+     "Troca de stack aceita no F0: confirmar com a área de projetos se o time domina.",
+     "F1 (imersão e setup) passou do teto de 4 semanas (6,5 no máximo): revisar com a área de projetos (a soma foi mantida, não cortada).",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'.",
+     "Offline com sincronização: banco em Postgres, não MongoDB (premissa da Sprint de Refino).",
+     "Provável acima de 26 semanas: fora da faixa calibrada da régua; validar com a área de projetos e considerar quebrar em fases."
+    ],
+    "internos": [
+     "D5 em aberto: a troca para Postgres por causa do sync não soma no F1."
+    ]
+   }
+  }
+ },
+ {
+  "caso": "H3 SaaS web + PWA + app, 3 bases de código",
+  "resultados": {
+   "Original (sem Claude Code)": {
+    "status": "ok",
+    "faixa": [
+     13.5,
+     18.2,
+     24.5
+    ],
+    "venda": 20,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      1.0,
+      1.5,
+      2.5
+     ],
+     "F3": [
+      7.5,
+      9.75,
+      12.0
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      1.0,
+      1.5
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [],
+    "internos": []
+   },
+   "Original (com Claude Code, padrão)": {
+    "status": "ok",
+    "faixa": [
+     10.4,
+     15.8,
+     23.5
+    ],
+    "venda": 16,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      0.7,
+      1.27,
+      2.5
+     ],
+     "F3": [
+      4.7,
+      7.56,
+      10.95
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      1.0,
+      1.5
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [],
+    "internos": []
+   },
+   "v1 (patch de 21/10)": {
+    "status": "ok",
+    "faixa": [
+     14.5,
+     19.5,
+     26.0
+    ],
+    "venda": 20,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      1.0,
+      1.5,
+      2.5
+     ],
+     "F3": [
+      8.5,
+      11.0,
+      13.5
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      1.0,
+      1.5
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Margem de segurança ainda não definida pelo NTec (D3): a faixa não tem margem extra."
+    ],
+    "internos": []
+   },
+   "v2 (corrigida, valores provisórios)": {
+    "status": "ok",
+    "faixa": [
+     14.5,
+     19.5,
+     26.0
+    ],
+    "venda": 20,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      1.0,
+      1.5,
+      2.5
+     ],
+     "F3": [
+      8.5,
+      11.0,
+      13.5
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      1.0,
+      1.5
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [],
+    "internos": [
+     "D3 em aberto: margem de segurança 0, a faixa não tem margem extra."
+    ]
+   },
+   "v2 + sugestões D2/D3": {
+    "status": "ok",
+    "faixa": [
+     15.6,
+     20.9,
+     27.7
+    ],
+    "venda": 22,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      1.0,
+      1.5,
+      2.5
+     ],
+     "F3": [
+      9.56,
+      12.38,
+      15.19
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      1.0,
+      1.5
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [],
+    "internos": []
+   }
+  }
+ },
+ {
+  "caso": "H4 Site institucional com prazo exigido de 4 semanas",
+  "resultados": {
+   "Original (sem Claude Code)": {
+    "status": "ok",
+    "faixa": [
+     5.5,
+     7.0,
+     9.5
+    ],
+    "venda": 8,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F3": [
+      2.0,
+      2.5,
+      3.0
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [],
+    "internos": []
+   },
+   "Original (com Claude Code, padrão)": {
+    "status": "ok",
+    "faixa": [
+     4.5,
+     6.3,
+     9.2
+    ],
+    "venda": 8,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      0.35,
+      0.42,
+      1.0
+     ],
+     "F3": [
+      1.2,
+      1.88,
+      2.7
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [],
+    "internos": []
+   },
+   "v1 (patch de 21/10)": {
+    "status": "PARADO",
+    "faixa": [
+     5.5,
+     7.0,
+     9.5
+    ],
+    "venda": 8,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F3": [
+      2.0,
+      2.5,
+      3.0
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [
+     "O cliente exige 4 semanas, abaixo do otimista (5,5): não vender sem a área de projetos."
+    ],
+    "alertas": [
+     "Margem de segurança ainda não definida pelo NTec (D3): a faixa não tem margem extra."
+    ],
+    "internos": []
+   },
+   "v2 (corrigida, valores provisórios)": {
+    "status": "PARADO",
+    "faixa": [
+     5.5,
+     7.0,
+     9.5
+    ],
+    "venda": 8,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F3": [
+      2.0,
+      2.5,
+      3.0
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [
+     "O cliente exige 4 semanas, abaixo do otimista (5,5): não vender sem a área de projetos."
+    ],
+    "alertas": [],
+    "internos": [
+     "D3 em aberto: margem de segurança 0, a faixa não tem margem extra."
+    ]
+   },
+   "v2 + sugestões D2/D3": {
+    "status": "PARADO",
+    "faixa": [
+     5.8,
+     7.3,
+     9.9
+    ],
+    "venda": 8,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F3": [
+      2.25,
+      2.81,
+      3.38
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [
+     "O cliente exige 4 semanas, abaixo do otimista (5,75): não vender sem a área de projetos."
+    ],
+    "alertas": [],
+    "internos": []
+   }
+  }
+ },
+ {
+  "caso": "H5 Cliente exige .NET; o CN só preencheu o F0",
+  "resultados": {
+   "Original (sem Claude Code)": {
+    "status": "ok",
+    "faixa": [
+     3.5,
+     4.5,
+     6.5
+    ],
+    "venda": 6,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F3": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [],
+    "internos": []
+   },
+   "Original (com Claude Code, padrão)": {
+    "status": "ok",
+    "faixa": [
+     3.4,
+     4.4,
+     6.5
+    ],
+    "venda": 6,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      0.35,
+      0.42,
+      1.0
+     ],
+     "F3": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [],
+    "internos": []
+   },
+   "v1 (patch de 21/10)": {
+    "status": "ERRO DE ENTRADA",
+    "detalhe": "niveis_acesso: ausente | multitenancy: ausente | offline: ausente"
+   },
+   "v2 (corrigida, valores provisórios)": {
+    "status": "REJEITADO",
+    "detalhe": "O cliente exige uma tecnologia fora da lista aceita pelo NTec."
+   },
+   "v2 + sugestões D2/D3": {
+    "status": "REJEITADO",
+    "detalhe": "O cliente exige uma tecnologia fora da lista aceita pelo NTec."
+   }
+  }
+ },
+ {
+  "caso": "H6 = H1 com multitenancy, lojas e formatos esquecidos no JSON",
+  "resultados": {
+   "Original (sem Claude Code)": {
+    "status": "ok",
+    "faixa": [
+     16.0,
+     21.5,
+     29.0
+    ],
+    "venda": 22,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      2.5,
+      3,
+      4
+     ],
+     "F3": [
+      10.0,
+      14.0,
+      18.5
+     ],
+     "F4": [
+      1.5,
+      2.0,
+      3
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "6+ níveis de acesso: complexidade alta, confirmar se todos são mesmo necessários no MVP.",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'."
+    ],
+    "internos": []
+   },
+   "Original (com Claude Code, padrão)": {
+    "status": "ok",
+    "faixa": [
+     12.1,
+     18.3,
+     27.6
+    ],
+    "venda": 20,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      1.75,
+      2.55,
+      4.0
+     ],
+     "F3": [
+      6.8,
+      11.25,
+      17.1
+     ],
+     "F4": [
+      1.5,
+      2.0,
+      3
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "6+ níveis de acesso: complexidade alta, confirmar se todos são mesmo necessários no MVP.",
+     "Integração com sistema do cliente: incluir a cláusula de contrato (acesso à API até o início da sprint; sem acesso, vira planilha) e o plano B em 'O que cortar'."
+    ],
+    "internos": []
+   },
+   "v1 (patch de 21/10)": {
+    "status": "ERRO DE ENTRADA",
+    "detalhe": "multitenancy: ausente | lojas: ausente | formatos: ausente ou vazio"
+   },
+   "v2 (corrigida, valores provisórios)": {
+    "status": "ERRO DE ENTRADA",
+    "detalhe": "multitenancy: ausente | lojas: ausente | formatos: ausente ou vazio"
+   },
+   "v2 + sugestões D2/D3": {
+    "status": "ERRO DE ENTRADA",
+    "detalhe": "multitenancy: ausente | lojas: ausente | formatos: ausente ou vazio"
+   }
+  }
+ },
+ {
+  "caso": "H7 Tecnologia exigida em lacuna do Fathom",
+  "resultados": {
+   "Original (sem Claude Code)": {
+    "status": "ok",
+    "faixa": [
+     7.5,
+     10.2,
+     13.0
+    ],
+    "venda": 12,
+    "fases": {
+     "F1": [
+      2.5,
+      3.5,
+      4
+     ],
+     "F2": [
+      0.5,
+      1,
+      1.5
+     ],
+     "F3": [
+      3.0,
+      3.75,
+      4.5
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Stack fora do template NTec: confirmar com a área de projetos se o time domina.",
+     "Imersão/setup bateu no teto de 4 semanas: revisar com a área de projetos."
+    ],
+    "internos": []
+   },
+   "Original (com Claude Code, padrão)": {
+    "status": "ok",
+    "faixa": [
+     6.1,
+     9.2,
+     12.6
+    ],
+    "venda": 10,
+    "fases": {
+     "F1": [
+      2.5,
+      3.5,
+      4
+     ],
+     "F2": [
+      0.35,
+      0.85,
+      1.5
+     ],
+     "F3": [
+      1.8,
+      2.81,
+      4.05
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Stack fora do template NTec: confirmar com a área de projetos se o time domina.",
+     "Imersão/setup bateu no teto de 4 semanas: revisar com a área de projetos."
+    ],
+    "internos": []
+   },
+   "v1 (patch de 21/10)": {
+    "status": "ok",
+    "faixa": [
+     7.5,
+     10.2,
+     13.5
+    ],
+    "venda": 12,
+    "fases": {
+     "F1": [
+      2.5,
+      3.5,
+      4.5
+     ],
+     "F2": [
+      0.5,
+      1,
+      1.5
+     ],
+     "F3": [
+      3.0,
+      3.75,
+      4.5
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Troca de stack aceita no F0: confirmar com a área de projetos se o time domina.",
+     "F1 (imersão e setup) passou do teto de 4 semanas (4,5 no máximo): revisar com a área de projetos (D4: a soma foi mantida, não cortada).",
+     "Margem de segurança ainda não definida pelo NTec (D3): a faixa não tem margem extra."
+    ],
+    "internos": []
+   },
+   "v2 (corrigida, valores provisórios)": {
+    "status": "ok",
+    "faixa": [
+     7.5,
+     10.2,
+     13.5
+    ],
+    "venda": 12,
+    "fases": {
+     "F1": [
+      2.5,
+      3.5,
+      4.5
+     ],
+     "F2": [
+      0.5,
+      1,
+      1.5
+     ],
+     "F3": [
+      3.0,
+      3.75,
+      4.5
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Troca de stack aceita no F0: confirmar com a área de projetos se o time domina.",
+     "Tecnologia exigida ainda não confirmada: se estiver fora da lista aceita, o projeto é rejeitado no F0 (fatores/F0-viabilidade.md), não só mais lento.",
+     "F1 (imersão e setup) passou do teto de 4 semanas (4,5 no máximo): revisar com a área de projetos (a soma foi mantida, não cortada)."
+    ],
+    "internos": [
+     "D3 em aberto: margem de segurança 0, a faixa não tem margem extra."
+    ]
+   },
+   "v2 + sugestões D2/D3": {
+    "status": "ok",
+    "faixa": [
+     7.9,
+     10.7,
+     14.1
+    ],
+    "venda": 12,
+    "fases": {
+     "F1": [
+      2.5,
+      3.5,
+      4.5
+     ],
+     "F2": [
+      0.5,
+      1,
+      1.5
+     ],
+     "F3": [
+      3.38,
+      4.22,
+      5.06
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      0,
+      0,
+      0
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Troca de stack aceita no F0: confirmar com a área de projetos se o time domina.",
+     "Tecnologia exigida ainda não confirmada: se estiver fora da lista aceita, o projeto é rejeitado no F0 (fatores/F0-viabilidade.md), não só mais lento.",
+     "F1 (imersão e setup) passou do teto de 4 semanas (4,5 no máximo): revisar com a área de projetos (a soma foi mantida, não cortada)."
+    ],
+    "internos": []
+   }
+  }
+ },
+ {
+  "caso": "H8 Formato repetido por engano: [app, app]",
+  "resultados": {
+   "Original (sem Claude Code)": {
+    "status": "ok",
+    "faixa": [
+     9.4,
+     11.9,
+     16.4
+    ],
+    "venda": 12,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F3": [
+      3.9,
+      4.88,
+      5.85
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [],
+    "internos": []
+   },
+   "Original (com Claude Code, padrão)": {
+    "status": "ok",
+    "faixa": [
+     7.7,
+     10.6,
+     15.8
+    ],
+    "venda": 12,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      0.35,
+      0.42,
+      1.0
+     ],
+     "F3": [
+      2.34,
+      3.66,
+      5.27
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [],
+    "internos": []
+   },
+   "v1 (patch de 21/10)": {
+    "status": "ok",
+    "faixa": [
+     9.7,
+     12.2,
+     16.8
+    ],
+    "venda": 14,
+    "fases": {
+     "F1": [
+      1.5,
+      2,
+      2.5
+     ],
+     "F2": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F3": [
+      4.2,
+      5.25,
+      6.3
+     ],
+     "F4": [
+      1,
+      1.5,
+      2
+     ],
+     "F5": [
+      0.5,
+      0.5,
+      1
+     ],
+     "F6": [
+      2,
+      2.5,
+      4
+     ]
+    },
+    "paradas": [],
+    "alertas": [
+     "Margem de segurança ainda não definida pelo NTec (D3): a faixa não tem margem extra."
+    ],
+    "internos": []
+   },
+   "v2 (corrigida, valores provisórios)": {
+    "status": "ERRO DE ENTRADA",
+    "detalhe": "formatos: formato repetido (cada formato entra uma vez)"
+   },
+   "v2 + sugestões D2/D3": {
+    "status": "ERRO DE ENTRADA",
+    "detalhe": "formatos: formato repetido (cada formato entra uma vez)"
+   }
+  }
+ }
+]

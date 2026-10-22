@@ -13,7 +13,9 @@ skill-dimensionamento-ntec/
 ├── README.md                       ← este arquivo
 ├── docs/
 │   ├── Dimensionamento-NTec-Skill.pdf   ← PDF explicativo (v4, anterior à revisão de 20/10: ainda mostra o fator Claude Code)
-│   └── gerar_pdf.py                     ← gera o PDF (reportlab + fontes Segoe UI do Windows)
+│   ├── gerar_pdf.py                     ← gera o PDF (reportlab + fontes Segoe UI do Windows)
+│   └── revisao-20-10/                   ← insumos da revisão de 20/10: análise do Council, testes comparativos,
+│                                          patches v1 e v2 e o contexto de 21/10
 └── .claude/skills/dimensionamento-ntec/
     ├── SKILL.md                    ← orquestrador: procedimento, guardrails, entregável e resposta no chat
     ├── proposta-tecnica.md         ← como preencher as 14 seções da Proposta Técnica (o entregável)
