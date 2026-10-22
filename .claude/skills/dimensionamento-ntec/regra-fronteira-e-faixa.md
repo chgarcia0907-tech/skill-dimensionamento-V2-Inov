@@ -34,7 +34,8 @@ Sempre nesta ordem. Só passa ao passo seguinte se o anterior não resolver.
 | 3 | PWA ou app? | "Quero que instale no celular" | Se não precisa de loja nem de recurso nativo pesado (Bluetooth, segundo plano) → PWA. Na dúvida → app |
 | 4 | Serviço de mercado ou sistema do cliente? | "Tem API, o TI de lá passa" | Produto vendido para qualquer empresa, com API pública = mercado. Sistema que só o cliente usa, ou dúvida = sistema do cliente (peso fixo, sem pedir link) |
 | 5 | Atípico ou só setor incomum? | App de agenda para criadores de abelhas | Setor incomum com produto comum = **não** atípico. Atípico é o *produto* sem benchmark |
-| 6 | Mesmo formato ou formato extra? | Painel admin | Mesmo código web = mesmo formato. Código separado (ex.: app nativo + painel web) = extra |
+| 6 | Mesmo formato ou formato extra? | Painel admin | Mesmo código web = mesmo formato. Código separado (ex.: app nativo + painel web) = extra, mas o extra só pesa nos fluxos com tela nos dois códigos (`compartilhado`). Na dúvida sobre onde o fluxo vive → `compartilhado` |
+| 8 | RN específica ou fluxo comum? | Relatório em PDF e Word num template fixo | Comum. Não usar a fronteira: template fixo e exportação estão decididos em `fatores/F3-desenvolvimento.md` (Passo 2). A fronteira só vale quando as perguntas do fator não decidem |
 | 7 | Dependência de dados ou integração? | "Importar a tabela nutricional pública" | Dado estático importado uma vez ou atualizado à mão = dependência de dados. Consulta automática a um serviço = integração |
 
 ## 4. Comentário obrigatório
