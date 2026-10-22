@@ -77,7 +77,7 @@ OBRIGATORIAS = {4, 6, 8, 10, 11, 14}
 STATUS = {  # (selo, cor, texto) — selo em texto porque as fontes do PDF não têm emoji
     "pronto": ("PRONTO", "#3D7A55", "Pronto para proposta"),
     "atencao": ("REVISÃO", "#D9782D", "Precisa de revisão da área de projetos"),
-    "preliminar": ("PRELIMINAR", "#D9782D", "Estimativa preliminar, sem PRD"),
+    "preliminar": ("PRELIMINAR", "#D9782D", "Estimativa preliminar, sem as transcrições das duas calls"),
     "parado": ("PARADO", "#C0453B", "Restrição técnica ou possível inviabilidade"),
 }
 
@@ -151,15 +151,27 @@ def vazio(v):
     return v in (None, "", [], {})
 
 
+def tem_as_duas_calls(cab):
+    """A entrada padrão são as transcrições da AT Diag e da AT Aprof (leitura-transcricoes.md)."""
+    calls = " ".join(str(c.get("call", "")) for c in cab.get("transcricoes", [])).lower()
+    return "diag" in calls and "aprof" in calls
+
+
+def sem_token(link):
+    """Tira do link do protótipo parâmetros que dão acesso a quem tiver o link (ex.: ?magic_link= do Lovable)."""
+    if not link:
+        return link
+    return re.sub(r"[?&](magic_link|token|access_token|invite)=[^&#\s]*", "", str(link))
+
+
 # ---------------------------------------------------------------- checklist
 def checklist(d, r):
     cab = d.get("cabecalho", {})
-    pag = cab.get("prd_paginas")
     proto = d.get("prototipo", {})
     itens = []
     itens.append((
-        "PRD (entre 5 e ~10 páginas) e protótipo anexados",
-        bool(cab.get("prd_link")) and isinstance(pag, int) and 5 <= pag <= 12 and bool(cab.get("prototipo_link")),
+        "Transcrições da AT Diagnóstico e da AT Aprofundamento e protótipo anexados",
+        tem_as_duas_calls(cab) and bool(cab.get("prototipo_link")),
     ))
     obrig = {
         4: d.get("perfis", {}).get("tabela"), 6: d.get("regras"), 8: d.get("seguranca"),
@@ -167,7 +179,7 @@ def checklist(d, r):
     }
     itens.append(("Todos os campos OBRIGATÓRIO preenchidos", all(not vazio(v) for v in obrig.values())))
     itens.append((
-        "Protótipo segue as regras de negócio do PRD — ou as adaptações estão justificadas e claras para o MVP (seção 14)",
+        "Protótipo segue as regras de negócio combinadas nas calls — ou as adaptações estão justificadas e claras para o MVP (seção 14)",
         bool(proto.get("recebido")) and not vazio(obrig[14]),
     ))
     cron = " ".join(str(s[1]) for s in d.get("cronograma", {}).get("sprints", [])).lower()
@@ -201,11 +213,11 @@ def montar(d, r):
                  f"Faixa: otimista {semanas(r['otimista'])} · provável {semanas(r['provavel'])} · "
                  f"conservador {semanas(r['conservador'])} semanas. Detalhe no Anexo."), ST["box"])))
     s.append(Spacer(1, 6))
-    pag = cab.get("prd_paginas")
+    calls = " · ".join(f"{c.get('call', '?')} ({c.get('data', 'sem data')})" for c in cab.get("transcricoes", []))
     s.append(caixa(P(
-        "**Pré-requisito para enviar à validação: documento de requisitos (PRD) + protótipo.** "
-        f"PRD: {cab.get('prd_link') or 'não informado'}"
-        f"{f' ({pag} páginas)' if pag else ''} · Protótipo: {cab.get('prototipo_link') or 'não informado'}", "box"),
+        "**Pré-requisito para enviar à validação: transcrições da AT Diagnóstico e da AT Aprofundamento + protótipo.** "
+        f"Transcrições: {calls or 'não informadas'} · "
+        f"Protótipo: {sem_token(cab.get('prototipo_link')) or 'não informado'}", "box"),
         fundo=WARN_BG, barra=ORANGE))
     s.append(Spacer(1, 7))
     meta = [
@@ -262,7 +274,7 @@ def montar(d, r):
     s += titulo(9, "Módulos críticos (pagamentos, integrações externas, automações)")
     mods = d.get("modulos_criticos", [])
     if not mods:
-        s.append(P("Não há módulo crítico de pagamento, integração externa ou automação no PRD."))
+        s.append(P("Não há módulo crítico de pagamento, integração externa ou automação no que foi discutido nas calls."))
     for m in mods:
         bloco = [P(m.get("nome", ""), "h2"), bullets(m.get("detalhe", []))]
         bloco += rotulados([(k, m[c]) for k, c in (("Entra no MVP", "mvp"),
@@ -295,7 +307,7 @@ def montar(d, r):
     s += titulo(14, "Protótipo × regras de negócio")
     pr = d.get("prototipo", {})
     if pr.get("tabela"):
-        s.append(tabela(["Tela/fluxo", "Regra do PRD", "Adaptação no protótipo", "Justificativa", "Vale para o MVP?"],
+        s.append(tabela(["Tela/fluxo", "Regra combinada nas calls", "Adaptação no protótipo", "Justificativa", "Vale para o MVP?"],
                         pr["tabela"], [0.18, 0.24, 0.22, 0.22, 0.14]))
     if pr.get("declaracao"):
         s.append(P(pr["declaracao"]))
@@ -312,7 +324,8 @@ def montar(d, r):
 
     # anexo
     s += titulo(0, "Anexo — Memória do dimensionamento (para a validação técnica)")
-    s.append(P("Calculado com a skill dimensionamento-ntec sobre o PRD. Sem buffer percentual: o risco está no "
+    s.append(P("Calculado com a skill dimensionamento-ntec sobre as transcrições da AT Diagnóstico e da AT Aprofundamento. "
+               "Sem buffer percentual: o risco está no "
                "intervalo mínimo / central / máximo de cada fase. Semanas off e garantia de 30 dias ficam fora da faixa.",
                "small"))
     s.append(P("Faixa de semanas", "h2"))
@@ -332,6 +345,10 @@ def montar(d, r):
     linhas.append(["**Total**", f"**{fmt(r['otimista'])}**", f"**{fmt(r['provavel'])}**",
                    f"**{fmt(r['conservador'])}**", f"Fator de formato no desenvolvimento: {r['fator_formato_detalhe']}"])
     s.append(tabela(["Fase", "Mín", "Central", "Máx", "Critério"], linhas, [0.25, 0.07, 0.08, 0.07, 0.53]))
+    if dim.get("inventario"):
+        s.append(P("Inventário de jornadas (o que foi confirmado nas calls)", "h2"))
+        s.append(tabela(["Jornada", "Quem faz", "Onde", "Regra, cálculo ou integração", "Citação"],
+                        dim["inventario"], [0.17, 0.12, 0.09, 0.31, 0.31]))
     if r["paradas"] or r["alertas"]:
         s.append(P("Alertas da régua", "h2"))
         s.append(bullets([f"**PARADO:** {p}" for p in r["paradas"]] + r["alertas"]))
@@ -349,7 +366,7 @@ def montar(d, r):
         s.append(P("O que cortar", "h2"))
         s.append(tabela(["Corte", "Economia estimada"], dim["cortes"], [0.72, 0.28]))
     for rot, chave in (("Suposições", "suposicoes"), ("Ajustes de fronteira", "fronteira"),
-                       ("Pontos para a imersão", "imersao")):
+                       ("Pontos para a imersão", "imersao"), ("Observações", "observacoes")):
         if dim.get(chave):
             s.append(P(rot, "h2"))
             s.append(bullets(dim[chave]))

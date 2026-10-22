@@ -21,15 +21,15 @@ Sempre entra. Cobre imersão, Sprint de Refino, setup do monorepo e pedido de ac
 
 ✅ **Reunião 20/10:** quando a demanda estiver pouco detalhada, a skill emite um **alerta para o CN recomendando discovery** antes de seguir.
 
-Antes, com PRD, este fator era sempre `false` e o alerta nunca disparava. Agora é `true` se **qualquer** pergunta abaixo for sim:
+É `true` se **qualquer** pergunta abaixo for sim:
 
 | Pergunta | Onde ler | Sem resposta |
 |---|---|---|
-| Não há PRD gerada pela skill `documento-requisitos-ntec`? | Entrada da skill | — |
-| Algum módulo da PRD não tem a linha **Superfície**, nem no próprio módulo nem no título da seção-mãe (ex.: "2.2 Fluxo do Consultor (Aplicativo Mobile)" vale para 2.2.1 a 2.2.5)? | Seção 2 | Sim |
-| Alguma integração da PRD não tem **Sentido**, **Dados** ou **Meio**? | Itens SID | Sim |
-| Algum fluxo de dados não tem **Origem**, **Processamento** ou **Destino**? | Seção 2 | Sim |
-| Algum módulo marcado com fator de complexidade não tem a seção **Regras de Negócio**? | Seção 2 | Sim |
+| Falta a transcrição da AT Aprof (só a AT Diag, só o resumo do Fathom, ou nenhuma call)? | Entrada da skill | — |
+| Depois das duas calls, não dá para listar as jornadas do começo ao fim (quem entra, o que faz, com o que sai)? | Inventário (`leitura-transcricoes.md`, Passo 4) | Sim |
+| O formato (app, web, PWA) não foi decidido? ("ainda não sei se é app ou site") | Calls | Sim |
+| Alguma integração citada não tem o outro sistema identificado ou o sentido (envia, recebe, os dois)? | Calls | Sim |
+| Alguma jornada depende de uma regra que o cliente **ainda não sabe descrever** ("vou pensar como seria o cálculo")? Documento que existe e só não foi enviado não conta: vai para *Pontos em aberto* | Calls | Sim |
 
 **Quando for `true`:**
 1. Soma a linha 1.2 na conta.
@@ -48,7 +48,7 @@ Stack que o cliente exige e está **fora** da lista do F0 já foi rejeitada. Aqu
 
 | Pergunta | Onde ler | Sem resposta |
 |---|---|---|
-| O cliente exige uma tecnologia da lista aceita do F0 que **não é a do template** (ex.: Supabase ou Postgres no lugar de MongoDB)? | PRD 3.1; Fathom | `false`. Registrar a stack do template como premissa a validar na Sprint de Refino |
+| O cliente exige uma tecnologia da lista aceita do F0 que **não é a do template** (ex.: Supabase ou Postgres no lugar de MongoDB)? | Calls | `false`. Registrar a stack do template como premissa a validar na Sprint de Refino |
 
 > ⏳ **D5 — em aberto:** a troca para Postgres obrigatória por causa do offline com sincronização conta aqui? **Provisório:** não conta.
 
@@ -58,7 +58,7 @@ Stack que o cliente exige e está **fora** da lista do F0 já foi rejeitada. Aqu
 
 | Pergunta | Onde ler | Sem resposta |
 |---|---|---|
-| Nenhum app ou site foi citado como referência para o **produto inteiro**? | Fathom ("tipo o…", "igual ao…", "vi um que…") | `true` + lacuna: "Existe algum app ou site parecido que a gente possa usar de referência?" |
+| Nenhum app ou site foi citado como referência para o **produto inteiro**? | Calls ("tipo o…", "igual ao…", "vi um que…", "as que eu já vi") | `true` + lacuna: "Existe algum app ou site parecido que a gente possa usar de referência?" |
 
 **Não confundir:**
 - Setor incomum com produto comum (agenda para criadores de abelhas) → `false`.

@@ -6,19 +6,19 @@ Definição única de cada termo usado nos arquivos F0 a F6. Se outro arquivo da
 
 ## Estrutura do produto
 
-**Módulo** — Uma subseção da seção 2 da PRD (2.2, 2.3…). É a unidade da PRD, não a do esforço.
+**Calls** — As transcrições na íntegra do Fathom da **AT Diagnóstico** (primeira call: dor, contexto, ideia do produto) e da **AT Aprofundamento** (segunda call: protótipo, escopo, condições). São a entrada padrão da skill desde a V2-Inov (`leitura-transcricoes.md`).
 
-**Item A(cli)D** — Cada linha de requisito "Adicionar, Consultar, Listar, Inativar, Deletar" dentro de um módulo da PRD.
+**Confirmado** — O que o cliente descreveu como parte do produto, ou o que o CN propôs e o cliente aceitou com uma resposta àquela proposta ("sim", "é isso mesmo"). Hesitação ("não sei se precisa", "talvez") e silêncio não são confirmação.
 
-**Folha** — A subseção mais funda da seção 2 que tem itens A(cli)D. Numa PRD de dois níveis são 2.2, 2.3…; numa de três níveis, 2.2.1, 2.2.2…
+**Ação** — Cada coisa que o usuário faz dentro de uma jornada: cadastrar, consultar, listar, editar, desativar, aprovar, exportar.
 
-**Fluxo** — Unidade de esforço do F3. Uma **jornada** completa, do início ao fim, que se quebrar torna o produto inútil. Não depende de como a PRD foi numerada. Na PRD:
-1. Partir das **folhas**, fora 2.1 Autenticação (vai para F2), Disponibilização do Produto (vai para F5 e F6) e, quando `offline` for `sync` ou `local`, as folhas de offline e sincronização (vão para o extra de offline).
-2. **Juntar** folhas da mesma jornada: mesma entidade principal, mesmo código, e uma é continuação da outra (lista + detalhe; criar + gerenciar). Folha com até 2 itens A(cli)D que só serve a outra jornada entra nela (ex.: cadastrar pessoa durante a anotação).
-3. Jornada com **mais de 8 itens A(cli)D** conta 2 fluxos.
+**Fluxo** — Unidade de esforço do F3. Uma **jornada** completa, do início ao fim, que se quebrar torna o produto inútil. Nas calls:
+1. Listar o que alguém faz do começo ao fim, como o cliente descreveu ("o médico entra, coloca o peso e o tipo de soro, e sai com o volume"). Fora: login e perfis (F2), publicação nas lojas (F5 e F6) e, quando `offline` for `sync` ou `local`, a parte de offline (vai para o extra de offline).
+2. **Juntar** o que é a mesma jornada: mesma coisa principal, mesmo código, e uma parte é continuação da outra (lista + detalhe; criar + gerenciar). Variações dentro da mesma tela (três tipos de soro, a unidade do cálcio) são a mesma jornada. Uma parte pequena que só serve a outra jornada entra nela (ex.: cadastrar pessoa durante a anotação).
+3. Jornada com **mais de 8 ações** conta 2 fluxos.
 4. Cada junção vai para *Suposições*.
 
-Exemplo (Projeto G, PRD de três níveis, 14 folhas): 2.3.1 e 2.3.2 (offline) saem para o extra; 2.2.1 + 2.2.2, 2.2.4 + 2.2.5 e 2.4.2 + 2.4.3 se juntam; ficam **9 fluxos**. Uma tela solta não é fluxo. (🔎 Proposta: os limites 8 e 2 precisam ser calibrados.)
+Uma tela solta não é fluxo. (🔎 Proposta: os limites 8 e "parte pequena" precisam ser calibrados.)
 
 **Formato** — Cada **código separado** que vai para o ar. Painel admin dentro do mesmo app web é o mesmo formato. App nativo + painel web são dois formatos.
 
@@ -32,7 +32,7 @@ Exemplo (Projeto G, PRD de três níveis, 14 folhas): 2.3.1 e 2.3.2 (offline) sa
 
 ## Perfis e acesso
 
-**Perfil (nível de acesso)** — Cada tipo de pessoa listado na seção 2.1 da PRD. Admin conta como perfil.
+**Perfil (nível de acesso)** — Cada tipo de pessoa que entra no sistema com login, citado nas calls. Admin conta como perfil.
 
 **Tela exclusiva** — Tela ou rota que um perfil abre e pelo menos um outro perfil não abre. **Não contam:**
 - um item a mais num menu que leva a uma tela que todos abrem;
@@ -64,13 +64,13 @@ Exemplo (Projeto G, PRD de três níveis, 14 folhas): 2.3.1 e 2.3.2 (offline) sa
 
 ## Referência e risco
 
-**Produto atípico** (F1) — Nenhum app ou site foi citado como referência para o **produto inteiro**, nem na PRD nem no Fathom. Setor incomum com produto comum não é atípico.
+**Produto atípico** (F1) — Nenhum app ou site foi citado como referência para o **produto inteiro** em nenhuma das calls. Setor incomum com produto comum não é atípico.
 
-**Feature atípica** (F3) — Uma **feature** específica está na lista do Passo 3 de `leitura-prd.md` (tempo real por push, relatório configurável) ou não tem referência citada. É uma **contagem** (quantas features), não semanas.
+**Feature atípica** (F3) — Uma **feature** específica está na lista do Passo 7 de `leitura-transcricoes.md` (tempo real por push, relatório configurável) ou não tem referência citada. É uma **contagem** (quantas features), não semanas.
 
-**Lacuna** — Fator que nem a PRD nem o Fathom respondem. Entra na conta com o valor mais pesado e volta para o CN como pergunta.
+**Lacuna** — Fator que as calls não respondem. Entra na conta com o valor mais pesado e volta para o CN como pergunta.
 
-**Citação** — Trecho literal da PRD (com a seção) ou do Fathom (com a data da reunião) que justifica a linha escolhida.
+**Citação** — Trecho literal da transcrição, com a call (AT Diag ou AT Aprof), a data e o minuto, que justifica a linha escolhida. O resumo e os *Action Items* do Fathom não são citação.
 
 ## Integrações e dados
 
@@ -84,15 +84,15 @@ Exemplo (Projeto G, PRD de três níveis, 14 folhas): 2.3.1 e 2.3.2 (offline) sa
 
 **Sistema do cliente** — ERP, sistema legado, sistema sob medida, ou SaaS em que o acesso depende da TI do cliente (ex.: Totvs, Bling ou RD Station sem sandbox liberado). Também: meio `arquivo` automático e qualquer caso em dúvida.
 
-**Sem API** — A PRD ou o Fathom dizem explicitamente que o outro sistema não tem API.
+**Sem API** — O cliente diz explicitamente na call que o outro sistema não tem API.
 
-**Dependência de dados** — Dados que **já existem fora do sistema** (planilha legada, base pública, sistema antigo) e precisam ser migrados, limpos, convertidos ou cruzados para o produto funcionar; **uma pessoa dispara** a importação (carga única ou recorrente). **Não é:** upload simples feito pelo usuário dentro do produto, com formato fixado na PRD, que vira registros na hora (ex.: planilha de uma coluna, uma pergunta por linha). Isso é parte do módulo.
+**Dependência de dados** — Dados que **já existem fora do sistema** (planilha legada, base pública, sistema antigo) e precisam ser migrados, limpos, convertidos ou cruzados para o produto funcionar; **uma pessoa dispara** a importação (carga única ou recorrente). **Não é:** upload simples feito pelo usuário dentro do produto, com formato combinado na call, que vira registros na hora (ex.: planilha de uma coluna, uma pergunta por linha). Isso é parte do módulo.
 
 **Offline local** — O app **só lê** sem internet o que já está no aparelho, sem gravar nada para subir depois.
 
 **Offline com sincronização** — O app **grava** sem internet e sobe os dados quando a conexão volta.
 
-**Volume alto** — A seção 3.3 da PRD declara **1.000 ou mais usuários simultâneos**, ou um pico com data (evento, lançamento). (🔎 Proposta: o limite 1.000 precisa ser validado.)
+**Volume alto** — Alguém diz na call que haverá **1.000 ou mais usuários simultâneos**, ou um pico com data (evento, lançamento). (🔎 Proposta: o limite 1.000 precisa ser validado.)
 
 ## Deploy e lojas
 

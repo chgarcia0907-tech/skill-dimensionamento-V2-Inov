@@ -16,7 +16,7 @@
 
 | Pergunta | Onde ler | Sem resposta |
 |---|---|---|
-| Quantos perfis a seção 2.1 da PRD lista? (admin conta) | PRD 2.1 | Lacuna. Usar a linha "2 a 5 com grandes diferenças" |
+| Quantos tipos de pessoa entram no sistema com login, segundo as calls? (admin conta) | Calls ("cada um vê os seus", "precisa de login?") | Lacuna. Com mais de um tipo de pessoa citado: "2 a 5 com grandes diferenças". Com um tipo só e o login em dúvida: "1 perfil", com `"niveis_acesso": "nenhum"` como valor leve em `lacunas_fathom` |
 
 ### Passo 2: o teste de "grandes diferenças" (só para 2 a 5 perfis)
 
@@ -24,9 +24,9 @@
 
 | # | Pergunta | Onde ler | Sem resposta |
 |---|---|---|---|
-| a | Algum perfil abre uma **tela exclusiva** (tela ou rota que pelo menos um outro perfil não abre)? O **painel admin básico** do template não conta (ver glossário) | PRD 2.1 e linha **Superfície** de cada módulo | Sim |
-| b | Algum perfil tem **status de cadastro** (pendente, aprovado, rejeitado) que bloqueia o acesso até alguém aprovar? | PRD 2.1 e RNs | Sim |
-| c | Algum perfil só vê os **próprios registros** (filtro por dono)? | PRD 2.1 e RNs dos módulos | Sim |
+| a | Algum perfil abre uma **tela exclusiva** (tela ou rota que pelo menos um outro perfil não abre)? O **painel admin básico** do template não conta (ver glossário) | Calls e telas do protótipo | Sim |
+| b | Algum perfil tem **status de cadastro** (pendente, aprovado, rejeitado) que bloqueia o acesso até alguém aprovar? | Calls ("só entra depois que a gente aprovar") | Sim |
+| c | Algum perfil só vê os **próprios registros** (filtro por dono)? | Calls ("cada um vê só os seus") | Sim |
 
 **Exemplos:**
 - Admin e usuário, em que o admin só vê um item a mais no menu que leva a uma tela que o usuário também abre → poucas.
@@ -59,10 +59,10 @@ Fazer as perguntas **na ordem**. A primeira que der sim decide a linha.
 
 | # | Pergunta (pronta para o CN repassar ao cliente) | Onde ler | Se sim |
 |---|---|---|---|
-| 1 | "O sistema vai ser usado por mais de uma empresa, clínica, unidade ou filial, cada uma com os seus dados?" | Visão Geral, 2.1, RNs, 3.4 (termos: multiempresa, por unidade, por clínica, por filial) | Vai para a 2. Se **não**: linha "Não" |
-| 2 | "Alguma empresa vai ter uma **regra** ou **funcionalidade** que funciona diferente das outras?" (Trocar logo ou cores, ou ligar e desligar features de uma lista fixa, **não** conta) | RNs, 3.4; Fathom | **F0** — parar e consultar |
-| 3 | "Se a empresa A vir um dado da empresa B por causa de um erro, isso quebra o contrato ou a LGPD?" | 3.4; Fathom | **Isolado** |
-| 4 | "Um administrador geral pode ver os dados de todas as empresas juntas?" | 2.1; Fathom | **Separado** |
+| 1 | "O sistema vai ser usado por mais de uma empresa, clínica, unidade ou filial, cada uma com os seus dados?" | Calls (termos: várias empresas, por unidade, por clínica, por filial) | Vai para a 2. Se **não**: linha "Não" |
+| 2 | "Alguma empresa vai ter uma **regra** ou **funcionalidade** que funciona diferente das outras?" (Trocar logo ou cores, ou ligar e desligar features de uma lista fixa, **não** conta) | Calls | **F0** — parar e consultar |
+| 3 | "Se a empresa A vir um dado da empresa B por causa de um erro, isso quebra o contrato ou a LGPD?" | Calls | **Isolado** |
+| 4 | "Um administrador geral pode ver os dados de todas as empresas juntas?" | Calls | **Separado** |
 
 **Sem resposta na 3 ou na 4:** **isolado** + lacuna para o CN com a pergunta 3.
 
@@ -86,6 +86,6 @@ Fazer as perguntas **na ordem**. A primeira que der sim decide a linha.
 ## Origem na resposta
 
 ```
-F2a: 4 perfis, grandes diferenças (origem: PRD 2.1 — veterinário abre "Prontuário", que a recepção não abre)
-F2b: isolado (origem: Fathom · 12/03 — "cada clínica não pode nem sonhar em ver o dado da outra")
+F2a: 4 perfis, grandes diferenças (origem: AT Aprof · 12/03 18:20 — "o veterinário abre o prontuário, a recepção não")
+F2b: isolado (origem: AT Diag · 05/03 9:41 — "cada clínica não pode nem sonhar em ver o dado da outra")
 ```

@@ -25,10 +25,10 @@ Todo critério segue o mesmo formato, para que o Claude não precise interpretar
 | Campo | O que é |
 |---|---|
 | **Pergunta** | Sim ou não. Nunca "muito", "pouco", "grande" |
-| **Onde ler** | Seção da PRD ou fala do Fathom que responde |
-| **Sem resposta** | O que fazer quando nem a PRD nem o Fathom respondem. Quase sempre: linha mais pesada + lacuna para o CN |
+| **Onde ler** | O que procurar nas calls (AT Diag e AT Aprof) para responder |
+| **Sem resposta** | O que fazer quando as calls não respondem. Quase sempre: linha mais pesada + lacuna para o CN |
 
-**Regra de citação:** a skill só escolhe a linha mais leve quando consegue citar o trecho da PRD ou do Fathom que a justifica. Sem citação, vai para a linha mais pesada.
+**Regra de citação:** a skill só escolhe a linha mais leve quando consegue citar o trecho da call (com o minuto) que a justifica. Sem citação, vai para a linha mais pesada.
 
 **Regra de campo vazio:** nenhum fator tem valor padrão. Se um campo do JSON não foi preenchido, a conta não roda (ajuste pendente no `calcular_faixa.py`).
 
@@ -60,5 +60,5 @@ Todo critério segue o mesmo formato, para que o Claude não precise interpretar
 
 - `calcular_faixa.py` já segue estes arquivos (21/10/2026). O F0 está no bloco `"f0"` do JSON. Nenhum campo tem padrão. As decisões D1–D5 estão nas constantes marcadas com `D1`…`D5`.
 - O texto de `exemplos/*.md` e o exemplo `ficticio-petagenda-proposta.json` (cronograma com 9 sprints, feito com o fator Claude Code) ainda mostram os números antigos.
-- `SKILL.md`, `regua-dimensionamento.md`, `leitura-prd.md` e `insumos-e-perguntas.md` já apontam para cá (21/10/2026). `regra-fronteira-e-faixa.md` ainda cita as regras antigas.
+- `SKILL.md`, `regua-dimensionamento.md`, `leitura-transcricoes.md` e `insumos-e-perguntas.md` já apontam para cá. Desde a V2-Inov (22/10/2026), a coluna *Onde ler* de cada fator aponta para as calls, não para a PRD. `regra-fronteira-e-faixa.md` ainda cita as regras antigas.
 - **Teste de concordância** (🔎 Proposta): antes de adotar, aplicar estes critérios aos Projetos A, B, C e D com 2 CNs e o Claude, sem um ver a classificação do outro, e conferir onde divergem.

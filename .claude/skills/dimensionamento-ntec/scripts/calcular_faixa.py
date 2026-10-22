@@ -22,6 +22,11 @@ Revisão de 22/10/2026 (dimensionamento do Projeto G, primeiro projeto com PRD d
 níveis): fator de formato por fluxo (`fluxos_por_formato`): cada fluxo recebe o
 fator do código em que existe, e o formato extra só pesa nos fluxos que existem
 em mais de um código. Publicação nas lojas pode ser lacuna do Fathom ("+").
+
+V2-Inov (22/10/2026): a entrada padrão passou a ser a transcrição da AT Diag e da
+AT Aprof, sem PRD (leitura-transcricoes.md). `lacunas_fathom` aceita também um
+objeto {campo: valor leve}, para as lacunas que as calls deixam mais (login e
+integrações). Pesos inalterados.
 """
 
 import json
@@ -127,16 +132,20 @@ REMOVIDOS = {
     "cliente_pouca_disponibilidade": "fator removido em 20/10/2026 (quem valida vai para o F0)",
 }
 
-# Fatores que a PRD não responde e a skill procura no Fathom (leitura-prd.md, Passo 4).
+# Fatores que as calls (AT Diag e AT Aprof) podem deixar sem resposta (leitura-transcricoes.md, Passo 6).
 # Lacuna entra na conta com o valor mais pesado; a parte da venda que depende dela aparece
-# com "+" ("vender 14 semanas = 12 + 2 que dependem do Fathom").
+# com "+" ("vender 14 semanas = 12 + 2 que dependem de confirmar com o cliente").
 LACUNAS_FATHOM = {
     "atipico": "referência de produto",
     "stack_fora_template": "tecnologia exigida",
     "deploy_infra_cliente": "servidores do cliente",
     "lojas": "publicação nas lojas",
+    "niveis_acesso": "login e perfis",
+    "integracoes": "integrações",
 }
-# Valor leve de cada lacuna: com ele o script refaz a conta para mostrar o "+".
+# Valor leve padrão de cada lacuna: com ele o script refaz a conta para mostrar o "+".
+# `niveis_acesso` e `integracoes` não têm padrão: o JSON diz o valor leve
+# ("lacunas_fathom": {"niveis_acesso": "nenhum", "integracoes": ["template"]}).
 LACUNAS_LEVE = {"atipico": False, "stack_fora_template": False, "deploy_infra_cliente": False, "lojas": "nao"}
 
 
@@ -201,8 +210,44 @@ def validar(e):
             erros.append(f"{campo}: tirar do JSON ({motivo})")
     if not erros:
         erros += validar_fluxos_por_formato(e)
+    if not erros:
+        erros += validar_lacunas(e)
     if erros:
         raise EntradaInvalida("Entrada incompleta ou inválida:\n  - " + "\n  - ".join(erros))
+
+
+def lacunas_leve(e):
+    """`lacunas_fathom` como {campo: valor leve}. Aceita a lista antiga (["atipico", "lojas"]) ou um objeto."""
+    lac = e.get("lacunas_fathom", [])
+    if isinstance(lac, list):
+        return {k: LACUNAS_LEVE.get(k) for k in lac}
+    return {k: LACUNAS_LEVE.get(k) if v is None else v for k, v in lac.items()}
+
+
+def validar_lacunas(e):
+    """Cada lacuna precisa de um fator conhecido e de um valor leve válido para aquele fator."""
+    lac = e.get("lacunas_fathom", [])
+    if not isinstance(lac, (list, dict)):
+        return ["lacunas_fathom: tem de ser uma lista ([\"atipico\"]) ou um objeto ({\"niveis_acesso\": \"nenhum\"})"]
+    erros = []
+    for campo, leve in lacunas_leve(e).items():
+        if campo not in LACUNAS_FATHOM:
+            erros.append(f"lacunas_fathom.{campo}: não é um destes: {', '.join(LACUNAS_FATHOM)}")
+        elif leve is None:
+            erros.append(f"lacunas_fathom.{campo}: dizer o valor leve "
+                         f"(ex.: {{\"{campo}\": {json.dumps('nenhum' if campo == 'niveis_acesso' else ['template'])}}})")
+        elif campo in OPCOES and leve not in OPCOES[campo]:
+            erros.append(f"lacunas_fathom.{campo}: '{leve}' não é um destes: {', '.join(sorted(OPCOES[campo]))}")
+        elif campo in BOOLEANOS and not isinstance(leve, bool):
+            erros.append(f"lacunas_fathom.{campo}: o valor leve tem de ser true/false")
+        elif campo == "integracoes" and (not isinstance(leve, list) or any(i not in F3_INTEGRACAO for i in leve)):
+            erros.append(f"lacunas_fathom.integracoes: o valor leve tem de ser uma lista de: {', '.join(F3_INTEGRACAO)}")
+    return erros
+
+
+def igual(a, b):
+    """Compara o valor da conta com o leve; listas de integrações não dependem da ordem."""
+    return sorted(a) == sorted(b) if isinstance(a, list) and isinstance(b, list) else a == b
 
 
 def validar_fluxos_por_formato(e):
@@ -270,7 +315,7 @@ def calcular(e):
     if e["multitenancy"] == "instancias":
         paradas.append("Multitenancy com código ou regra de negócio diferente por cliente: projeto beira o inviável.")
     if "sem_api" in e["integracoes"]:
-        paradas.append("Integração com sistema que a PRD diz não ter API: avaliar alternativa (planilha); "
+        paradas.append("Integração com sistema que, segundo o cliente, não tem API: avaliar alternativa (planilha); "
                        "potencial motivo de inviabilidade.")
 
     # F1 — Imersão, refinamento, setup e acessos
@@ -390,11 +435,12 @@ def calcular(e):
         paradas.append(f"O cliente exige {fmt(prazo)} semanas, abaixo do otimista ({fmt(otimista)}): "
                        "não vender sem a área de projetos.")
 
-    # Parte da venda que depende das lacunas do Fathom (em sprints inteiras)
-    lacunas = [k for k in e.get("lacunas_fathom", []) if k in LACUNAS_FATHOM and e[k] != LACUNAS_LEVE[k]]
+    # Parte da venda que depende das lacunas das calls (em sprints inteiras)
+    leves = lacunas_leve(e)
+    lacunas = [k for k, leve in leves.items() if not igual(e[k], leve)]
     venda_confirmada = None
     if lacunas:
-        confirmada = dict(e, lacunas_fathom=[], **{k: LACUNAS_LEVE[k] for k in lacunas})
+        confirmada = dict(e, lacunas_fathom=[], **{k: leves[k] for k in lacunas})
         venda_confirmada = venda(calcular(confirmada)["provavel"])
 
     return {

@@ -2,21 +2,21 @@
 
 ✅ **Reunião 20/10:** integrações são um tópico **separado** dos fluxos. Somam no F3 **depois** do fator de formato (não são multiplicadas por ele).
 
-**Peso fixo, sem perguntar ao CN sobre documentação.** O CN não tem como avaliar a API de outro sistema. A linha sai de três perguntas que a PRD já responde.
+**Peso fixo, sem perguntar ao CN sobre documentação.** O CN não tem como avaliar a API de outro sistema. A linha sai de três perguntas que as calls respondem.
 
 ---
 
 ## O teste
 
-Para **cada** item SID "integrar com…" da PRD:
+Para **cada** sistema externo citado nas calls (pagamento, ERP, mapa, WhatsApp, IA, planilha automática):
 
 | # | Pergunta | Onde ler | Resultado |
 |---|---|---|---|
-| 0 | A troca de dados é **automática**, sem uma pessoa disparar? | Item SID, campo **Meio** | Se **não** (uma pessoa importa ou exporta um arquivo): não é integração, é **dependência de dados** (`F3-desenvolvimento.md`) |
-| 1 | É login com Google, envio de e-mail ou upload de arquivo? | Item SID | `template` (0) |
-| 2 | A PRD ou o Fathom dizem que o outro sistema **não tem API**? | Item SID; Fathom | **F0** — parar e consultar |
-| 3 | O sistema **envia e recebe**? | Item SID, campo **Sentido** | Sim → bidirecional. Só envia ou só recebe → unidirecional |
-| 4 | O outro lado é **serviço de mercado** (documentação pública **e** sandbox que o NTec acessa sozinho, sem a TI do cliente)? | Item SID; nome do serviço | Sim → `_doc`. Não, ou dúvida → `_sem_doc` |
+| 0 | A troca de dados é **automática**, sem uma pessoa disparar? | Calls ("a gente sobe a planilha" × "puxa sozinho") | Se **não** (uma pessoa importa ou exporta um arquivo): não é integração, é **dependência de dados** (`F3-desenvolvimento.md`) |
+| 1 | É login com Google, envio de e-mail ou upload de arquivo? | Calls | `template` (0) |
+| 2 | O cliente diz que o outro sistema **não tem API**? | Calls | **F0** — parar e consultar |
+| 3 | O sistema **envia e recebe**? | Calls ("só manda", "puxa de lá", "os dois") | Sim → bidirecional. Só envia ou só recebe → unidirecional |
+| 4 | O outro lado é **serviço de mercado** (documentação pública **e** sandbox que o NTec acessa sozinho, sem a TI do cliente)? | Nome do serviço citado | Sim → `_doc`. Não, ou dúvida → `_sem_doc` |
 
 **Exemplos de serviço de mercado:** Mercado Pago, Stripe, Pix via gateway, Google Maps, Mapbox, Expo Push / FCM, OpenAI / Anthropic, WhatsApp Business API, emissores de NF-e, Google Calendar, SMS.
 
@@ -43,9 +43,9 @@ Para **cada** item SID "integrar com…" da PRD:
 
 ---
 
-## Casos que a PRD marca como fator de complexidade
+## Funcionalidades citadas nas calls que viram integração
 
-| Na PRD | Linha |
+| Na call | Linha |
 |---|---|
 | Pagamento (gateway, Pix, cartão) | `bi_doc`. `bi_sem_doc` só se o pagamento passar pelo sistema próprio do cliente |
 | IA (classificar, extrair, gerar, responder) | `uni_doc`. Se a IA decide sem um humano no fim: ⚠️ em *Pontos de atenção* |
@@ -68,6 +68,6 @@ Para **cada** item SID "integrar com…" da PRD:
 ## Origem na resposta
 
 ```
-Integração ERP Totvs: bidirecional com sistema do cliente (origem: PRD 2.4 "envia e recebe pedidos" + acesso depende da TI do cliente)
-Integração Mercado Pago: bidirecional com serviço de mercado (origem: PRD 2.3)
+Integração ERP Totvs: bidirecional com sistema do cliente (origem: AT Aprof · 12/03 22:10 — "manda o pedido e recebe a nota de volta" + acesso depende da TI do cliente)
+Integração Mercado Pago: bidirecional com serviço de mercado (origem: AT Diag · 05/03 14:02 — "o cliente paga pelo Pix no app")
 ```

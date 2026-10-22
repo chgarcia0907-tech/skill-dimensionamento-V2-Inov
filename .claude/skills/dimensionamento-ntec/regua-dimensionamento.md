@@ -10,7 +10,7 @@ Regras gerais para transformar o que o coordenador de negócios (CN) levantou em
 
 ## Regras de uso (ler antes de dimensionar)
 
-1. **Não inventar fator.** Cada fator tem uma pergunta de sim ou não e o lugar onde ler a resposta (`fatores/`). A linha mais leve só entra com a citação da PRD ou do Fathom que a justifica. Sem citação, vale a linha **mais pesada**, registrada em *Suposições* e, se for o caso, como lacuna para o CN. Uma empresa júnior erra muito mais para menos do que para mais.
+1. **Não inventar fator.** Cada fator tem uma pergunta de sim ou não e o lugar onde ler a resposta (`fatores/`). A linha mais leve só entra com a citação da call (AT Diag ou AT Aprof, com o minuto) que a justifica. Sem citação, vale a linha **mais pesada**, registrada em *Suposições* e, se for o caso, como lacuna para o CN. Uma empresa júnior erra muito mais para menos do que para mais.
 2. **Toda linha tem três valores: mínimo / central / máximo.** O mínimo é o cenário "tudo dá certo", o central é o que costuma acontecer no NTec e o máximo é "os riscos aparecem".
 3. **F0 primeiro, depois somar fase a fase, na ordem F1 a F6.** O F0 não soma semanas: rejeita o projeto ou para para a área de projetos. As fases são sequenciais na régua, mesmo quando na prática se sobrepõem um pouco. A sobreposição é a folga natural do time.
 4. **Rodar o script para fechar a conta.** Não somar de cabeça.
@@ -31,13 +31,13 @@ Um painel admin dentro do mesmo app web **não** é um formato a mais. Um app na
 
 ### Semanas off e garantia ficam fora da régua
 - **Semanas off** (férias, provas, recesso de fim de ano, julho) entram por calendário, somadas depois da faixa. No histórico, de 1 a 3 por projeto.
-- **Garantia de 30 dias** é gratuita e não entra no prazo (vale para o que está no documento de requisitos).
+- **Garantia de 30 dias** é gratuita e não entra no prazo (vale para o escopo da proposta).
 
 ---
 
 ## F0 a F6 — os fatores
 
-Desde a revisão de 20/10/2026, cada fase tem o seu arquivo em `fatores/`, com a pergunta de sim ou não, onde ler na PRD ou no Fathom, o que fazer sem resposta e a tabela de pesos. **Os pesos estão lá, não aqui.**
+Desde a revisão de 20/10/2026, cada fase tem o seu arquivo em `fatores/`, com a pergunta de sim ou não, o que procurar nas calls, o que fazer sem resposta e a tabela de pesos. **Os pesos estão lá, não aqui.**
 
 | Fase | Arquivo | Campos do JSON |
 |---|---|---|
@@ -67,7 +67,7 @@ Sem buffer percentual (removido em 17/10/2026: o efeito era desprezível e o ris
 | **Conservador (teto de risco)** | soma dos máximos | O que acontece se os riscos listados se confirmarem |
 
 - **Arredondamento:** semanas sempre para cima. A **recomendação de venda** é o provável arredondado para cima até fechar sprints inteiras (número par de semanas).
-- **Lacunas do Fathom** (`"lacunas_fathom"` no JSON): a venda é a conta com elas no valor mais pesado. O script mostra com "+" quantas semanas dessa venda dependem delas ("14 = 12 + 2 que dependem do Fathom"), também em sprints inteiras (`leitura-prd.md`, Passo 4).
+- **Lacunas do Fathom** (`"lacunas_fathom"` no JSON): a venda é a conta com elas no valor mais pesado. O script mostra com "+" quantas semanas dessa venda dependem delas ("14 = 12 + 2 que dependem do Fathom"), também em sprints inteiras (`leitura-transcricoes.md`, Passo 6).
 - **Depois somar as semanas off** do calendário.
 
 ---
@@ -96,6 +96,7 @@ Rodando a régua sobre os projetos reais (detalhes em `exemplos/`):
 | Projeto B | 10 | 13 → **14** | 20 | 12 (+1 off) | Em execução (45% do prazo), com Claude Code | ⚠️ Vendido entre o piso e o provável. O motor e a tela andaram mais rápido que a régua; conferir no fim (23/11/2026) |
 | Projeto E | — | — | — | 34 | Em execução | Sem ficha técnica; não calibrado |
 | Projeto F | — | — | — | 38 (+3 off) | Em execução | Sem ficha técnica; não calibrado |
+| Projeto H | 10 | 13 → **14** | 20 | Em negociação (CN falou "2 a 3 meses" na AT Aprof) | Primeiro dimensionado pelas transcrições | ⚠️ "2 meses" fica abaixo do piso; "3 meses" bate com a venda sem as lacunas (12). Conferir no fim |
 
 Leituras:
 - **Projetos pequenos e médios (até ~20 semanas):** a régua acerta ou fica um pouco acima. É intencional que erre para cima.
@@ -109,7 +110,7 @@ Leituras:
 
 - **Amostra pequena:** 4 projetos com dados, 2 ainda em execução. Os pesos são um ponto de partida, não uma regressão.
 - **Contagem de fluxos dos projetos antigos é estimada** a partir das tasks do Notion (marcada como palpite nos exemplos).
-- **Regras de tradução da PRD ainda não calibradas:** "1 módulo = 1 fluxo" e "concorrência, imutabilidade ou rotina agendada → módulo com RN específica" (`leitura-prd.md`) não foram conferidas contra um projeto real, porque todos os projetos da calibração são anteriores à PRD.
+- **Leitura das transcrições ainda não calibrada:** "fluxo = jornada descrita pelo cliente" e "só conta o que o cliente confirmou" (`leitura-transcricoes.md`) não foram conferidas contra um projeto terminado. O Projeto H é o primeiro dimensionado assim (`exemplos/projeto-h.md`).
 - **A "Régua de Dimensionamento" citada no formulário é uma subpágina do Notion** que não veio no PDF. Se ela tiver números diferentes, ela vence e este arquivo precisa ser atualizado.
 - **Retrospectivas quase sempre vazias:** as causas de atraso não estão registradas.
 
@@ -130,3 +131,4 @@ Leituras:
 | 17/10/2026 | Revisão da área de projetos: app + painel de 8 fluxos com offline deve levar ~12 sprints | Fator Claude Code revisto para o meio-termo: núcleo do F3 x0,6 / 0,75 / 0,9 e F2 x0,7 / 0,85 / 1 (o x0,5 inicial dava 20 semanas para esse projeto). Projeto B continua em vender 12 |
 | 20/10/2026 | Reunião "Validação Skill NTec" e análise do LLM Council (21/10/2026) | F0 de viabilidade antes de tudo; um arquivo por fator em `fatores/` (pesos saem deste arquivo); nenhum campo do JSON com padrão; tetos não cortam a soma; fator Claude Code e "cliente com pouca disponibilidade" removidos; F2 em 2 a 5 / 6+; formato extra +0,2; `bi_sem_doc` com mínimo 4. Decisões D1 a D5 com valores provisórios. Calibração: B 10 / 13 / 20 (vender 14), C 13 / 18 / 24 |
 | 22/10/2026 | Dimensionamento do Projeto G (app de campo offline + painel web; primeira PRD em três níveis): a skill deu 17 sprints e a área esperava ~14 | Diagnóstico: o erro estava na tradução da PRD, não nos pesos (baixar o peso do fluxo para 0,9 levaria A de 12 para 10 e D de 18 para 16). Mudanças: (1) fluxo = jornada, independente da numeração da PRD (glossário); (2) fator de formato por fluxo (`fluxos_por_formato`), com o formato extra só nos fluxos `compartilhado`; (3) relatório em template fixo não é RN específica; (4) upload simples do usuário não é dependência de dados; (5) Superfície vale pelo título da seção-mãe; (6) `lojas` pode ser lacuna do Fathom ("+"). Projeto G: vender 34 → 28 semanas (14 sprints = 24 + 4 que dependem de referência de produto e lojas). Pesos inalterados; A a D com os mesmos números (C e D com todos os fluxos `compartilhado`, a conferir) |
+| 22/10/2026 | V2-Inov: decisão de trocar a entrada da skill. Transcrições do Projeto H (AT Diag de 19 min e AT Aprof de 11 min) | A entrada padrão deixa de ser a PRD e passa a ser a transcrição na íntegra da AT Diag e da AT Aprof (`leitura-transcricoes.md`, que substitui `leitura-prd.md`): só conta o que o cliente confirmou; a skill monta o inventário de jornadas; o prazo e o preço que o CN falou na call não entram na conta (vão para *Observações*); `lacunas_fathom` aceita login e integrações com o valor leve no JSON; a Proposta Técnica troca PRD por transcrições no cabeçalho e no checklist e ganha o inventário e as observações no anexo. Pesos inalterados; A a D e PetAgenda com os mesmos números. Projeto H: 10 / 13 / 20, vender 14 = 12 + 2 (login e cobrança) |

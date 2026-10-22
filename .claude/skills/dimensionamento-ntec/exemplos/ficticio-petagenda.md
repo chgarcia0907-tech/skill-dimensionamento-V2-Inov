@@ -11,7 +11,7 @@ Este caso **não é um projeto real**. Serve para mostrar ao CN como a resposta 
 
 # Projeto PetAgenda
 
-⚠️ **Estimativa preliminar, sem PRD.** Rodar a skill da PRD antes de fechar a proposta.
+⚠️ **Estimativa preliminar, sem transcrição das calls.** Mandar as transcrições da AT Diag e da AT Aprof antes de fechar a proposta.
 
 **1. Prazo em uma frase.** Recomendado vender **20 semanas (10 sprints)** + semanas off. Não vender abaixo de 14.
 
