@@ -11,7 +11,9 @@
 
 Os itens 5.1 a 5.3 saem direto do formato (`F3-desenvolvimento.md`, item 3.2). Não há pergunta.
 
-**Deploys parciais** (✅ Reunião 20/10): o time publica versões parciais desde a primeira sprint. Por isso o F5 é curto: ele cobre só a publicação final, domínio e ajustes de produção.
+**Deploy primeiro** (23/10/2026): o deploy é **a primeira coisa depois da imersão**, no começo da sprint seguinte, para cobrir cedo uma etapa complexa. Não ocupa uma sprint dedicada: o resto da sprint já é desenvolvimento. Na precificação, só as semanas centrais do F5 são cobradas com 1 analista (`proposta-tecnica.md`, *Precificação*). Os **testes de deploy** ficam no F4 e são cobrados com 2 analistas.
+
+**Deploys parciais** (✅ Reunião 20/10): depois do deploy inicial, o time publica versões parciais a cada sprint. Por isso o F5 é curto: ele cobre o deploy inicial, domínio e ajustes de produção.
 
 **Publicação nas lojas não é F5:** é F6.
 

@@ -31,8 +31,8 @@ Uma skill do Claude que transforma as **transcrições na íntegra do Fathom** d
 - **Monta o inventário de jornadas** a partir das falas do cliente, com a citação (call e minuto) de cada uma.
 - **Transforma o que as calls não responderam em lacuna:** entra na conta com o valor mais pesado, e o CN recebe a pergunta pronta para o cliente.
 - **Mostra o que cortar:** cortes de escopo, com quantas semanas cada um economiza.
-- **Entrega a Proposta Técnica em PDF**, no template oficial do NTec (Comercial → Validação de Projeto): as 14 seções, o cronograma sprint a sprint, o checklist e a memória do dimensionamento.
-- **Calcula só o prazo**, sem preço. Os pesos supõem uma dupla com cerca de 20 horas por semana somadas e o template NTec, sem multiplicador por ferramenta e sem buffer percentual.
+- **Entrega a Proposta Técnica em PDF**, no template oficial do NTec (Comercial → Validação de Projeto): as 15 seções, o cronograma sprint a sprint, a precificação, o checklist e a memória do dimensionamento.
+- **Calcula o prazo e o preço do provável.** O preço sai do tipo de cada sprint: R$ 1.440 por analista por semana, 2 analistas em desenvolvimento e testes, 1 em imersão, deploy, gestão de mudança e publicação. O deploy é a primeira coisa depois da imersão. Os pesos supõem uma dupla com cerca de 20 horas por semana somadas e o template NTec, sem multiplicador por ferramenta e sem buffer percentual.
 
 ## 2. Onde ela entra no processo
 
@@ -70,9 +70,9 @@ Igual à skill do NCiv: um arquivo curto que coordena, e arquivos de conheciment
 | `regua-dimensionamento.md` | Regras de uso, faixa final, quando parar, calibração e registro das fontes | Sempre |
 | `regra-fronteira-e-faixa.md` | Desempate quando um fator cabe em duas linhas; tabela de cortes | Em caso de dúvida e para "O que cortar" |
 | `scripts/calcular_faixa.py` | Faz a conta (fonte da verdade dos pesos), para o número não sair de cabeça | Sempre |
-| `proposta-tecnica.md` | Como preencher cada uma das 14 seções da Proposta Técnica a partir das calls e da conta | Sempre, no fim |
+| `proposta-tecnica.md` | Como preencher cada uma das 15 seções da Proposta Técnica a partir das calls e da conta | Sempre, no fim |
 | `template-proposta-tecnica.md` | O template original do NTec, como o comercial recebe | Só para consulta |
-| `scripts/gerar_proposta.py` | Gera o PDF "[Proposta Técnica] {projeto}", recalcula a faixa e confere o checklist do template | Sempre, no fim |
+| `scripts/gerar_proposta.py` | Gera o PDF "[Proposta Técnica] {projeto}", recalcula a faixa, calcula o preço e confere o checklist do template | Sempre, no fim |
 | `exemplos/` | Precedentes reais anonimizados (Projetos A a D, Projeto H), Projetos E e F pendentes e o caso fictício PetAgenda. Cada ficha traz no fim o JSON de entrada da régua | Para comparar com projeto parecido |
 
 ## 5. Procedimento
@@ -83,7 +83,7 @@ Igual à skill do NCiv: um arquivo curto que coordena, e arquivos de conheciment
 4. **Montar o JSON e rodar o script.** Nenhum campo tem padrão: se faltar um, o script para e diz qual.
 5. **Comparar com o precedente** mais parecido. Diferença acima de 30% precisa de explicação. Comparar também com o prazo que o CN já falou na AT Aprof, se falou.
 6. **Aplicar a regra de fronteira** se precisar (no máximo 3 ajustes por projeto).
-7. **Montar a Proposta Técnica** (um JSON com as 14 seções e a memória do dimensionamento) e gerar o PDF com `gerar_proposta.py`.
+7. **Montar a Proposta Técnica** (um JSON com as 15 seções e a memória do dimensionamento) e gerar o PDF com `gerar_proposta.py`.
 8. **Responder no chat, curto:** status, prazo em uma frase, faixa, inventário de jornadas, caminho do PDF, lacunas para o CN, itens pendentes do checklist e os 2 ou 3 pontos de atenção mais graves.
 
 ## 6. Das calls para a régua

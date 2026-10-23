@@ -3,6 +3,8 @@
 _Transcrição em Markdown do PDF "Template de Proposta Técnica" (Padrão de documentação · NTEC, Comercial → Validação de Projeto). Serve de referência: como a skill preenche cada seção está em `proposta-tecnica.md`._
 
 > **Diferença da V2-Inov:** o template original pede **PRD + protótipo** como pré-requisito. Desde a V2-Inov (22/10/2026), a skill usa as **transcrições da AT Diag e da AT Aprof + protótipo** no lugar do PRD. Onde o template diz "PRD", a skill lê "o que foi combinado nas calls" (o cabeçalho, a seção 14 e o primeiro item do checklist mudam por isso).
+>
+> **Seção 15, Precificação (23/10/2026):** não está no template original. A skill acrescenta o preço do cenário provável por tipo de sprint (`proposta-tecnica.md`, *Precificação*).
 
 ---
 

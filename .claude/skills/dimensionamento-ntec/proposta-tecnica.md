@@ -1,6 +1,6 @@
 # Proposta Técnica — como preencher o template do NTec
 
-O entregável da skill é a **Proposta Técnica** no template oficial do NTec ("Comercial → Validação de Projeto"). É o documento que o comercial manda para a validação técnica. A skill monta um JSON e roda `scripts/gerar_proposta.py`, que gera o PDF no visual do template: faixa azul-marinho no topo, selo laranja OBRIGATÓRIO, as 14 seções, o checklist final e um **Anexo — Memória do dimensionamento**.
+O entregável da skill é a **Proposta Técnica** no template oficial do NTec ("Comercial → Validação de Projeto"). É o documento que o comercial manda para a validação técnica. A skill monta um JSON e roda `scripts/gerar_proposta.py`, que gera o PDF no visual do template: faixa azul-marinho no topo, selo laranja OBRIGATÓRIO, as 15 seções (as 14 do template e a 15, Precificação), o checklist final e um **Anexo — Memória do dimensionamento**.
 
 Modelo completo do JSON: `exemplos/ficticio-petagenda-proposta.md` (bloco ```json). Template original, como o NTec o escreveu: `template-proposta-tecnica.md` (pede PRD; a skill usa as calls no lugar).
 
@@ -10,6 +10,7 @@ Modelo completo do JSON: `exemplos/ficticio-petagenda-proposta.md` (bloco ```jso
 - **As semanas não são digitadas.** O script recalcula a faixa a partir de `dimensionamento.entrada`, que é o mesmo JSON da régua (`calcular_faixa.py`). Caixa de status, cronograma e anexo saem do mesmo cálculo.
 - **Lacunas do Fathom na caixa de status.** Com `lacunas_fathom` na entrada, a caixa de status mostra a venda com "+" ("14 semanas = 12 + 2 que dependem do Fathom") (`leitura-transcricoes.md`, Passo 6). O cronograma segue a venda com as lacunas.
 - **Nada interno no corpo** (seções 1 a 14): sem `(origem: ...)` nem nome de arquivo da régua. As origens ficam no anexo (critérios, inventário, suposições) e no chat.
+- **O preço não é digitado.** Sai do tipo de cada sprint do cronograma (seção 15).
 - **Nada que o CN falou de prazo ou preço no corpo.** Isso vai para `dimensionamento.observacoes`, comparado com a faixa.
 - **Texto curto e sem adjetivo de venda.** Todo termo técnico é explicado na primeira vez que aparece.
 
@@ -40,7 +41,8 @@ Modelo completo do JSON: `exemplos/ficticio-petagenda-proposta.md` (bloco ```jso
 | 10. Roadmap **(obrig.)** | `roadmap` (`[fase, entrega, natureza]`) | Cada jornada do inventário = uma entrega *Prioritário*. Item na conta que depende da seção 11 continua *Prioritário*, com "(depende do ponto em aberto N)". *A confirmar* = algo discutido em que o cliente hesitou e que não está na conta. *Futuro* = o que o cliente deixou para depois ou descartou. **Nada A confirmar ou Futuro pode aparecer no cronograma** (o script confere pelo texto da entrega) |
 | 11. Pontos em aberto **(obrig.)** | `pontos_abertos` (lista de textos) | Nesta ordem: lacunas que mudam a faixa, documentos que o cliente ainda precisa mandar (planilha, tabela, norma), divergências entre as calls, dependências externas (API, fornecedor, conta de loja), e as lacunas que não mudam a faixa (data de início). Cada um diz o valor usado na conta, quando houver. **Nunca vazio** |
 | 12. Stack | `stack.itens`, `stack.nao_validado` | O template NTec (Expo, Next.js, MongoDB + Prisma, Better Auth, S3, Vercel, Vitest e Playwright), só as peças que o projeto usa. O primeiro item de `nao_validado` é sempre "Toda a stack é premissa a validar na Sprint de Refino e Prototipação". Exigência do cliente (`stack_fora_template`) entra aqui também como não validada |
-| 13. Cronograma | `cronograma.sprints` (`[sprint, entregas, depende_de]`), `cronograma.duracao_obs` | Ver abaixo |
+| 13. Cronograma | `cronograma.sprints` (`[sprint, entregas, depende_de, tipo]`), `cronograma.duracao_obs` | Ver abaixo |
+| 15. Precificação | (nenhum: sai do `tipo` de cada sprint) | Ver *Precificação* abaixo |
 | 14. Protótipo **(obrig.)** | `prototipo.recebido`, `prototipo.tabela` (`[tela, regra, adaptação, justificativa, vale p/ MVP]`), `prototipo.declaracao` | Só com protótipo recebido e validado pelo cliente. Sem adaptação: `declaracao` = "O protótipo segue integralmente as regras combinadas nas calls". Sem protótipo: `recebido: false`, tabela vazia; o PDF avisa o comercial |
 
 `dependencia_externa_sem_confirmacao`: `true` se alguma integração ou fornecedor está sendo tratado como certo sem confirmação. Com a regra de peso fixo e a cláusula de contrato, o normal é `false`.
@@ -50,11 +52,38 @@ Modelo completo do JSON: `exemplos/ficticio-petagenda-proposta.md` (bloco ```jso
 Usar os valores **centrais** de cada fase do `calcular_faixa.py` e encaixar em sprints de 2 semanas até fechar a recomendação de venda (provável arredondado para sprints inteiras).
 
 1. **F1** (imersão e setup): Sprint 1, ou 1 e 2 se F1 passar de 2 semanas. Inclui validar o protótipo e, se houver app nas lojas, pedir as contas Apple e Google.
-2. **F2** (acesso e login): a sprint seguinte. Se sobrar meia sprint, começar os cadastros.
-3. **F3** (desenvolvimento): as jornadas do inventário na ordem de uso, de 1 a 2 por sprint conforme o peso. Jornada com RN específica ou offline com sincronização ocupa a sprint inteira ou mais. Integração com sistema do cliente vai depois da sprint em que vence o prazo da cláusula de acesso à API.
-4. **F4** (testes com o cliente), **F5** (deploy) e **F6** (lojas) no fim, nessa ordem. Em F6, contar o tempo de aprovação das lojas.
-5. Toda sprint cuja entrega depende de um ponto da seção 11 leva `depende_de` = "ponto N".
-6. O número de sprints precisa bater com a recomendação. Se a soma dos centrais for quebrada, a folga fica na última sprint ("correções finais e entrega").
+2. **F5** (deploy): **a primeira coisa depois da imersão**, no começo da sprint seguinte, com as semanas centrais do F5 (`fatores/F5-deploy.md`). Não é uma sprint dedicada: o resto da sprint já é desenvolvimento. Escrever as semanas na entrega ("Deploy inicial (0,5 semana), login e perfis").
+3. **F2** (acesso e login): logo depois do deploy, na mesma sprint. Se sobrar meia sprint, começar os cadastros.
+4. **F3** (desenvolvimento): as jornadas do inventário na ordem de uso, de 1 a 2 por sprint conforme o peso. Jornada com RN específica ou offline com sincronização ocupa a sprint inteira ou mais. Integração com sistema do cliente vai depois da sprint em que vence o prazo da cláusula de acesso à API.
+5. **F4** (testes com o cliente, inclusive os testes de deploy) e **F6** (lojas) no fim, nessa ordem. Em F6, contar o tempo de aprovação das lojas.
+6. Toda sprint cuja entrega depende de um ponto da seção 11 leva `depende_de` = "ponto N".
+7. O número de sprints precisa bater com a recomendação (o script para se não bater, porque o preço sairia errado). Se a soma dos centrais for quebrada, a folga fica na última sprint ("correções finais e entrega").
+8. **Cada sprint tem um tipo** (4º item), que define o preço na seção 15. Uma sprint é sempre de um tipo só: se F1 der menos de 2 semanas, a imersão ocupa a sprint 1 inteira. O deploy não é tipo: a sprint em que ele entra leva o tipo do resto dela (em geral `desenvolvimento`), e o script desconta o deploy sozinho.
+
+| Tipo | Quando | Analistas cobrados |
+|---|---|---|
+| `imersao` | F1: imersão, refino do escopo, validação do protótipo e setup | 1 |
+| `desenvolvimento` | F2 e F3: login, perfis, jornadas, integrações; também correções finais | 2 |
+| `testes` | F4: testes com o cliente e correções dos testes, **inclusive testes de deploy** | 2 |
+| `gestao_mudanca` | Treinamento e implantação com a equipe do cliente | 1 |
+| `publicacao` | F6: envio e aprovação nas lojas | 1 |
+
+Sprint que junta um tipo de 1 analista com desenvolvimento ou testes (ex.: "correções dos testes e envio às lojas") é cobrada cheia: usar `desenvolvimento` ou `testes`. A exceção é o deploy, cobrado à parte (ver *Precificação*).
+
+## Precificação (seção 15)
+
+O script calcula; a skill não digita valores. A regra:
+
+- **R$ 1.440 por analista por semana**, e cada sprint tem 2 semanas.
+- Sprint de `desenvolvimento` ou `testes`: 2 analistas → R$ 2.880 por semana, **R$ 5.760 por sprint**.
+- Sprint de `imersao`, `gestao_mudanca` ou `publicacao`: 1 analista → R$ 1.440 por semana, **R$ 2.880 por sprint**.
+- **Deploy:** as semanas centrais do F5 saem com 1 analista, no começo da primeira sprint depois da imersão; o resto dessa sprint sai pelo tipo dela. Com F5 = 0,5 semana numa sprint de desenvolvimento: 0,5 × R$ 1.440 + 1,5 × R$ 2.880 = **R$ 5.040**. Se o F5 passar de 2 semanas (infra do cliente), o que sobra entra na sprint seguinte.
+- **Só o cenário provável** é precificado, pelas semanas da recomendação de venda (o provável fechado em sprints inteiras, as mesmas do cronograma). As semanas que dependem de lacunas entram no preço, como entram no cronograma.
+- Semanas off e a garantia de 30 dias não são cobradas.
+
+Exemplo: 7 sprints, F5 = 0,5 semana = imersão + deploy e desenvolvimento + 3 de desenvolvimento + testes + publicação → R$ 2.880 + R$ 5.040 + 4 × R$ 5.760 + R$ 2.880 = **R$ 33.840**.
+
+O PDF mostra a tabela `Sprint | Tipo | Semanas | Analistas | Valor` com o total, e o preço aparece também na caixa de status.
 
 ## Anexo — Memória do dimensionamento (`dimensionamento`)
 

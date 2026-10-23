@@ -1,6 +1,6 @@
 # Proposta Técnica modelo — PetAgenda (fictício)
 
-Modelo completo da entrada do `scripts/gerar_proposta.py`: as 14 seções do template e o bloco `dimensionamento`. Copiar a estrutura para um projeto novo. Ficha do caso: [ficticio-petagenda.md](ficticio-petagenda.md).
+Modelo completo da entrada do `scripts/gerar_proposta.py`: as 15 seções do template e o bloco `dimensionamento`. Copiar a estrutura para um projeto novo. Ficha do caso: [ficticio-petagenda.md](ficticio-petagenda.md).
 
 Gerar o PDF: `python ../scripts/gerar_proposta.py ficticio-petagenda-proposta.md --saida <pasta>`. O script usa o primeiro bloco `json` deste arquivo.
 
@@ -251,52 +251,62 @@ Gerar o PDF: `python ../scripts/gerar_proposta.py ficticio-petagenda-proposta.md
       [
         "Sprint 1",
         "Imersão, refino do escopo, validação do protótipo e setup. Pedir as contas Apple e Google.",
-        "ponto 2"
+        "ponto 2",
+        "imersao"
       ],
       [
         "Sprint 2",
-        "Autenticação, 4 perfis e separação por clínica.",
-        ""
+        "Deploy inicial (1 semana) e início da autenticação.",
+        "",
+        "desenvolvimento"
       ],
       [
         "Sprint 3",
-        "Cadastro de clínicas e início do agendamento no app.",
-        ""
+        "Autenticação, 4 perfis e separação por clínica.",
+        "",
+        "desenvolvimento"
       ],
       [
         "Sprint 4",
-        "Agendamento no app e gestão da agenda no painel.",
-        ""
+        "Cadastro de clínicas e agendamento no app.",
+        "",
+        "desenvolvimento"
       ],
       [
         "Sprint 5",
-        "Pagamento com Mercado Pago.",
-        ""
+        "Gestão da agenda no painel e pagamento com Mercado Pago.",
+        "",
+        "desenvolvimento"
       ],
       [
         "Sprint 6",
         "Registro de atendimento e vacina, carteirinha de vacina.",
-        ""
+        "",
+        "desenvolvimento"
       ],
       [
         "Sprint 7",
         "Rotina de lembretes por push e ajustes do app.",
-        ""
+        "",
+        "desenvolvimento"
       ],
       [
         "Sprint 8",
-        "Testes com o cliente.",
-        ""
+        "Testes com o cliente, inclusive os testes de deploy.",
+        "",
+        "testes"
       ],
       [
         "Sprint 9",
-        "Deploy e envio às lojas.",
-        "ponto 2"
+        "Envio às lojas.",
+        "ponto 2",
+        "publicacao"
       ],
       [
         "Sprint 10",
         "Aprovação nas lojas e entrega.",
-        "ponto 2"
+        "ponto 2",
+        "publicacao"
       ]
     ],
     "duracao_obs": "mais as semanas off do calendário"

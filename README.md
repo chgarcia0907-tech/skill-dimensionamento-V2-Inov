@@ -2,7 +2,7 @@
 
 Skill do Claude que ajuda coordenadores de negócios (CNs) do Núcleo de Tecnologia a chegar a uma **faixa de semanas** realista (otimista / provável / conservador) antes de mandar a proposta para a área de projetos. A arquitetura segue a skill de dimensionamento do NCiv (Gabrielle Lobo, [repositório](https://github.com/gabriellelobo-pj/skill-dimensionamento)). A régua segue o formulário *Dimensionamento Tec* e foi calibrada nos projetos reais do NTec.
 
-**V2-Inov — entrada padrão: as transcrições da AT Diagnóstico e da AT Aprofundamento.** Esta versão é uma cópia de [skill-dimensionamento-ntec](https://github.com/chgarcia0907-tech/skill-dimensionamento-ntec) em que a skill deixa de ler a PRD: ela lê a transcrição na íntegra das duas calls no Fathom e dimensiona pelo que foi discutido nelas (`leitura-transcricoes.md`). Calcula só o prazo, sem preço. Com uma call só, ou sem transcrição, ela dimensiona mesmo assim, e o resultado sai como ⚠️ estimativa preliminar.
+**V2-Inov — entrada padrão: as transcrições da AT Diagnóstico e da AT Aprofundamento.** Esta versão é uma cópia de [skill-dimensionamento-ntec](https://github.com/chgarcia0907-tech/skill-dimensionamento-ntec) em que a skill deixa de ler a PRD: ela lê a transcrição na íntegra das duas calls no Fathom e dimensiona pelo que foi discutido nelas (`leitura-transcricoes.md`). Calcula o prazo e, a partir dele, o preço do cenário provável (seção 15 da proposta). Com uma call só, ou sem transcrição, ela dimensiona mesmo assim, e o resultado sai como ⚠️ estimativa preliminar.
 
 > **Retomando em outra conversa?** Leia a seção [Contexto para retomar](#contexto-para-retomar) no fim deste arquivo.
 
@@ -17,7 +17,7 @@ skill-dimensionamento-ntec/
 │                                          patches v1 e v2 e o contexto de 21/10
 └── .claude/skills/dimensionamento-ntec/
     ├── SKILL.md                    ← orquestrador: procedimento, guardrails, entregável e resposta no chat
-    ├── proposta-tecnica.md         ← como preencher as 14 seções da Proposta Técnica (o entregável)
+    ├── proposta-tecnica.md         ← como preencher as 15 seções da Proposta Técnica (o entregável)
     ├── template-proposta-tecnica.md ← o template original do NTec em Markdown (só para consulta)
     ├── leitura-transcricoes.md     ← entrada padrão: como ler a AT Diag e a AT Aprof, o que conta como escopo,
     │                                 inventário de jornadas, onde está cada fator nas calls e as lacunas
@@ -77,7 +77,7 @@ Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para co
 - **Números atualizados (22/10/2026):** textos de `exemplos/*.md`, cronograma da proposta PetAgenda, `regra-fronteira-e-faixa.md` (sem negociação de prazo, cortes com os pesos atuais) e o guia explicativo em `docs/` saem da régua atual.
 
 Histórico de 17/10/2026:
-- **Implementado:** o dimensionamento final sai no **template "Proposta Técnica" do NTec** (14 seções + checklist + anexo com a memória do dimensionamento), gerado por `scripts/gerar_proposta.py`. O bloco para colar no formulário Dimensionamento Tec saiu. Guia em `proposta-tecnica.md`. O guia explicativo em `docs/` (v4) já mostra a Proposta Técnica e o fator Claude Code.
+- **Implementado:** o dimensionamento final sai no **template "Proposta Técnica" do NTec** (15 seções, com a precificação, + checklist + anexo com a memória do dimensionamento), gerado por `scripts/gerar_proposta.py`. O bloco para colar no formulário Dimensionamento Tec saiu. Guia em `proposta-tecnica.md`. O guia explicativo em `docs/` (v4) já mostra a Proposta Técnica e o fator Claude Code.
 - **Removido em 20/10/2026:** **fator Claude Code** na régua (todos os projetos do NTec agora são codados com Claude Code por uma dupla com ~20 h/semana somadas): núcleo do F3 x0,6 / 0,75 / 0,9 e F2 x0,7 / 0,85 / 1; imersão, extras do F3, testes, deploy e lojas ficam iguais. É um meio-termo: um x0,5 acertava o Projeto B (vender 12) mas dava 20 semanas para um app + painel de 8 fluxos com offline que a área de projetos espera em ~12 sprints. Projetos antigos rodam com `claude_code: false`.
 - **Implementado:** integrações com **peso fixo, sem perguntar ao CN** (ver [Integrações: peso fixo](#integrações-peso-fixo-sem-perguntar-ao-cn-implementado)).
 - **Implementado:** o que a PRD não responde é tirado da **transcrição do Fathom**; o que não estiver lá volta ao CN como **lacuna** (`leitura-prd.md`, Passo 4).
@@ -128,7 +128,7 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 - **O que a PRD não cobre** (quem valida, condições de contrato, stack e infra, benchmark, data de início): a skill procura na **transcrição do Fathom** (só vale o que foi dito explicitamente, citando reunião e trecho). O que não achar vira **lacuna**: entra na conta com o valor mais pesado e volta ao CN na seção 5 da resposta, com a pergunta pronta. Lacuna que mexe na faixa deixa o status em ⚠️. A documentação das APIs **saiu** dessa rodada (peso fixo, seção abaixo).
 - **1 módulo = 1 fluxo.** 2.1 Autenticação vai para F2, e Disponibilização vai para F5 e F6.
 - **Fatores de complexidade da PRD encaixam nas linhas atuais**, sem peso novo. Pagamento, IA e push viram integração. Concorrência, imutabilidade e rotina agendada fazem o módulo virar RN específica. Tempo real por push e relatório configurável viram feature atípica. Tabela completa em `leitura-prd.md`.
-- **Papel da skill:** ocupa o lugar que a skill da PRD chama de `validacao-tecnica-ntec`, mas calcula **só o prazo, sem preço**.
+- **Papel da skill:** ocupa o lugar que a skill da PRD chama de `validacao-tecnica-ntec`, e calcula o prazo e o preço do cenário provável (por tipo de sprint).
 
 **Publicação**
 - Repositório **público**: https://github.com/matheusrpgomes-sketch/skill-dimensionamento-ntec
