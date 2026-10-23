@@ -255,41 +255,46 @@ Gerar o PDF: `python ../scripts/gerar_proposta.py ficticio-petagenda-proposta.md
       ],
       [
         "Sprint 2",
-        "Autenticação, 4 perfis, separação por clínica e cadastro de clínicas.",
+        "Autenticação, 4 perfis e separação por clínica.",
         ""
       ],
       [
         "Sprint 3",
-        "Agendamento no app e gestão da agenda no painel.",
+        "Cadastro de clínicas e início do agendamento no app.",
         ""
       ],
       [
         "Sprint 4",
-        "Pagamento com Mercado Pago.",
+        "Agendamento no app e gestão da agenda no painel.",
         ""
       ],
       [
         "Sprint 5",
-        "Registro de atendimento e vacina, carteirinha de vacina.",
+        "Pagamento com Mercado Pago.",
         ""
       ],
       [
         "Sprint 6",
-        "Rotina de lembretes por push e ajustes do app.",
+        "Registro de atendimento e vacina, carteirinha de vacina.",
         ""
       ],
       [
         "Sprint 7",
-        "Testes com o cliente.",
+        "Rotina de lembretes por push e ajustes do app.",
         ""
       ],
       [
         "Sprint 8",
+        "Testes com o cliente.",
+        ""
+      ],
+      [
+        "Sprint 9",
         "Deploy e envio às lojas.",
         "ponto 2"
       ],
       [
-        "Sprint 9",
+        "Sprint 10",
         "Aprovação nas lojas e entrega.",
         "ponto 2"
       ]
@@ -359,14 +364,14 @@ Gerar o PDF: `python ../scripts/gerar_proposta.py ficticio-petagenda-proposta.md
     },
     "criterios": {
       "F1": "Base. As duas calls existem; referência citada na AT Diag (não atípico).",
-      "F2": "AT Aprof: 4 perfis, Recepção e Veterinário com módulos próprios = grandes diferenças; dados separados por clínica. Com fator Claude Code (x0,85 no central).",
-      "F3": "3 fluxos comuns (2.2, 2.4, 2.5) + 1 com RN específica (2.3, rotina agendada) × 1,3; Mercado Pago bi_doc; push uni_doc. Núcleo com fator Claude Code (x0,75 no central).",
+      "F2": "AT Aprof: 4 perfis, Recepção e Veterinário com módulos próprios = grandes diferenças; dados separados por clínica.",
+      "F3": "3 fluxos comuns (2.2, 2.4, 2.5) + 1 com RN específica (2.3, rotina agendada). Fator por fluxo: a rotina só no app (x1,2), dois fluxos só no painel (x1) e um nos dois códigos (x1,4). Mercado Pago bi_doc; push uni_doc.",
       "F4": "Base; cliente com validação semanal (Fathom · 12/03).",
       "F5": "Painel web + app.",
       "F6": "App comum nas lojas (AT Aprof)."
     },
     "atencao": [
-      "A regra \"rotina agendada vira RN específica\" ainda não foi calibrada; como fluxo comum, o provável cairia para 17,5 semanas."
+      "A regra \"rotina agendada vira RN específica\" ainda não foi calibrada; como fluxo comum, o provável cairia para 16,75 semanas (venda de 18)."
     ],
     "lacunas": [
       [
@@ -380,11 +385,11 @@ Gerar o PDF: `python ../scripts/gerar_proposta.py ficticio-petagenda-proposta.md
     "cortes": [
       [
         "Publicar como PWA em vez de app nas lojas",
-        "F6 inteira (−2,5) + fator de formato"
+        "−4 semanas na venda (20 → 16): F6 inteira (−2,5) + fator de formato"
       ],
       [
         "Juntar Recepção e Veterinário num perfil Clínica",
-        "−1 semana"
+        "−2 semanas na venda (20 → 18): F2 −1 no central"
       ]
     ],
     "suposicoes": [

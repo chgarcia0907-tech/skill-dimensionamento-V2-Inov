@@ -10,7 +10,7 @@ Guia de eventos, gastronomia e hospedagem de uma região, centrado num mapa. Web
 | Fator | Classificação | Origem |
 |---|---|---|
 | Formato | PWA (o painel está no mesmo código → não é formato extra) | hand-off |
-| Níveis de acesso | visitante, cadastrado e admin → 2 a 6 com poucas diferenças | hand-off |
+| Níveis de acesso | visitante, cadastrado e admin → 2 a 5 com poucas diferenças | hand-off |
 | Fluxos comuns | 4: mapa com filtros, agenda (hoje/amanhã), detalhe do local, cadastro de estabelecimentos e eventos | palpite, média confiança |
 | Integrações | API de mapa (uni, doc), notificações (uni, doc); login Google e S3 = template; links para apps de navegação e WhatsApp = 0 | plannings S3–S5 |
 | Demais fatores | nenhum | — |
