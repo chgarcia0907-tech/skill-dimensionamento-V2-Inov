@@ -27,6 +27,7 @@ skill-dimensionamento-ntec/
     ├── regua-dimensionamento.md    ← regras de uso, faixa final, quando parar, calibração, fontes
     ├── regra-fronteira-e-faixa.md  ← desempate entre linhas + tabela de cortes ("O que cortar")
     ├── scripts/calcular_faixa.py   ← faz a conta (fonte da verdade dos pesos)
+    ├── scripts/testar_exemplos.py  ← teste de regressão: a régua de hoje ainda dá a faixa de cada ficha?
     ├── scripts/gerar_proposta.py   ← gera o PDF "[Proposta Técnica] {projeto}" no template do NTec (reportlab)
     └── exemplos/                   ← precedentes (.md, com o JSON de entrada no fim de cada ficha): Projeto A, Projeto B, Projeto C, Projeto D,
                                       Projetos E e F (pendente), Projeto H (primeiro pelas transcrições, com a
@@ -43,6 +44,10 @@ skill-dimensionamento-ntec/
 - **Rodar a conta direto:**
   ```bash
   python .claude/skills/dimensionamento-ntec/scripts/calcular_faixa.py .claude/skills/dimensionamento-ntec/exemplos/projeto-a.md
+  ```
+- **Conferir os exemplos depois de mudar um peso** (compara a régua com a tabela de `exemplos/README.md`):
+  ```bash
+  python .claude/skills/dimensionamento-ntec/scripts/testar_exemplos.py
   ```
 - **Gerar a Proposta Técnica** (precisa de `pip install reportlab`):
   ```bash
@@ -152,25 +157,33 @@ Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em c
 | Projeto C | 13 / 18 / 24 | 11 | Atrasou (~14). Régua ~3 semanas acima do real (viés conhecido) |
 | Projeto B | 10 / 13 → vender 14 / 20 | 12 | Em execução; fim previsto em 23/11/2026 |
 | Projetos E e F | não calibrado | 34 / 38 | Sem ficha. Alerta automático acima de 26 semanas |
+| Projeto H | 10 / 13 → vender 14 = 12 + 2 / 20 | — | Em negociação. Primeiro dimensionado pelas transcrições |
 
-Todos são **anteriores à PRD**: as regras de leitura da PRD ainda não foram conferidas contra um projeto real.
+Os Projetos A a D são **anteriores à leitura das calls** (fluxos contados pelas tasks do Notion). O Projeto H, quando terminar, é o primeiro precedente para conferir a leitura das transcrições.
 
-### Pendências (próximos passos)
-1. **Conferir a regra de peso fixo** no primeiro projeto com integração com sistema do cliente que terminar (se `bi_sem_doc` ficou longe do real, ajustar o peso).
-2. **Avisar o Augustus:** trocar `validacao-tecnica-ntec` por `dimensionamento-ntec` na skill da PRD (a nossa não calcula preço) e, se possível, salvar o inventário num arquivo.
-3. **Mandar o resto do levantamento** (Projeto D completo, Projetos E e F) para calibrar os projetos grandes e tirar os palpites do Projeto D.
-4. **Conseguir a subpágina "Régua de Dimensionamento"** do Notion. Se tiver números, eles valem mais que os da skill.
-5. **Atualizar a calibração** quando o Projeto A (19/10/2026) e os Projetos B e D (23/11/2026) terminarem. Passo a passo em `exemplos/README.md`; atualizar também a ficha original em `privado/`.
-6. **Conferir as regras de leitura da PRD** no primeiro projeto com PRD que terminar (principalmente "rotina agendada → RN específica").
-7. Testar a skill com um CN num lead real.
-8. **Fechar as decisões D1 a D5** e os pesos 🔎 com a área técnica, fazer o teste de concordância (2 CNs + Claude nos Projetos A a D) e atualizar os textos dos exemplos e o guia explicativo (`docs/`) se os pesos mudarem.
+### Pendências (próximos passos, 22/10/2026)
+**Só nós**
+1. **Mergear o PR** do branch `revisao-fronteira-template-guia` (fronteira, template, guia v5, teste de regressão e esta lista).
+2. **Reinstalar a skill no claude.ai:** compactar `.claude/skills/dimensionamento-ntec` em .zip e reenviar em *Settings → Capabilities → Skills*. Conferir que a descrição fala das transcrições, não da PRD.
+3. **Ficha do Projeto G** (`exemplos/projeto-g.md`), se puder ser anonimizado: é o único precedente grande (app de campo offline + painel, vender 34 → 28 semanas no Registro das fontes).
+4. **Testar a skill de ponta a ponta** com as transcrições de um lead novo (ou de novo com o Projeto H) depois de reinstalar, conferindo a resposta no chat e o PDF.
 
-Feito: PDF v2 com a PRD; publicação no GitHub com projetos anonimizados; integrações com peso fixo e PDF v3; Proposta Técnica como entregável, fator Claude Code e PDF v4.
+**Depende do NTec**
+5. **Decisões D1 a D5** e pesos 🔎 com Augusto e Frank (`fatores/README.md`). Quando fecharem: mudar no script **e** no `fatores/F*.md`, registrar no Registro das fontes e rodar `scripts/testar_exemplos.py`.
+6. **Teste de concordância:** 2 CNs + Claude classificam os Projetos A a D sem um ver o outro.
+7. **Registrar o realizado** do Projeto A (terminou em 19/10/2026) e dos Projetos B e D (23/11/2026) nas fichas e na Calibração (`exemplos/README.md` tem o passo a passo; atualizar também a ficha em `privado/`). No B, ver se 13 / vender 14 ficou acima do real (vendido 12). No D, conferir os fatores com palpite.
+8. **Projeto H:** quando fechar e terminar, conferir "fluxo = jornada descrita pelo cliente" e "só conta o que o cliente confirmou".
+9. **Projetos E e F:** conseguir as fichas para calibrar acima de 26 semanas.
+10. **Subpágina "Régua de Dimensionamento" do Notion**, citada no formulário e nunca recebida. Se tiver números, eles valem mais que os da skill.
+11. **Retrospectivas:** pedir que sejam preenchidas; sem elas não se sabe a causa dos atrasos.
+12. **Peso fixo de integração:** conferir `bi_sem_doc` no primeiro projeto com integração com sistema do cliente que terminar.
+
+Feito: PDF v2 a v4 e guia v5 (V2-Inov); publicação no GitHub com projetos anonimizados; integrações com peso fixo; Proposta Técnica como entregável; insumos e exemplos em Markdown (PR #3) com os números da régua atual (PR #4); teste de regressão dos exemplos (`scripts/testar_exemplos.py`). As pendências da época da PRD (avisar o Augustus, conferir as regras de leitura da PRD) saíram com a V2-Inov.
 
 ### Onde está cada coisa
 | O quê | Caminho |
 |---|---|
-| Cópia de trabalho (esta pasta, repositório git) | `~\OneDrive\Área de Trabalho\Projetos\skill-dimensionamento-ntec\` |
+| Cópia de trabalho (esta pasta, repositório git) | `~\Downloads\pastita\skill-dimensionamento-V2-Inov\` |
 | Repositório no GitHub (público) | https://github.com/chgarcia0907-tech/skill-dimensionamento-V2-Inov (esta versão); original: https://github.com/chgarcia0907-tech/skill-dimensionamento-ntec |
 | Skill instalada (não sincroniza sozinha) | `~\.claude\skills\dimensionamento-ntec\` |
 | Mapa dos projetos reais (fora do git) | `privado\mapa-projetos.md` e `privado\exemplos-originais\` |
@@ -179,4 +192,4 @@ Feito: PDF v2 com a PRD; publicação no GitHub com projetos anonimizados; integ
 | Template da Proposta Técnica (original) | `.claude/skills/dimensionamento-ntec/template-proposta-tecnica.md` (convertido de `~/Downloads/template-proposta-comercial.pdf`) |
 | Skill da PRD (Augustus) | https://github.com/rivasaugustus/documento-requisitos-ntec |
 
-**Fluxo de atualização:** editar nesta pasta → rodar os exemplos com o script se mexeu em peso → copiar `.claude/skills/dimensionamento-ntec` para `~/.claude/skills/` → commit e push.
+**Fluxo de atualização:** editar nesta pasta → rodar `python .claude/skills/dimensionamento-ntec/scripts/testar_exemplos.py` se mexeu em peso → copiar `.claude/skills/dimensionamento-ntec` para `~/.claude/skills/` → commit e push.

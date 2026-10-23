@@ -10,6 +10,7 @@ Cada projeto tem uma ficha `.md`: o que era, como a régua classificou, compara�
 | [Projeto D](projeto-d.md) | App + painel web | 2–3, poucas diferenças | 5 + 0 | 13 / 18 / 23 | 18 | Em execução, sem atraso |
 | [Projetos E e F](projetos-e-f-pendente.md) | ? | ? | ? | não calibrado | 34 / 38 | Em execução |
 | [Projeto H](projeto-h.md) | App nativo, offline | 1 (login em aberto) | 0 + 1 | 10 / 13 / 20 | — | Em negociação. **Primeiro dimensionado pelas transcrições** da AT Diag e da AT Aprof: exemplo completo de `leitura-transcricoes.md`, com a proposta em [projeto-h-proposta.md](projeto-h-proposta.md) |
+| [Projeto H proposta](projeto-h-proposta.md) | App nativo, offline | 1 (login em aberto) | 0 + 1 | 10 / 13 / 20 | — | JSON da Proposta Técnica do Projeto H (`scripts/gerar_proposta.py`) |
 | [PetAgenda (fictício)](ficticio-petagenda.md) | App + painel web | 4 | 4 + 0 | 14 / 18 / 24 | — | Resposta completa de exemplo (sem transcrição) |
 | [PetAgenda proposta (fictício)](ficticio-petagenda-proposta.md) | App + painel web | 4 | 3 + 1 | 14 / 19 / 26 | — | JSON modelo da Proposta Técnica (`scripts/gerar_proposta.py`) |
 
@@ -17,7 +18,7 @@ Cada projeto tem uma ficha `.md`: o que era, como a régua classificou, compara�
 
 Os Projetos A a D são **anteriores à leitura das calls**: os fluxos foram contados a partir das tasks do Notion. O Projeto H é o primeiro dimensionado pelas transcrições (fluxo = jornada descrita pelo cliente); quando ele terminar, vira o primeiro precedente para conferir essa leitura.
 
-**Números da régua atual (22/10/2026):** as faixas da tabela e das fichas saem do script de hoje, sem o fator Claude Code (removido em 20/10/2026) e sem o fator de cliente com pouca disponibilidade. Quando a régua mudar, rodar de novo cada ficha e atualizar esta tabela.
+**Números da régua atual (22/10/2026):** as faixas da tabela e das fichas saem do script de hoje, sem o fator Claude Code (removido em 20/10/2026) e sem o fator de cliente com pouca disponibilidade. Quando a régua mudar, rodar `python ../scripts/testar_exemplos.py`: ele roda a régua em cada ficha e mostra quais linhas desta tabela ficaram desatualizadas.
 
 ## Como achar um precedente
 
@@ -31,7 +32,7 @@ Quando um projeto terminar:
 1. Criar `nome.md` no mesmo formato dos outros, com **vendido × realizado** e a causa dos desvios (puxar da retrospectiva).
 2. No fim dele, a seção **Entrada da régua** com o JSON dos fatores, como a área de projetos classificaria hoje.
 3. Rodar `python ../scripts/calcular_faixa.py nome.md`.
-4. Atualizar a tabela acima e a tabela de Calibração em `regua-dimensionamento.md`.
+4. Atualizar a tabela acima e a tabela de Calibração em `regua-dimensionamento.md`, e rodar `python ../scripts/testar_exemplos.py` para conferir que a linha nova bate.
 5. Se 2 ou mais projetos errarem para o mesmo lado no mesmo fator, ajustar o peso no script **e** na régua, e registrar no "Registro das fontes".
 
 Não copiar valores de contrato nem dados pessoais de clientes para estas fichas.
