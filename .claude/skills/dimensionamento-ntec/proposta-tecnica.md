@@ -74,14 +74,14 @@ Sprint que junta um tipo de 1 analista com desenvolvimento ou testes (ex.: "corr
 
 O script calcula; a skill não digita valores. A regra:
 
-- **R$ 1.440 por analista por semana**, e cada sprint tem 2 semanas.
-- Sprint de `desenvolvimento` ou `testes`: 2 analistas → R$ 2.880 por semana, **R$ 5.760 por sprint**.
-- Sprint de `imersao`, `gestao_mudanca` ou `publicacao`: 1 analista → R$ 1.440 por semana, **R$ 2.880 por sprint**.
-- **Deploy:** as semanas centrais do F5 saem com 1 analista, no começo da primeira sprint depois da imersão; o resto dessa sprint sai pelo tipo dela. Com F5 = 0,5 semana numa sprint de desenvolvimento: 0,5 × R$ 1.440 + 1,5 × R$ 2.880 = **R$ 5.040**. Se o F5 passar de 2 semanas (infra do cliente), o que sobra entra na sprint seguinte.
+- **R$ 2.160 por analista por semana**, e cada sprint tem 2 semanas.
+- Sprint de `desenvolvimento` ou `testes`: 2 analistas → R$ 4.320 por semana, **R$ 8.640 por sprint**.
+- Sprint de `imersao`, `gestao_mudanca` ou `publicacao`: 1 analista → R$ 2.160 por semana, **R$ 4.320 por sprint**.
+- **Deploy:** as semanas centrais do F5 saem com 1 analista, no começo da primeira sprint depois da imersão; o resto dessa sprint sai pelo tipo dela. Com F5 = 0,5 semana numa sprint de desenvolvimento: 0,5 × R$ 2.160 + 1,5 × R$ 4.320 = **R$ 7.560**. Se o F5 passar de 2 semanas (infra do cliente), o que sobra entra na sprint seguinte.
 - **Só o cenário provável** é precificado, pelas semanas da recomendação de venda (o provável fechado em sprints inteiras, as mesmas do cronograma). As semanas que dependem de lacunas entram no preço, como entram no cronograma.
 - Semanas off e a garantia de 30 dias não são cobradas.
 
-Exemplo: 7 sprints, F5 = 0,5 semana = imersão + deploy e desenvolvimento + 3 de desenvolvimento + testes + publicação → R$ 2.880 + R$ 5.040 + 4 × R$ 5.760 + R$ 2.880 = **R$ 33.840**.
+Exemplo: 7 sprints, F5 = 0,5 semana = imersão + deploy e desenvolvimento + 3 de desenvolvimento + testes + publicação → R$ 4.320 + R$ 7.560 + 4 × R$ 8.640 + R$ 4.320 = **R$ 50.760**.
 
 O PDF mostra a tabela `Sprint | Tipo | Semanas | Analistas | Valor` com o total, e o preço aparece também na caixa de status.
 

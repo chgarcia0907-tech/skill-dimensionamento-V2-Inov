@@ -86,7 +86,7 @@ STATUS = {  # (selo, cor, texto) — selo em texto porque as fontes do PDF não 
 }
 
 # ---------------------------------------------------------------- precificação
-VALOR_ANALISTA_SEMANA = 1440  # R$ por analista por semana
+VALOR_ANALISTA_SEMANA = 2160  # R$ por analista por semana
 SEMANAS_POR_SPRINT = 2
 # Tipo da sprint → (rótulo no PDF, analistas cobrados). Sprint de imersão, gestão de mudança ou
 # publicação cobra 1 analista; desenvolvimento e testes (inclusive testes de deploy), 2.
