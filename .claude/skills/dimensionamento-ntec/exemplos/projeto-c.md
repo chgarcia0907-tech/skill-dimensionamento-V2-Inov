@@ -9,8 +9,8 @@ Calcula um índice científico a partir de diários preenchidos pelo usuário e 
 
 | Fator | Classificação | Origem |
 |---|---|---|
-| Formato | Web + app (2 códigos) → x1,3 | kick-off, planning S5 |
-| Níveis de acesso | 5 perfis (dois níveis de admin, profissionais de duas áreas e paciente); um perfil profissional tem cadastro pendente/rejeitado que bloqueia rotas → 2 a 6 com grandes diferenças | plannings S1 e S5 |
+| Formato | Web + app (2 códigos); todos os fluxos como `compartilhado` (palpite: a ficha não diz em que código cada jornada vive) → x1,4 | kick-off, planning S5 |
+| Níveis de acesso | 5 perfis (dois níveis de admin, profissionais de duas áreas e paciente); um perfil profissional tem cadastro pendente/rejeitado que bloqueia rotas → 2 a 5 com grandes diferenças | plannings S1 e S5 |
 | Fluxos | 3 comuns (diário, questionário, gestão e dashboards por perfil) + 1 com RN específica (cálculo do índice, "100% fidedigno", mínimo de 7 registros) | hand-off; contagem de fluxos = palpite |
 | Dependência de dados | base pública de referência + importação e exportação de CSV, com conversão de unidades | plannings S2–S4 |
 | RN crítica | sim (fórmula científica das clientes) | hand-off |
@@ -23,10 +23,10 @@ Calcula um índice científico a partir de diários preenchidos pelo usuário e 
 |---|---|---|---|
 | F1 Imersão e setup | 1,5 | 2 | 2,5 |
 | F2 Acesso e login | 1,5 | 2 | 2,5 |
-| F3 Desenvolvimento (x1,3) | 7,5 | 10,3 | 13,1 |
+| F3 Desenvolvimento (x1,4) | 8 | 10,95 | 13,9 |
 | F4 Testes com cliente | 1,5 | 2 | 3 |
 | F5 Deploy | 0,5 | 1 | 1,5 |
-| **Faixa** | **13** | **18** | **23** |
+| **Faixa** | **13** | **18** | **24** |
 
 ## Vendido × realizado
 - **Vendido (11) abaixo do piso da régua (13).** O projeto atrasou (~14 semanas) e ainda ficou com os testes por terminar.

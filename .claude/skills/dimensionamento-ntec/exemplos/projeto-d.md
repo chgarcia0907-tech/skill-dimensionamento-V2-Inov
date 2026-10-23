@@ -11,8 +11,8 @@ O cidadão registra avistagens de espécies com foto e geolocalização. App nat
 
 | Fator | Classificação | Origem |
 |---|---|---|
-| Formato | App nativo + web (painel e landing, código separado) → x1,3 | hand-off |
-| Níveis de acesso | cidadão, admin (talvez pesquisador) → 2 a 6 com poucas diferenças | **palpite** |
+| Formato | App nativo + web (painel e landing, código separado); todos os fluxos como `compartilhado` (palpite) → x1,4 | hand-off |
+| Níveis de acesso | cidadão, admin (talvez pesquisador) → 2 a 5 com poucas diferenças | **palpite** |
 | Fluxos comuns | 5: registrar avistagem (foto + localização), mapa público, moderação pelo admin, catálogo de espécies, histórico do usuário | **palpite** |
 | Integrações | mapa (uni, doc); upload de foto (S3) = template | **palpite** |
 | Offline | não (**a conferir**: uso em campo pode precisar) | **palpite** |
@@ -24,18 +24,18 @@ O cidadão registra avistagens de espécies com foto e geolocalização. App nat
 |---|---|---|---|
 | F1 Imersão e setup | 1,5 | 2 | 2,5 |
 | F2 Acesso e login | 0,5 | 1 | 1,5 |
-| F3 Desenvolvimento (x1,3) | 7 | 8,6 | 10,8 |
+| F3 Desenvolvimento (x1,4) | 7,5 | 9,25 | 11,5 |
 | F4 Testes com cliente | 1 | 1,5 | 2 |
 | F5 Deploy | 0,5 | 1 | 1,5 |
 | F6 Lojas | 2 | 2,5 | 4 |
-| **Faixa** | **13** | **17 → vender 18** | **23** |
+| **Faixa** | **13** | **18** | **23** |
 
 ## Vendido × realizado
 - **Recomendação de venda da régua = vendido (18).** Sem atraso até agora: 6 de 9 sprints abertas.
 - Resultado final: a confirmar.
 
 ## Lição para a régua
-Se o hand-off mostrar que o app precisa funcionar **offline com sincronização** (comum em uso de campo), a régua soma +2 no central (faixa 14 / 19 / 26, recomendação de venda 20). Vale como alerta para futuros apps de campo: perguntar sempre.
+Se o hand-off mostrar que o app precisa funcionar **offline com sincronização** (comum em uso de campo), a régua soma +2 no central (faixa 15 / 20 / 26, recomendação de venda 20) e o banco tem de ser Postgres, não MongoDB (F0, item 0.2). Vale como alerta para futuros apps de campo: perguntar sempre.
 
 ## Entrada da régua
 

@@ -68,7 +68,7 @@ Resumo das conversas que criaram e evoluíram a skill (16 e 17/10/2026), para co
 ### Onde paramos antes (21/10/2026)
 - **Revisão de 20/10 (reunião "Validação Skill NTec" + LLM Council):** **F0 de viabilidade** antes de tudo (🚫 rejeita ou 🚩 para para a área de projetos); critérios e pesos em **`fatores/`**, um arquivo por fase; **nenhum campo do JSON com padrão** (o script para se faltar um); tetos de fase não cortam a soma; **fator Claude Code e "cliente com pouca disponibilidade" removidos** (quem valida passou para o F0); F2 em 2 a 5 / 6+; formato extra +0,2; `bi_sem_doc` com mínimo 4. `SKILL.md`, `regua-dimensionamento.md`, `leitura-prd.md` e `insumos-e-perguntas.md` já apontam para `fatores/`.
 - **Em aberto:** decisões D1 a D5 (`fatores/README.md`) e os pesos marcados 🔎, a validar com Augusto e Frank. Até lá, o script usa os valores provisórios.
-- **Ainda com números antigos:** textos de `exemplos/*.md`, o cronograma de `exemplos/ficticio-petagenda-proposta.md`, `regra-fronteira-e-faixa.md` e o guia explicativo em `docs/`.
+- **Ainda com números antigos:** `regra-fronteira-e-faixa.md` e o guia explicativo em `docs/`. Os textos de `exemplos/*.md` e o cronograma da proposta PetAgenda foram refeitos com o script atual em 22/10/2026.
 
 Histórico de 17/10/2026:
 - **Implementado:** o dimensionamento final sai no **template "Proposta Técnica" do NTec** (14 seções + checklist + anexo com a memória do dimensionamento), gerado por `scripts/gerar_proposta.py`. O bloco para colar no formulário Dimensionamento Tec saiu. Guia em `proposta-tecnica.md`. O guia explicativo em `docs/` (v4) já mostra a Proposta Técnica e o fator Claude Code.
