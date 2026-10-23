@@ -104,13 +104,13 @@ Gerar o PDF: `python ../scripts/gerar_proposta.py projeto-h-proposta.md --saida 
   },
   "cronograma": {
     "sprints": [
-      ["Sprint 1", "Imersão, refino do escopo, validação do protótipo com a planilha da cliente e setup. Pedir as contas Apple e Google.", "pontos 3 e 4"],
-      ["Sprint 2", "Login e tela de parâmetros: peso, faixa de peso e tipo de soro.", "ponto 1"],
-      ["Sprint 3", "Cálculo do soro: volume de cada componente, volume total e velocidade de infusão.", "ponto 3"],
-      ["Sprint 4", "Aviso de concentração máxima, unidade do cálcio, funcionamento sem internet e cobrança dentro do app.", "ponto 2"],
-      ["Sprint 5", "Testes com a cliente, conferindo cada faixa e cada tipo de soro contra a planilha.", ""],
-      ["Sprint 6", "Correções dos testes, versão de produção e envio para as lojas.", ""],
-      ["Sprint 7", "Revisão das lojas (categoria de saúde), correções finais e entrega.", ""]
+      ["Sprint 1", "Imersão, refino do escopo, validação do protótipo com a planilha da cliente e setup. Pedir as contas Apple e Google.", "pontos 3 e 4", "imersao"],
+      ["Sprint 2", "Deploy inicial (0,5 semana), login e tela de parâmetros: peso, faixa de peso e tipo de soro.", "ponto 1", "desenvolvimento"],
+      ["Sprint 3", "Cálculo do soro: volume de cada componente, volume total e velocidade de infusão.", "ponto 3", "desenvolvimento"],
+      ["Sprint 4", "Aviso de concentração máxima, unidade do cálcio, funcionamento sem internet e cobrança dentro do app.", "ponto 2", "desenvolvimento"],
+      ["Sprint 5", "Testes com a cliente, conferindo cada faixa e cada tipo de soro contra a planilha.", "", "testes"],
+      ["Sprint 6", "Correções dos testes, versão de produção e envio para as lojas.", "", "testes"],
+      ["Sprint 7", "Revisão das lojas (categoria de saúde), correções finais e entrega.", "", "desenvolvimento"]
     ],
     "duracao_obs": "das quais 2 semanas dependem dos pontos 1 e 2"
   },

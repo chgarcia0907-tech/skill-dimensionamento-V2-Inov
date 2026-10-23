@@ -4,13 +4,16 @@ Uso:
     python gerar_proposta.py proposta.json [--saida PASTA]
     python gerar_proposta.py exemplos/ficticio-petagenda-proposta.md [--saida PASTA]
 
-A entrada é um JSON com as 14 seções do template e o bloco `dimensionamento`
+A entrada é um JSON com as 15 seções do template e o bloco `dimensionamento`
 (ver `proposta-tecnica.md` e `exemplos/ficticio-petagenda-proposta.md`). Pode vir
 num `.json` ou no primeiro bloco ```json de um `.md`.
 A faixa de semanas NÃO é digitada: o script roda `calcular_faixa.calcular`
 sobre `dimensionamento.entrada`, para que a proposta e a régua nunca divirjam.
 
-Saída: "[Proposta Técnica] {projeto}.pdf" e, no terminal, a faixa e o
+A precificação (seção 15) também não é digitada: sai do tipo de cada sprint
+do cronograma (`precificar`).
+
+Saída: "[Proposta Técnica] {projeto}.pdf" e, no terminal, a faixa, o preço e o
 resultado do checklist final do template.
 
 Precisa de `reportlab` (pip install reportlab).
@@ -81,6 +84,61 @@ STATUS = {  # (selo, cor, texto) — selo em texto porque as fontes do PDF não 
     "preliminar": ("PRELIMINAR", "#D9782D", "Estimativa preliminar, sem as transcrições das duas calls"),
     "parado": ("PARADO", "#C0453B", "Restrição técnica ou possível inviabilidade"),
 }
+
+# ---------------------------------------------------------------- precificação
+VALOR_ANALISTA_SEMANA = 1440  # R$ por analista por semana
+SEMANAS_POR_SPRINT = 2
+# Tipo da sprint → (rótulo no PDF, analistas cobrados). Sprint de imersão, gestão de mudança ou
+# publicação cobra 1 analista; desenvolvimento e testes (inclusive testes de deploy), 2.
+# Sprint que mistura um tipo de 1 analista com desenvolvimento ou testes é cobrada cheia.
+# O deploy (F5) não é tipo de sprint: abre a primeira sprint depois da imersão, e só as semanas
+# centrais do F5 são cobradas com 1 analista.
+TIPOS_SPRINT = {
+    "imersao": ("Imersão", 1),
+    "desenvolvimento": ("Desenvolvimento", 2),
+    "testes": ("Testes", 2),
+    "gestao_mudanca": ("Gestão de mudança", 1),
+    "publicacao": ("Publicação", 1),
+}
+ANALISTAS_DEPLOY = 1
+
+
+class PrecificacaoInvalida(ValueError):
+    pass
+
+
+def reais(v):
+    return "R$ " + f"{v:,.0f}".replace(",", ".")
+
+
+def precificar(cronograma, venda, semanas_deploy):
+    """Preço de cada sprint e o total. O cronograma precisa fechar a venda em sprints de 2 semanas."""
+    linhas, total = [], 0
+    sprints_ = cronograma.get("sprints", [])
+    deploy = semanas_deploy
+    for x in sprints_:
+        tipo = x[3] if len(x) > 3 else ""
+        if tipo not in TIPOS_SPRINT:
+            raise PrecificacaoInvalida(
+                f"{x[0]}: falta o tipo da sprint (4º item), um de: {', '.join(TIPOS_SPRINT)}.")
+        rotulo, analistas = TIPOS_SPRINT[tipo]
+        d = min(deploy, SEMANAS_POR_SPRINT) if tipo != "imersao" else 0
+        deploy -= d
+        resto = SEMANAS_POR_SPRINT - d
+        valor = round((d * ANALISTAS_DEPLOY + resto * analistas) * VALOR_ANALISTA_SEMANA)
+        if not d:
+            linhas.append((str(x[0]), rotulo, fmt(resto), str(analistas), valor))
+        elif not resto:
+            linhas.append((str(x[0]), "Deploy", fmt(d), str(ANALISTAS_DEPLOY), valor))
+        else:
+            linhas.append((str(x[0]), f"Deploy + {rotulo.lower()}", f"{fmt(d)} + {fmt(resto)}",
+                           f"{ANALISTAS_DEPLOY} + {analistas}", valor))
+        total += valor
+    if len(sprints_) * SEMANAS_POR_SPRINT != venda:
+        raise PrecificacaoInvalida(
+            f"o cronograma tem {len(sprints_)} sprints ({len(sprints_) * SEMANAS_POR_SPRINT} semanas), "
+            f"mas a venda é de {venda} semanas ({venda // SEMANAS_POR_SPRINT} sprints).")
+    return {"linhas": linhas, "total": total}
 
 
 def inline(t):
@@ -198,7 +256,7 @@ def checklist(d, r):
 
 
 # ---------------------------------------------------------------- documento
-def montar(d, r):
+def montar(d, r, preco):
     s = []
     cab = d.get("cabecalho", {})
     dim = d.get("dimensionamento", {})
@@ -212,7 +270,8 @@ def montar(d, r):
         f"{inline(texto)}<br/>"
         + inline(f"**Prazo recomendado:** {venda} semanas ({venda // 2} sprints de 2 semanas){parte}, mais as semanas off. "
                  f"Faixa: otimista {semanas(r['otimista'])} · provável {semanas(r['provavel'])} · "
-                 f"conservador {semanas(r['conservador'])} semanas. Detalhe no Anexo."), ST["box"])))
+                 f"conservador {semanas(r['conservador'])} semanas. Detalhe no Anexo.")
+        + "<br/>" + inline(f"**Preço:** {reais(preco['total'])} (seção 15)."), ST["box"])))
     s.append(Spacer(1, 6))
     calls = " · ".join(f"{c.get('call', '?')} ({c.get('data', 'sem data')})" for c in cab.get("transcricoes", []))
     s.append(caixa(P(
@@ -315,6 +374,20 @@ def montar(d, r):
     if not pr.get("recebido"):
         s.append(caixa(P("**Protótipo não recebido pela skill.** O comercial precisa preencher esta seção "
                          "antes de enviar para a validação.", "box"), fundo=WARN_BG, barra=ORANGE))
+
+    # 15
+    s += titulo(15, "Precificação")
+    s.append(P(f"Cada semana é cobrada por analista ({reais(VALOR_ANALISTA_SEMANA)} por analista por semana). "
+               "Semanas de desenvolvimento e de testes (inclusive testes de deploy) contam 2 analistas; semanas de "
+               "imersão, deploy, gestão de mudança e publicação contam 1. O deploy é feito no começo da primeira "
+               "sprint depois da imersão. O preço segue o cronograma da seção 13, no cenário provável; semanas off "
+               "e a garantia de 30 dias não são cobradas."))
+    linhas = [[sp, tipo, sem, an, reais(v)] for sp, tipo, sem, an, v in preco["linhas"]]
+    linhas.append(["**Total**", "", f"**{venda}**", "", f"**{reais(preco['total'])}**"])
+    s.append(tabela(["Sprint", "Tipo", "Semanas", "Analistas", "Valor"], linhas, [0.16, 0.34, 0.14, 0.14, 0.22]))
+    if cr.get("duracao_obs"):
+        s.append(Spacer(1, 3))
+        s.append(P(f"Prazo de {venda} semanas, {cr['duracao_obs']}."))
 
     # checklist
     s += titulo(0, "Checklist final antes de enviar (comercial)")
@@ -420,6 +493,12 @@ def main():
         motivos = "\n  - ".join(r["rejeicoes"])
         sys.exit(f"REJEITADO NO F0, nenhum PDF gerado:\n  - {motivos}\n"
                  "Responder ao CN com o critério, a citação e o que precisaria mudar (fatores/F0-viabilidade.md).")
+    venda = sprints(r["provavel"]) * 2
+    try:
+        f5 = next(v[1] for k, v in r["fases"].items() if k.startswith("F5"))
+        preco = precificar(d.get("cronograma", {}), venda, f5)
+    except PrecificacaoInvalida as erro:
+        sys.exit(f"Erro no cronograma (seção 13), sem ele não há preço: {erro}")
     projeto = d.get("projeto", entrada.get("projeto", "Projeto"))
     pasta = a.saida or os.path.dirname(os.path.abspath(a.proposta))
     os.makedirs(pasta, exist_ok=True)
@@ -428,15 +507,16 @@ def main():
                             topMargin=18 * mm, bottomMargin=17 * mm, title=f"Proposta Técnica — {projeto}",
                             author="NTEC")
     first_top = Spacer(1, 32 * mm)
-    doc.build([first_top] + montar(d, r), onFirstPage=pagina(projeto), onLaterPages=pagina(projeto))
+    doc.build([first_top] + montar(d, r, preco), onFirstPage=pagina(projeto), onLaterPages=pagina(projeto))
 
-    venda = sprints(r["provavel"]) * 2
     parte = parte_lacunas(entrada, r)
     print(f"PDF: {destino}")
     print(f"Faixa: otimista {semanas(r['otimista'])} · provável {semanas(r['provavel'])} · "
           f"conservador {semanas(r['conservador'])} · vender {venda} semanas ({venda // 2} sprints)")
     if parte:
         print(f"  {parte}")
+    print(f"Preço: {reais(preco['total'])} (" + "; ".join(f"{l[0]} {l[1].lower()} {reais(l[4])}"
+                                                          for l in preco["linhas"]) + ")")
     print("Checklist:")
     for texto, ok in checklist(d, r):
         print(f"  [{'x' if ok else ' '}] {texto}")
