@@ -143,10 +143,11 @@ O F0 não soma semanas: decide se a skill dimensiona.
 
 | Resultado | Critérios | O que a skill faz |
 |---|---|---|
-| 🚫 **Rejeitado** | Stack exigida fora da lista aceita (Next.js/React, Expo/React Native, Node/TypeScript, MongoDB, Postgres, Supabase, Vercel, AWS); offline com sincronização exigido em MongoDB; SLA ou sustentação além da garantia de 30 dias; infra do cliente sem acesso do NTec | Não dimensiona e não gera PDF. Responde ao CN com o critério, o motivo e o que precisaria mudar |
-| 🚩 **Parado** | Multa por atraso; ninguém do cliente nomeado para validar; feature sem referência **e** sem documentação; hardware; multitenancy com regra diferente por cliente; integração com sistema sem API; prazo exigido abaixo do otimista | Dimensiona, mas a proposta não vai ao cliente sem a área de projetos |
+| 🚫 **Rejeitado** | Stack exigida fora da lista aceita (Next.js/React, Expo/React Native, Node/TypeScript, MongoDB, Postgres, Supabase, Vercel, AWS); SLA ou sustentação além da garantia de 30 dias | Não dimensiona e não gera PDF. Responde ao CN com o critério, o motivo e o que precisaria mudar |
+| 🚩 **Parado** | Multa por atraso; feature sem referência **e** sem documentação; hardware; multitenancy com regra diferente por cliente; integração com sistema sem API; prazo exigido abaixo do otimista (conferido depois da conta, com análise de entrega parcial) | Dimensiona, mas a proposta não vai ao cliente sem a área de projetos |
+| **Condição de escopo** | Infra do cliente sem acesso do NTec | Dimensiona sem o deploy (F5 zerado). O deploy é do cliente, e a proposta diz que a garantia de 30 dias não se aplica |
 
-Trocar MongoDB por Postgres ou Supabase **não** rejeita: soma como troca de stack no F1.
+Trocar MongoDB por Postgres ou Supabase **não** rejeita: soma como troca de stack no F1. Offline com sincronização também não rejeita: o banco é Postgres, como premissa técnica (D5, em aberto, decide se isso soma no F1).
 
 ## 8. Régua de dimensionamento (F1 a F6)
 
@@ -203,7 +204,7 @@ Cada linha tem **mínimo / central / máximo** em semanas. Os pesos já consider
 | F6 Lojas — app comum | 2 | 2,5 | 4 |
 | F6 Lojas — app sensível (saúde, finanças, crianças, pagamento no app) | 2,5 | 3 | 6 |
 
-_Desde 20/10/2026 a régua não tem fator Claude Code nem o fator "cliente com pouca disponibilidade" (quem valida passou para o F0). Tetos de fase não cortam a soma: a fase acima do teto sai com alerta. Semanas off (férias, provas, recessos) e a garantia gratuita de 30 dias ficam fora da régua: as semanas off são somadas depois, pelo calendário._
+_Desde 20/10/2026 a régua não tem fator Claude Code nem o fator "cliente com pouca disponibilidade". Tetos de fase não cortam a soma: a fase acima do teto sai com alerta. Semanas off (férias, provas, recessos) e a garantia gratuita de 30 dias ficam fora da régua: as semanas off são somadas depois, pelo calendário._
 
 ## 9. Faixa final e cortes
 
@@ -253,7 +254,7 @@ O que as duas calls não respondem vira **lacuna**. A skill dimensiona mesmo ass
 
 1. **Mostra quanto da venda depende das lacunas:** *"Recomendado vender 14 semanas (7 sprints) = 12 + 2 que dependem de confirmar com o cliente (login e perfis, integrações)"*.
 2. **Devolve ao CN as Lacunas para o CN** (no chat, na seção 11 e no anexo): o fator, o que foi procurado e não achado, a pergunta pronta e o valor provisório.
-3. **Status:** lacuna em quem valida → 🚩 (F0). Lacuna que mexe na faixa → **[Revisar]** até o CN responder. Lacuna só na data de início não rebaixa o status.
+3. **Status:** lacuna que mexe na faixa → **[Revisar]** até o CN responder. Lacuna só na data de início não rebaixa o status.
 
 No máximo 5 perguntas por rodada, as que mais mexem no prazo primeiro. O CN repassa ao cliente (WhatsApp serve), a skill troca o valor e roda de novo.
 
@@ -262,13 +263,12 @@ No máximo 5 perguntas por rodada, as que mais mexem no prazo primeiro. O CN rep
 | Login | A pessoa precisa criar conta e entrar com login, ou abre o app e já usa? |
 | Pagamento | Como você quer cobrar: o app é pago na loja, tem assinatura dentro do app, ou é gratuito? |
 | Lojas | O app vai para a App Store e a Play Store, ou só para uso interno? |
-| Quem valida | Quem do seu lado vai testar e aprovar as entregas? |
 | Referência | Existe algum app ou site parecido que a gente possa usar de referência? |
 | Stack e infra | Vocês exigem alguma tecnologia, ou que o sistema fique nos servidores de vocês? |
 | Documento da regra | Você consegue mandar a planilha (ou a tabela, a norma) com as fórmulas que o sistema vai seguir? |
 | Data de início | Qual é a data prevista de início? (para contar férias, provas e recesso) |
 
-Sem transcrição nenhuma, a skill usa as perguntas de `insumos-e-perguntas.md` (fluxos, regra de negócio, formato, níveis de acesso, integrações, offline, multitenancy, quem valida).
+Sem transcrição nenhuma, a skill usa as perguntas de `insumos-e-perguntas.md` (fluxos, regra de negócio, formato, níveis de acesso, integrações, offline, multitenancy, condições de contrato).
 
 ## 12. Calibração com projetos reais
 

@@ -322,11 +322,9 @@ Gerar o PDF: `python ../scripts/gerar_proposta.py ficticio-petagenda-proposta.md
       "projeto": "PetAgenda, a partir da AT Diag e da AT Aprof (exemplo fictício)",
       "f0": {
         "stack_exigida_fora_da_lista": false,
-        "offline_sync_com_mongodb_exigido": false,
         "sla_ou_sustentacao": false,
         "infra_cliente_sem_acesso": false,
         "multa_por_atraso": false,
-        "sem_validador_nomeado": false,
         "feature_sem_referencia_nem_doc": false,
         "hardware": false,
         "prazo_exigido_semanas": null

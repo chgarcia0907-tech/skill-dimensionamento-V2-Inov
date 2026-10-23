@@ -21,7 +21,6 @@ App para médicos calcularem o soro de crianças: informa o peso, o tipo de soro
 | Histórico | Fora (exclusão) | AT Diag 13:32 ("não é prontuário") |
 | RN crítica | `true` | O app calcula volume e infusão de soro pediátrico |
 | Atípico | `false` | AT Aprof 2:32 ("as [calculadoras] que eu já vi") |
-| Quem valida | A própria cliente, pessoa física | AT Aprof 1:35 ("ajustes… a gente faria no decorrer do projeto") |
 | Prazo exigido | `null` | AT Aprof 7:14 ("para esse ano, mas não tem pressa") |
 
 **Descartado na leitura:** a conversa interna antes de a cliente entrar (AT Diag 0:00 a 1:31), a apresentação da Poli Júnior (16:11 a 17:57) e os *Action Items* do Fathom.
@@ -65,11 +64,9 @@ O JSON que o script lê (`python ../scripts/calcular_faixa.py projeto-h.md`). O 
   "projeto": "Projeto H — calculadora clínica (app nativo, a partir da AT Diag e da AT Aprof)",
   "f0": {
     "stack_exigida_fora_da_lista": false,
-    "offline_sync_com_mongodb_exigido": false,
     "sla_ou_sustentacao": false,
     "infra_cliente_sem_acesso": false,
     "multa_por_atraso": false,
-    "sem_validador_nomeado": false,
     "feature_sem_referencia_nem_doc": false,
     "hardware": false,
     "prazo_exigido_semanas": null

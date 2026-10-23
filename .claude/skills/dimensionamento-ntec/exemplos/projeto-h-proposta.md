@@ -127,11 +127,9 @@ Gerar o PDF: `python ../scripts/gerar_proposta.py projeto-h-proposta.md --saida 
       "projeto": "Projeto H — calculadora clínica (app nativo, a partir da AT Diag e da AT Aprof)",
       "f0": {
         "stack_exigida_fora_da_lista": false,
-        "offline_sync_com_mongodb_exigido": false,
         "sla_ou_sustentacao": false,
         "infra_cliente_sem_acesso": false,
         "multa_por_atraso": false,
-        "sem_validador_nomeado": false,
         "feature_sem_referencia_nem_doc": false,
         "hardware": false,
         "prazo_exigido_semanas": null
@@ -186,7 +184,6 @@ Gerar o PDF: `python ../scripts/gerar_proposta.py projeto-h-proposta.md --saida 
     "suposicoes": [
       "\"EES\" na transcrição da AT Diag (15:04) foi lido como Play Store (\"tanto para a [Play Store] quanto para a App Store\").",
       "Os três tipos de soro e a escolha da unidade do cálcio são a mesma jornada (Calcular o soro), não jornadas separadas.",
-      "Quem valida: a própria cliente, pessoa física, que participou das duas calls e disse que os ajustes \"a gente faria no decorrer do projeto\" (AT Aprof 1:35).",
       "Sem histórico de cálculos: a cliente descartou (\"não é prontuário\", AT Diag 13:32).",
       "Prazo exigido: nenhum. \"Para esse ano, mas não tem pressa\" não é exigência.",
       "A planilha com as fórmulas é o documento da RN específica, não dependência de dados."

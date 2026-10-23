@@ -65,8 +65,10 @@ A área de projetos sempre revisa o resultado antes de virar proposta. A skill e
 
 ## Parar e sinalizar para a área de projetos
 
-- 🚫 **Rejeitado no F0** (stack exigida fora da lista, offline com sincronização em MongoDB exigido, SLA ou sustentação, infra do cliente sem acesso do NTec): não dimensionar.
-- 🚩 **Parado no F0** (multa por atraso, ninguém nomeado para validar, feature sem referência nem documentação, hardware, multitenancy com regra diferente por tenant, integração sem API, prazo exigido abaixo do otimista): dimensionar, mas não vender sem a área de projetos.
+- 🚫 **Rejeitado no F0** (stack exigida fora da lista, SLA ou sustentação): não dimensionar.
+- **Infra do cliente sem acesso do NTec** (F0, item 0.3): dimensionar sem o deploy (F5 zerado). O deploy é do cliente, e a proposta diz que a garantia de 30 dias não se aplica.
+- **Offline com sincronização** (F0, item 0.2): não para. O banco é Postgres, como premissa técnica.
+- 🚩 **Parado no F0** (multa por atraso, feature sem referência nem documentação, hardware, multitenancy com regra diferente por tenant, integração sem API, prazo exigido abaixo do otimista): dimensionar, mas não vender sem a área de projetos. O prazo exigido só é comparado depois da conta; abaixo do otimista, analisar se um módulo utilizável pode ser entregue antes, num deploy parcial, sem reduzir o prazo total (`fatores/F0-viabilidade.md`, 0.3).
 - **Demanda pouco detalhada** (`fatores/F1-imersao-setup.md`, 1.2): abrir a resposta com o alerta de discovery. O status nunca é ✅.
 - **Prazo já falado ao cliente abaixo do otimista** da skill: a expectativa do cliente está errada; o CN precisa corrigir antes da proposta.
 - **Provável acima de 26 semanas**: a régua ainda não foi calibrada para projetos grandes (Projetos E e F, de 34 e 38 semanas, não têm ficha técnica). Dimensionar mesmo assim, marcar ⚠️ e sugerir quebrar em fases.

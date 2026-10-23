@@ -30,6 +30,12 @@ AT Aprof, sem PRD (leitura-transcricoes.md). `lacunas_fathom` aceita também um
 objeto {campo: valor leve}, para as lacunas que as calls deixam mais (login e
 integrações). Pesos inalterados.
 
+Revisão do consultor do NTec (depois de 20/10/2026): offline com sincronização
+deixa de rejeitar (vira premissa de Postgres); "ninguém nomeado para validar" sai
+do F0; infra do cliente sem acesso do NTec deixa de rejeitar e zera o F5 (deploy
+fica com o cliente, sem garantia de 30 dias); prazo exigido abaixo do otimista
+continua 🚩, com análise de entrega parcial.
+
 Exemplos em Markdown (22/10/2026): os `.json` de `exemplos/` viraram um bloco
 ```json dentro do `.md` de cada projeto, para a skill ler ficha e entrada juntas.
 """
@@ -104,14 +110,18 @@ PROVAVEL_CALIBRADO_ATE = 26  # acima disso a régua ainda não foi calibrada
 # F0 — fatores/F0-viabilidade.md. Rejeita: a skill não dimensiona.
 F0_REJEICOES = {
     "stack_exigida_fora_da_lista": "O cliente exige uma tecnologia fora da lista aceita pelo NTec.",
-    "offline_sync_com_mongodb_exigido": "Offline com sincronização exigido em MongoDB: só se vende com Postgres.",
     "sla_ou_sustentacao": "O cliente exige SLA, suporte 24/7 ou sustentação além da garantia de 30 dias.",
-    "infra_cliente_sem_acesso": "O sistema roda na infra do cliente sem acesso do time do NTec para publicar e corrigir.",
+}
+# F0 — Condição de escopo: a skill dimensiona, sem o deploy (F5 zerado), e a proposta escreve a condição.
+F0_CONDICOES = ["infra_cliente_sem_acesso"]
+# Campos que saíram do F0 na revisão do consultor: JSON antigo com eles para com erro.
+F0_REMOVIDOS = {
+    "offline_sync_com_mongodb_exigido": "offline com sincronização não rejeita mais: vira Postgres como premissa (offline: sync)",
+    "sem_validador_nomeado": "critério removido: ninguém nomeado para validar não bloqueia a proposta",
 }
 # F0 — Parar e consultar a área de projetos: a skill dimensiona, mas o status é 🚩.
 F0_PARADAS = {
     "multa_por_atraso": "O contrato prevê multa por atraso.",
-    "sem_validador_nomeado": "Ninguém do cliente foi nomeado para testar e aprovar as entregas.",
     "feature_sem_referencia_nem_doc": "Feature sem referência e sem documentação técnica pública: pode exigir prova de conceito paga.",
     "hardware": "O produto depende de hardware (Bluetooth com dispositivo próprio, IoT, leitor, impressora fiscal).",
 }
@@ -178,9 +188,12 @@ def validar_f0(e):
     if not isinstance(f0, dict):
         erros.append("f0: ausente (bloco de viabilidade, ver fatores/F0-viabilidade.md)")
     else:
-        for campo in [*F0_REJEICOES, *F0_PARADAS]:
+        for campo in [*F0_REJEICOES, *F0_PARADAS, *F0_CONDICOES]:
             if not isinstance(f0.get(campo), bool):
                 erros.append(f"f0.{campo}: ausente ou não é true/false")
+        for campo, motivo in F0_REMOVIDOS.items():
+            if campo in f0:
+                erros.append(f"f0.{campo}: tirar do JSON ({motivo})")
         prazo = f0.get("prazo_exigido_semanas", "ausente")
         if prazo is not None and (isinstance(prazo, bool) or not isinstance(prazo, (int, float))):
             erros.append("f0.prazo_exigido_semanas: ausente (usar null se o cliente não exigiu prazo)")
@@ -396,7 +409,7 @@ def calcular(e):
         alertas.append("Dependência de dados de bases soltas: chamar o núcleo de Dados para avaliar.")
     extras.append(F3_OFFLINE[e["offline"]])
     if e["offline"] == "sync":
-        alertas.append("Offline com sincronização: banco em Postgres, não MongoDB (premissa da Sprint de Refino).")
+        alertas.append("Offline com sincronização: banco em Postgres, não MongoDB (premissa técnica na seção 12 e na Sprint de Refino).")
         avisos_internos.append("D5 em aberto: a troca para Postgres por causa do sync não soma no F1.")
     if e["volume_alto"]:
         extras.append(F3_VOLUME_ALTO)
@@ -421,8 +434,14 @@ def calcular(e):
         f5.append(F5_APP_JUNTO_WEB if tem_web else F5_APP_SOZINHO)
     if e["deploy_infra_cliente"]:
         f5.append(F5_INFRA_CLIENTE)
-        alertas.append("Deploy na infra do cliente: pedir as regras de deploy e os acessos já na imersão.")
+        if not f0["infra_cliente_sem_acesso"]:
+            alertas.append("Deploy na infra do cliente: pedir as regras de deploy e os acessos já na imersão.")
     f5 = soma(*f5)
+    deploy_pelo_cliente = f0["infra_cliente_sem_acesso"]
+    if deploy_pelo_cliente:
+        f5 = (0, 0, 0)
+        alertas.append("Infra do cliente sem acesso do NTec: o deploy é do cliente e sai do escopo (F5 zerado). "
+                       "A proposta diz que a garantia de 30 dias não se aplica.")
 
     # F6 — Publicação nas lojas
     lojas = e["lojas"]
@@ -451,7 +470,9 @@ def calcular(e):
     prazo = f0["prazo_exigido_semanas"]
     if prazo is not None and prazo < otimista:
         paradas.append(f"O cliente exige {fmt(prazo)} semanas, abaixo do otimista ({fmt(otimista)}): "
-                       "não vender sem a área de projetos.")
+                       "não concluir a proposta sem a área de projetos. Analisar se um módulo utilizável "
+                       "pode ser entregue antes, num deploy parcial, sem reduzir o prazo total "
+                       "(fatores/F0-viabilidade.md, 0.3).")
 
     # Parte da venda que depende das lacunas das calls (em sprints inteiras)
     leves = lacunas_leve(e)
@@ -474,6 +495,7 @@ def calcular(e):
         "rejeicoes": [],
         "lacunas_na_conta": lacunas,
         "venda_confirmada": venda_confirmada,
+        "deploy_pelo_cliente": deploy_pelo_cliente,
     }
 
 
