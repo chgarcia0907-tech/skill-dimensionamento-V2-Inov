@@ -27,6 +27,7 @@ A área de projetos sempre revisa o resultado antes de virar proposta. A skill e
 | `proposta-tecnica.md` | Sempre, no fim: como preencher cada uma das 14 seções da **Proposta Técnica** (o entregável) a partir das calls e da conta |
 | `scripts/gerar_proposta.py` | Sempre, no fim: gera o PDF "[Proposta Técnica] {projeto}" no template do NTec |
 | `exemplos/ficticio-petagenda-proposta.md` | Modelo do JSON da proposta, para copiar a estrutura |
+| `template-proposta-tecnica.md` | Só para consulta: o template original do NTec, como o comercial recebe (pede PRD; a skill usa as calls) |
 
 ## Procedimento
 
