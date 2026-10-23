@@ -1,6 +1,6 @@
 # Insumos da revisão de 20/10/2026
 
-Material de trabalho que levou à revisão da régua (F0, `fatores/` por fase e script sem padrões), mergeada no PR #1. O estado atual da skill está no `README.md` da raiz e em `.claude/skills/dimensionamento-ntec/fatores/README.md`. Os arquivos desta pasta são o registro de **como** se chegou lá.
+Material de trabalho que levou à revisão da régua (F0, `fatores/` por fase e script sem padrões), mergeada no PR #1. O estado atual da skill está no `README.md` da raiz e em `fatores/README.md`. Os arquivos desta pasta são o registro de **como** se chegou lá.
 
 | Arquivo | O que é |
 |---|---|
@@ -14,5 +14,5 @@ Material de trabalho que levou à revisão da régua (F0, `fatores/` por fase e 
 Para reproduzir os testes, a partir desta pasta:
 
 ```bash
-python -I testes/comparar.py testes ../../.claude/skills/dimensionamento-ntec/scripts/calcular_faixa.py
+python -I testes/comparar.py testes ../../scripts/calcular_faixa.py
 ```

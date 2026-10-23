@@ -1,6 +1,6 @@
 # Dimensionamento NTec — Skill
 
-_Guia explicativo · v5 (V2-Inov) · 22/10/2026. Se este guia e os arquivos de `.claude/skills/dimensionamento-ntec/` divergirem, valem os arquivos da skill (e, para os pesos, `fatores/` e `scripts/calcular_faixa.py`)._
+_Guia explicativo · v5 (V2-Inov) · 22/10/2026. Se este guia e os arquivos da skill (raiz do repositório) divergirem, valem os arquivos da skill (e, para os pesos, `fatores/` e `scripts/calcular_faixa.py`)._
 
 > **Para que serve este documento:** explicar o que tem na skill **dimensionamento-ntec**, como ela lê as **transcrições da AT Diagnóstico e da AT Aprofundamento** e chega a uma **faixa de semanas**, e como o coordenador de negócios (CN) usa no dia a dia.
 > **Para quem:** CNs e área de projetos do Núcleo de Tecnologia. A skill não substitui a validação da área de projetos: ela evita que chegue à equipe um prazo "nada a ver".
@@ -53,7 +53,7 @@ AT Diag (dor e ideia) → AT Aprof (protótipo e escopo) → Dimensionamento (es
 - **Onde está instalada:** `~\.claude\skills\dimensionamento-ntec\` (pasta pessoal; vale para qualquer projeto).
 - **Cópia de trabalho (para editar e versionar):** este repositório. A cópia instalada **não se atualiza sozinha**: depois de editar aqui, copiar de novo para lá.
 - **No claude.ai:** compactar a pasta `dimensionamento-ntec` em .zip e enviar em Settings → Capabilities → Skills.
-- **No GitHub:** `github.com/chgarcia0907-tech/skill-dimensionamento-V2-Inov`. Para instalar, clonar e copiar `.claude/skills/dimensionamento-ntec` para `~/.claude/skills/`.
+- **No GitHub:** `github.com/chgarcia0907-tech/skill-dimensionamento-V2-Inov`. A raiz do repositório é a pasta da skill: para o claude.ai, baixar o .zip (*Code → Download ZIP*) e enviar; para o Claude Code, extrair em `~/.claude/skills/dimensionamento-ntec/`.
 
 ## 4. Arquitetura (o que tem dentro)
 

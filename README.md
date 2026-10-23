@@ -9,29 +9,28 @@ Skill do Claude que ajuda coordenadores de negócios (CNs) do Núcleo de Tecnolo
 ## Estrutura
 
 ```
-skill-dimensionamento-ntec/
-├── README.md                       ← este arquivo
-├── docs/
+skill-dimensionamento-V2-Inov/   ← a raiz do repositório é a pasta da skill (o .zip do GitHub já sai pronto para o claude.ai)
+├── README.md                       ← este arquivo (fica fora do .zip, ver .gitattributes)
+├── docs/                           ← fica fora do .zip (ver .gitattributes)
 │   ├── Dimensionamento-NTec-Skill.md    ← guia explicativo (v5, V2-Inov: entrada pelas transcrições, F0 e pesos da revisão de 20/10)
 │   └── revisao-20-10/                   ← insumos da revisão de 20/10: análise do Council, testes comparativos,
 │                                          patches v1 e v2 e o contexto de 21/10
-└── .claude/skills/dimensionamento-ntec/
-    ├── SKILL.md                    ← orquestrador: procedimento, guardrails, entregável e resposta no chat
-    ├── proposta-tecnica.md         ← como preencher as 15 seções da Proposta Técnica (o entregável)
-    ├── template-proposta-tecnica.md ← o template original do NTec em Markdown (só para consulta)
-    ├── leitura-transcricoes.md     ← entrada padrão: como ler a AT Diag e a AT Aprof, o que conta como escopo,
-    │                                 inventário de jornadas, onde está cada fator nas calls e as lacunas
-    ├── insumos-e-perguntas.md      ← caminho sem transcrição (formulário, ficha, briefing) + vocabulário
-    ├── fatores/                    ← um arquivo por fase (F0 viabilidade a F6 lojas) com critérios e pesos,
-    │                                 glossário e README com as decisões em aberto D1 a D5
-    ├── regua-dimensionamento.md    ← regras de uso, faixa final, quando parar, calibração, fontes
-    ├── regra-fronteira-e-faixa.md  ← desempate entre linhas + tabela de cortes ("O que cortar")
-    ├── scripts/calcular_faixa.py   ← faz a conta (fonte da verdade dos pesos)
-    ├── scripts/testar_exemplos.py  ← teste de regressão: a régua de hoje ainda dá a faixa de cada ficha?
-    ├── scripts/gerar_proposta.py   ← gera o PDF "[Proposta Técnica] {projeto}" no template do NTec (reportlab)
-    └── exemplos/                   ← precedentes (.md, com o JSON de entrada no fim de cada ficha): Projeto A, Projeto B, Projeto C, Projeto D,
-                                      Projetos E e F (pendente), Projeto H (primeiro pelas transcrições, com a
-                                      proposta completa), PetAgenda (fictício) e PetAgenda proposta (JSON modelo)
+├── SKILL.md                    ← orquestrador: procedimento, guardrails, entregável e resposta no chat
+├── proposta-tecnica.md         ← como preencher as 15 seções da Proposta Técnica (o entregável)
+├── template-proposta-tecnica.md ← o template original do NTec em Markdown (só para consulta)
+├── leitura-transcricoes.md     ← entrada padrão: como ler a AT Diag e a AT Aprof, o que conta como escopo,
+│                                 inventário de jornadas, onde está cada fator nas calls e as lacunas
+├── insumos-e-perguntas.md      ← caminho sem transcrição (formulário, ficha, briefing) + vocabulário
+├── fatores/                    ← um arquivo por fase (F0 viabilidade a F6 lojas) com critérios e pesos,
+│                                 glossário e README com as decisões em aberto D1 a D5
+├── regua-dimensionamento.md    ← regras de uso, faixa final, quando parar, calibração, fontes
+├── regra-fronteira-e-faixa.md  ← desempate entre linhas + tabela de cortes ("O que cortar")
+├── scripts/calcular_faixa.py   ← faz a conta (fonte da verdade dos pesos)
+├── scripts/testar_exemplos.py  ← teste de regressão: a régua de hoje ainda dá a faixa de cada ficha?
+├── scripts/gerar_proposta.py   ← gera o PDF "[Proposta Técnica] {projeto}" no template do NTec (reportlab)
+└── exemplos/                   ← precedentes (.md, com o JSON de entrada no fim de cada ficha): Projeto A, Projeto B, Projeto C, Projeto D,
+                                  Projetos E e F (pendente), Projeto H (primeiro pelas transcrições, com a
+                                  proposta completa), PetAgenda (fictício) e PetAgenda proposta (JSON modelo)
 ```
 
 **Projetos anonimizados.** Os precedentes reais do NTec aparecem como Projeto A a F, só com o tipo de produto e os fatores da régua. Quem é cada um, as fichas originais e os links internos ficam numa pasta `privado/` que não vai para o repositório.
@@ -40,21 +39,21 @@ skill-dimensionamento-ntec/
 
 - **Instalada em:** `~\.claude\skills\dimensionamento-ntec\` (pasta pessoal; vale em qualquer projeto do Claude Code).
 - **Chamar:** `/dimensionamento-ntec`, ou pedir "dimensiona esse projeto" colando a transcrição na íntegra (Fathom, modo transcrição) da AT Diag e da AT Aprof, mais o link do protótipo, se tiver. Com uma call só, ou só o formulário, a ficha ou o briefing, a estimativa sai como preliminar.
-- **claude.ai:** compactar a pasta `dimensionamento-ntec` em .zip e enviar em *Settings → Capabilities → Skills*.
+- **claude.ai:** baixar o .zip do GitHub (*Code → Download ZIP*) e enviar em *Settings → Capabilities → Skills*.
 - **Rodar a conta direto:**
   ```bash
-  python .claude/skills/dimensionamento-ntec/scripts/calcular_faixa.py .claude/skills/dimensionamento-ntec/exemplos/projeto-a.md
+  python scripts/calcular_faixa.py exemplos/projeto-a.md
   ```
 - **Conferir os exemplos depois de mudar um peso** (compara a régua com a tabela de `exemplos/README.md`):
   ```bash
-  python .claude/skills/dimensionamento-ntec/scripts/testar_exemplos.py
+  python scripts/testar_exemplos.py
   ```
 - **Gerar a Proposta Técnica** (precisa de `pip install reportlab`):
   ```bash
-  python .claude/skills/dimensionamento-ntec/scripts/gerar_proposta.py .claude/skills/dimensionamento-ntec/exemplos/ficticio-petagenda-proposta.md --saida .
+  python scripts/gerar_proposta.py exemplos/ficticio-petagenda-proposta.md --saida .
   ```
 
-**Instalar a partir do GitHub:** clonar o repositório e copiar a pasta `.claude/skills/dimensionamento-ntec` para `~/.claude/skills/`.
+**Instalar a partir do GitHub:** em *Code → Download ZIP*, o .zip já sai com o `SKILL.md` na pasta de cima e sem `docs/` e `README.md` (o `.gitattributes` tira os dois). Para o Claude Code, extrair e renomear a pasta para `~/.claude/skills/dimensionamento-ntec/`.
 
 **Atenção:** esta pasta é a cópia de trabalho. A cópia instalada em `~/.claude/skills` **não se atualiza sozinha**: depois de editar aqui, copiar de novo para lá.
 
@@ -164,7 +163,7 @@ Os Projetos A a D são **anteriores à leitura das calls** (fluxos contados pela
 ### Pendências (próximos passos, 22/10/2026)
 **Só nós**
 1. **Mergear o PR** do branch `revisao-fronteira-template-guia` (fronteira, template, guia v5, teste de regressão e esta lista).
-2. **Reinstalar a skill no claude.ai:** compactar `.claude/skills/dimensionamento-ntec` em .zip e reenviar em *Settings → Capabilities → Skills*. Conferir que a descrição fala das transcrições, não da PRD.
+2. **Reinstalar a skill no claude.ai:** baixar o .zip do GitHub (*Code → Download ZIP*) e reenviar em *Settings → Capabilities → Skills*. Conferir que a descrição fala das transcrições, não da PRD.
 3. **Ficha do Projeto G** (`exemplos/projeto-g.md`), se puder ser anonimizado: é o único precedente grande (app de campo offline + painel, vender 34 → 28 semanas no Registro das fontes).
 4. **Testar a skill de ponta a ponta** com as transcrições de um lead novo (ou de novo com o Projeto H) depois de reinstalar, conferindo a resposta no chat e o PDF.
 
@@ -189,7 +188,7 @@ Feito: PDF v2 a v4 e guia v5 (V2-Inov); publicação no GitHub com projetos anon
 | Mapa dos projetos reais (fora do git) | `privado\mapa-projetos.md` e `privado\exemplos-originais\` |
 | Guia explicativo | `docs\Dimensionamento-NTec-Skill.md` (v5; o PDF v4 saiu do repositório e fica no histórico do git) |
 | Formulário original | `~\Downloads\dimensionamento.pdf` |
-| Template da Proposta Técnica (original) | `.claude/skills/dimensionamento-ntec/template-proposta-tecnica.md` (convertido de `~/Downloads/template-proposta-comercial.pdf`) |
+| Template da Proposta Técnica (original) | `template-proposta-tecnica.md` (convertido de `~/Downloads/template-proposta-comercial.pdf`) |
 | Skill da PRD (Augustus) | https://github.com/rivasaugustus/documento-requisitos-ntec |
 
-**Fluxo de atualização:** editar nesta pasta → rodar `python .claude/skills/dimensionamento-ntec/scripts/testar_exemplos.py` se mexeu em peso → copiar `.claude/skills/dimensionamento-ntec` para `~/.claude/skills/` → commit e push.
+**Fluxo de atualização:** editar nesta pasta → rodar `python scripts/testar_exemplos.py` se mexeu em peso → copiar a skill para `~/.claude/skills/dimensionamento-ntec/` → commit e push.
