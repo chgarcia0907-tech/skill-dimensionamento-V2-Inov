@@ -14,7 +14,7 @@ Calculadora clínica pediátrica que substitui a planilha usada hoje pela client
 | Fluxos | 1 com RN específica (motor de cálculo com várias faixas, soluções e alertas) + 1 comum (interface e preferências) | hand-off |
 | Offline | local, sem sincronizar → 0 | hand-off |
 | RN crítica | sim: erro de cálculo é risco clínico | hand-off |
-| Cliente com pouca disponibilidade | sim (fator removido em 20/10/2026: não soma mais; quem valida vai para o F0) | hand-off |
+| Cliente com pouca disponibilidade | sim (fator removido em 20/10/2026: não soma mais) | hand-off |
 | Lojas | app sensível (saúde): revisão mais rigorosa | hand-off |
 
 ## Resultado da régua
@@ -56,11 +56,9 @@ O JSON que o script lê (`python ../scripts/calcular_faixa.py projeto-b.md`). O 
   "projeto": "Projeto B (app clínico offline)",
   "f0": {
     "stack_exigida_fora_da_lista": false,
-    "offline_sync_com_mongodb_exigido": false,
     "sla_ou_sustentacao": false,
     "infra_cliente_sem_acesso": false,
     "multa_por_atraso": false,
-    "sem_validador_nomeado": false,
     "feature_sem_referencia_nem_doc": false,
     "hardware": false,
     "prazo_exigido_semanas": null

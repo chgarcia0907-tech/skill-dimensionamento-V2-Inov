@@ -35,7 +35,7 @@ O cidadão registra avistagens de espécies com foto e geolocalização. App nat
 - Resultado final: a confirmar.
 
 ## Lição para a régua
-Se o hand-off mostrar que o app precisa funcionar **offline com sincronização** (comum em uso de campo), a régua soma +2 no central (faixa 15 / 20 / 26, recomendação de venda 20) e o banco tem de ser Postgres, não MongoDB (F0, item 0.2). Vale como alerta para futuros apps de campo: perguntar sempre.
+Se o hand-off mostrar que o app precisa funcionar **offline com sincronização** (comum em uso de campo), a régua soma +2 no central (faixa 15 / 20 / 26, recomendação de venda 20) e o banco passa a ser Postgres, não MongoDB (F0, item 0.2). Vale como alerta para futuros apps de campo: perguntar sempre.
 
 ## Entrada da régua
 
@@ -46,11 +46,9 @@ O JSON que o script lê (`python ../scripts/calcular_faixa.py projeto-d.md`). O 
   "projeto": "Projeto D (app de ciência cidadã)",
   "f0": {
     "stack_exigida_fora_da_lista": false,
-    "offline_sync_com_mongodb_exigido": false,
     "sla_ou_sustentacao": false,
     "infra_cliente_sem_acesso": false,
     "multa_por_atraso": false,
-    "sem_validador_nomeado": false,
     "feature_sem_referencia_nem_doc": false,
     "hardware": false,
     "prazo_exigido_semanas": null

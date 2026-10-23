@@ -7,7 +7,7 @@ Origem: reunião "Validação Skill NTec" (20/10/2026) e análise do LLM Council
 | Arquivo | Fase | O que decide |
 |---|---|---|
 | `glossario.md` | — | Definição única de cada termo |
-| `F0-viabilidade.md` | Antes de tudo | Se o projeto pode ser dimensionado ou é rejeitado |
+| `F0-viabilidade.md` | Antes de tudo (o prazo exigido, depois da conta) | Se o projeto é rejeitado, para para consulta ou segue com condição de escopo |
 | `F1-imersao-setup.md` | F1 | Imersão, refinamento, setup e o alerta de discovery |
 | `F2-acesso-multitenancy.md` | F2 | Níveis de acesso (F2a) e multitenancy (F2b), em tabelas separadas |
 | `F3-desenvolvimento.md` | F3 | Fluxos, formato e extras (dados, offline, volume) |
@@ -39,6 +39,7 @@ Todo critério segue o mesmo formato, para que o Claude não precise interpretar
 | Marca | Significa |
 |---|---|
 | ✅ **Reunião 20/10** | Decidido na reunião de validação |
+| ✅ **Revisão do consultor do NTec** | Orientação do consultor do NTec posterior à reunião de 20/10 (F0, itens 0.2 e 0.3; F5) |
 | 🔎 **Proposta** | Sugerido pelo Council, ainda não validado pela área técnica. Revisar com Augusto e Frank |
 | ⏳ **D1 … D5** | Decisão em aberto: o número ou a regra depende do time. Até decidir, a skill usa o valor indicado como *provisório* |
 

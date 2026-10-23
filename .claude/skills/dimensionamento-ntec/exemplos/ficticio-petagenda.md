@@ -34,7 +34,6 @@ Este caso **não é um projeto real**. Serve para mostrar ao CN como a resposta 
 - "Cada clínica tem regras próprias (horários, preços, tipos de consulta) ou todas seguem as mesmas regras?"
 - "O pagamento precisa ser pelo app no lançamento, ou pode ser na clínica no começo?"
 - "Precisa estar na App Store e na Play Store, ou um app que se instala pelo navegador resolve no início?"
-- "Quem da rede vai testar e aprovar as entregas, e tem umas 2 horas por semana para isso?"
 
 **6. Detalhamento por fase**
 
@@ -76,11 +75,9 @@ O JSON que o script lê (`python ../scripts/calcular_faixa.py ficticio-petagenda
   "projeto": "PetAgenda (exemplo fictício)",
   "f0": {
     "stack_exigida_fora_da_lista": false,
-    "offline_sync_com_mongodb_exigido": false,
     "sla_ou_sustentacao": false,
     "infra_cliente_sem_acesso": false,
     "multa_por_atraso": false,
-    "sem_validador_nomeado": false,
     "feature_sem_referencia_nem_doc": false,
     "hardware": false,
     "prazo_exigido_semanas": null

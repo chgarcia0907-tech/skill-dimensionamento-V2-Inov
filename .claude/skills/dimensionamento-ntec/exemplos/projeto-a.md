@@ -43,11 +43,9 @@ O JSON que o script lê (`python ../scripts/calcular_faixa.py projeto-a.md`). O 
   "projeto": "Projeto A (PWA de guia local)",
   "f0": {
     "stack_exigida_fora_da_lista": false,
-    "offline_sync_com_mongodb_exigido": false,
     "sla_ou_sustentacao": false,
     "infra_cliente_sem_acesso": false,
     "multa_por_atraso": false,
-    "sem_validador_nomeado": false,
     "feature_sem_referencia_nem_doc": false,
     "hardware": false,
     "prazo_exigido_semanas": null

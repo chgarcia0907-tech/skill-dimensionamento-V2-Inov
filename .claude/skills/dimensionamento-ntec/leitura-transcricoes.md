@@ -91,14 +91,12 @@ O inventário vai para o anexo da proposta (campo `criterios`, F3) e para a resp
 | Campo do bloco `"f0"` | O que procurar nas calls | Como traduzir | Sem resposta |
 |---|---|---|---|
 | `stack_exigida_fora_da_lista` | "Tem que ser em…", "a nossa TI só aceita…" | `true` só se o cliente **exige** tecnologia fora da lista do F0. "Vocês decidem" → `false`. 🚫 rejeita | `false` + stack do template em *Suposições* |
-| `offline_sync_com_mongodb_exigido` | Funciona sem internet **e** o dado sobe depois, com MongoDB exigido | 🚫 rejeita | `false` |
 | `sla_ou_sustentacao` | Suporte 24/7, SLA, "vocês mantêm depois" | `true` se for além da garantia de 30 dias. 🚫 rejeita | `false` + *Suposições* |
-| `infra_cliente_sem_acesso` | "Fica nos nossos servidores" sem acesso do NTec | 🚫 rejeita | `false` |
+| `infra_cliente_sem_acesso` | "Fica nos nossos servidores" sem acesso do NTec | Não rejeita: o deploy fica com o cliente, o F5 zera e a proposta diz que a garantia de 30 dias não se aplica (F0, item 0.3) | `false` |
 | `multa_por_atraso` | Multa, penalidade | 🚩 | `false` + *Suposições* |
-| `sem_validador_nomeado` | Quem vai testar e aprovar as entregas | Pessoa nomeada → `false`. **Cliente que é uma pessoa só** (pessoa física, dono que decide sozinho), que participou das calls e disse que vai acompanhar os ajustes → `false`, com a citação. Empresa sem ninguém nomeado → `true`. 🚩 | `true` + lacuna |
 | `feature_sem_referencia_nem_doc` | Feature que ninguém sabe se existe em algum lugar e não tem documentação técnica pública | 🚩 | `false`, se toda feature tem referência ou é comum |
 | `hardware` | Leitor, impressora, sensor, Bluetooth com aparelho próprio | 🚩 | `false` |
-| `prazo_exigido_semanas` | Data limite **exigida pelo cliente** | Converter para semanas a partir do início previsto. "Seria para esse ano, mas não tem pressa" **não é** exigência → `null` + *Suposições* | `null` |
+| `prazo_exigido_semanas` | Data limite **exigida pelo cliente** | Comparado com o otimista **depois da conta**: abaixo dele = 🚩, com análise de entrega parcial (F0, item 0.3). Converter para semanas a partir do início previsto. "Seria para esse ano, mas não tem pressa" **não é** exigência → `null` + *Suposições* | `null` |
 
 **Depois F1 a F6:**
 
@@ -134,7 +132,7 @@ O que as duas calls não respondem vira **lacuna**:
    O script refaz a conta com o valor leve e mostra a diferença em sprints inteiras: *"Recomendado vender 12 semanas (6 sprints) = 10 + 2 que dependem de confirmar com o cliente (login e perfis, integrações), mais as semanas off."*
 3. **Listar em *Lacunas para o CN*** (chat, seção 11 e anexo da proposta): o fator, o que foi procurado nas calls e não achado, a pergunta pronta e o valor provisório.
 4. **Registrar o valor provisório em *Suposições***, com `(origem: lacuna — não está nas calls)`.
-5. **Status:** lacuna em quem valida → 🚩 (F0). Lacuna que mexe na faixa → ⚠️ *Precisa de revisão* até o CN responder. Lacuna só na data de início não rebaixa o status.
+5. **Status:** lacuna que mexe na faixa → ⚠️ *Precisa de revisão* até o CN responder. Lacuna só na data de início não rebaixa o status.
 
 **No máximo 5 perguntas por rodada**, as que mais mexem no prazo primeiro. O CN repassa ao cliente (WhatsApp serve) e manda a resposta; a skill troca o valor, tira o fator de `lacunas_fathom`, roda o script de novo e muda a origem para `(origem: CN)`.
 
@@ -145,7 +143,6 @@ O que as duas calls não respondem vira **lacuna**:
 | Login (`niveis_acesso`) | "A pessoa precisa criar conta e entrar com login, ou abre o app e já usa?" |
 | Pagamento (`integracoes`) | "Como você quer cobrar: o app é pago na loja, tem assinatura dentro do app, ou é gratuito?" |
 | Lojas (`lojas`) | "O app vai para a App Store e a Play Store, ou só para uso interno?" |
-| Quem valida (`f0.sem_validador_nomeado`) | "Quem do seu lado vai testar e aprovar as entregas?" |
 | Referência (`atipico`) | "Existe algum app ou site parecido que a gente possa usar de referência?" |
 | Stack e infra (`stack_fora_template`, `deploy_infra_cliente`) | "Vocês exigem alguma tecnologia, ou que o sistema fique nos servidores de vocês?" |
 | Documento da regra | "Você consegue mandar a planilha (ou a tabela, a norma) com as fórmulas que o sistema vai seguir?" |

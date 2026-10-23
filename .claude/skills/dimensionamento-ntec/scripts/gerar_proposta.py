@@ -377,17 +377,27 @@ def montar(d, r, preco):
 
     # 15
     s += titulo(15, "Precificação")
+    deploy = ("O deploy fica com o cliente (condição abaixo)." if r["deploy_pelo_cliente"]
+              else "O deploy é feito no começo da primeira sprint depois da imersão.")
+    garantia = "semanas off não são cobradas" if r["deploy_pelo_cliente"] else \
+        "semanas off e a garantia de 30 dias não são cobradas"
     s.append(P(f"Cada semana é cobrada por analista ({reais(VALOR_ANALISTA_SEMANA)} por analista por semana). "
                "Semanas de desenvolvimento e de testes (inclusive testes de deploy) contam 2 analistas; semanas de "
-               "imersão, deploy, gestão de mudança e publicação contam 1. O deploy é feito no começo da primeira "
-               "sprint depois da imersão. O preço segue o cronograma da seção 13, no cenário provável; semanas off "
-               "e a garantia de 30 dias não são cobradas."))
+               f"imersão, deploy, gestão de mudança e publicação contam 1. {deploy} O preço segue o cronograma "
+               f"da seção 13, no cenário provável; {garantia}."))
     linhas = [[sp, tipo, sem, an, reais(v)] for sp, tipo, sem, an, v in preco["linhas"]]
     linhas.append(["**Total**", "", f"**{venda}**", "", f"**{reais(preco['total'])}**"])
     s.append(tabela(["Sprint", "Tipo", "Semanas", "Analistas", "Valor"], linhas, [0.16, 0.34, 0.14, 0.14, 0.22]))
     if cr.get("duracao_obs"):
         s.append(Spacer(1, 3))
         s.append(P(f"Prazo de {venda} semanas, {cr['duracao_obs']}."))
+    if r["deploy_pelo_cliente"]:
+        s.append(Spacer(1, 4))
+        s.append(caixa(P("**Condição de escopo: deploy pelo cliente.** O sistema vai rodar na infraestrutura do "
+                         "cliente, sem acesso do time do NTec. O deploy nessa infraestrutura é responsabilidade do "
+                         "cliente e não está no escopo, no prazo nem no preço desta proposta. O NTec entrega o "
+                         "código e as versões de revisão no próprio ambiente. **A garantia de 30 dias não se aplica "
+                         "a este projeto.**", "box"), fundo=WARN_BG, barra=ORANGE))
 
     # checklist
     s += titulo(0, "Checklist final antes de enviar (comercial)")

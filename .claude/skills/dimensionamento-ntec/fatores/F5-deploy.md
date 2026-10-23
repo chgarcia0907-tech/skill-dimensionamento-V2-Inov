@@ -28,6 +28,6 @@ Os itens 5.1 a 5.3 saem direto do formato (`F3-desenvolvimento.md`, item 3.2). N
 | A conta de nuvem ou o servidor onde o sistema vai rodar é **do cliente**? | Calls ("nossos servidores", "a nossa TI hospeda") | `false` se o cliente é pessoa física ou não tem TI própria. Empresa com TI e ninguém falou → lacuna: "O sistema vai ficar nos servidores ou na nuvem do cliente?" |
 | A TI do cliente precisa **aprovar cada publicação**, ou exige um pipeline de deploy próprio? | Calls | Idem |
 
-Infra do cliente **sem acesso do time do NTec** para publicar e corrigir → **F0** (rejeitado).
+Infra do cliente **sem acesso do time do NTec** para publicar e corrigir (✅ revisão do consultor do NTec, `F0-viabilidade.md`, item 0.3): não rejeita. O deploy é responsabilidade do cliente e sai do escopo: **o F5 fica zerado**, inclusive o item 5.4, e o cronograma não tem a etapa de deploy. A garantia de 30 dias não se aplica, e a proposta diz isso. As versões parciais para revisão, na infra do NTec, e a entrega do código continuam com o NTec. No JSON: `f0.infra_cliente_sem_acesso: true`.
 
 **Alerta:** pedir os acessos e as regras de deploy do cliente **já na imersão**.

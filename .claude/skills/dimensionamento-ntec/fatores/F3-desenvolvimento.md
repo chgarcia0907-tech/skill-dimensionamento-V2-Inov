@@ -157,7 +157,7 @@ Se a importação roda **sozinha**, sem ninguém disparar, é integração (`F3-
 
 > 🔎 **Proposta:** baixar dados do servidor para consultar offline já é uma sincronização de mão única e tem custo. Sugestão: offline local com leitura de dados do servidor = +0,5 / +0,5 / +1. **Até validar:** 0.
 
-✅ **Reunião 20/10:** offline com sincronização **não** se vende com MongoDB. A proposta registra Postgres como premissa (ver ⏳ **D5** no F0).
+✅ **Reunião 20/10:** offline com sincronização **não** se vende com MongoDB. Desde a revisão do consultor do NTec, isso é escolha técnica e não rejeita: o banco é Postgres, e a proposta registra isso como premissa técnica e da Sprint de Refino (F0, item 0.2; ver ⏳ **D5**).
 
 ### Volume alto
 
