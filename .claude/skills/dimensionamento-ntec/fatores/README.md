@@ -59,5 +59,5 @@ Todo critério segue o mesmo formato, para que o Claude não precise interpretar
 ## O que ainda não foi feito
 
 - `calcular_faixa.py` já segue estes arquivos (21/10/2026). O F0 está no bloco `"f0"` do JSON. Nenhum campo tem padrão. As decisões D1–D5 estão nas constantes marcadas com `D1`…`D5`.
-- `SKILL.md`, `regua-dimensionamento.md`, `leitura-transcricoes.md` e `insumos-e-perguntas.md` já apontam para cá. Desde a V2-Inov (22/10/2026), a coluna *Onde ler* de cada fator aponta para as calls, não para a PRD. `regra-fronteira-e-faixa.md` ainda cita as regras antigas.
+- `SKILL.md`, `regua-dimensionamento.md`, `leitura-transcricoes.md` e `insumos-e-perguntas.md` já apontam para cá. Desde a V2-Inov (22/10/2026), a coluna *Onde ler* de cada fator aponta para as calls, não para a PRD. `regra-fronteira-e-faixa.md` foi revisto em 22/10/2026 (sem negociação de prazo, F2 de 2 a 5, cortes com os pesos atuais).
 - **Teste de concordância** (🔎 Proposta): antes de adotar, aplicar estes critérios aos Projetos A, B, C e D com 2 CNs e o Claude, sem um ver a classificação do outro, e conferir onde divergem.

@@ -1,8 +1,8 @@
 # Dimensionamento NTec — Skill
 
-_Versão em Markdown do antigo PDF explicativo (v4 · 17/10/2026). É anterior à revisão de 20/10 e à V2-Inov: ainda fala da PRD como entrada padrão e do fator Claude Code. Para as regras em vigor, valem os arquivos de `.claude/skills/dimensionamento-ntec/`._
+_Guia explicativo · v5 (V2-Inov) · 22/10/2026. Se este guia e os arquivos de `.claude/skills/dimensionamento-ntec/` divergirem, valem os arquivos da skill (e, para os pesos, `fatores/` e `scripts/calcular_faixa.py`)._
 
-> **Para que serve este documento:** explicar o que tem na skill **dimensionamento-ntec**, como ela lê a **PRD** (o documento de requisitos do projeto) e chega a uma **faixa de semanas**, e como o coordenador de negócios (CN) usa no dia a dia.   
+> **Para que serve este documento:** explicar o que tem na skill **dimensionamento-ntec**, como ela lê as **transcrições da AT Diagnóstico e da AT Aprofundamento** e chega a uma **faixa de semanas**, e como o coordenador de negócios (CN) usa no dia a dia.
 > **Para quem:** CNs e área de projetos do Núcleo de Tecnologia. A skill não substitui a validação da área de projetos: ela evita que chegue à equipe um prazo "nada a ver".
 
 1. O que é a skill
@@ -10,48 +10,50 @@ _Versão em Markdown do antigo PDF explicativo (v4 · 17/10/2026). É anterior �
 3. Como acessar e usar
 4. Arquitetura (o que tem dentro)
 5. Procedimento
-6. Da PRD para a régua
-7. Régua de dimensionamento (F1 a F6)
-8. Faixa final e cortes
-9. O entregável: a Proposta Técnica
-10. Perguntas para o CN: Fathom e lacunas
-11. Calibração com projetos reais
-12. Exemplo: PetAgenda a partir da PRD
-13. Linha do tempo de exemplo (Projeto A)
-14. Parar e sinalizar
-15. Histórico, datas e pendências
+6. Das calls para a régua
+7. F0 — Viabilidade
+8. Régua de dimensionamento (F1 a F6)
+9. Faixa final e cortes
+10. O entregável: a Proposta Técnica
+11. Lacunas: o que as calls não responderam
+12. Calibração com projetos reais
+13. Exemplo: PetAgenda sem e com as calls
+14. Linha do tempo de exemplo (Projeto A)
+15. Parar e sinalizar
+16. Histórico, decisões em aberto e pendências
 
 ## 1. O que é a skill
 
-Uma skill do Claude que transforma a **PRD** do projeto (o documento de requisitos "[Requisitos] {projeto}", que vira anexo de contrato) numa faixa de semanas calibrada nos projetos reais do NTec. Sem PRD, ela aceita o formulário *Dimensionamento Tec*, uma ficha, um briefing ou a transcrição de uma call, mas o resultado sai como **estimativa preliminar**. A arquitetura segue a skill de dimensionamento do NCiv (Gabrielle Lobo). A estrutura de fases segue o formulário Dimensionamento Tec.
+Uma skill do Claude que transforma as **transcrições na íntegra do Fathom** da AT Diag e da AT Aprof numa faixa de semanas calibrada nos projetos reais do NTec. Ela dimensiona **pelo que o cliente confirmou nas duas calls**, sem documento de requisitos (PRD) no meio. Com uma call só, só o resumo do Fathom, ou sem transcrição (formulário *Dimensionamento Tec*, ficha, briefing), ela dimensiona mesmo assim, mas o resultado sai como **estimativa preliminar**. A arquitetura segue a skill de dimensionamento do NCiv (Gabrielle Lobo); a estrutura de fases segue o formulário Dimensionamento Tec.
 
 - **Entrega três números:** otimista (piso), provável (recomendado) e conservador (teto de risco), em semanas e sprints de 2 semanas.
-- **Pergunta em linguagem de negócio** o que falta, e traduz a resposta para os fatores técnicos.
-- **Mostra o que cortar**: cortes de escopo, com quantas semanas cada um economiza.
-- **Entrega a Proposta Técnica em PDF**, no template oficial do NTec (Comercial → Validação de Projeto): as 14 seções, o cronograma sprint a sprint, o checklist e a memória do dimensionamento (seção 9).
-- **Considera Claude Code:** os pesos supõem uma dupla com cerca de 20 horas por semana somadas, codando com Claude Code (seção 7). A régua não usa buffer percentual.
+- **Começa pelo F0:** antes de contar semanas, confere se o projeto é viável (🚫 rejeita ou 🚩 para para a área de projetos).
+- **Monta o inventário de jornadas** a partir das falas do cliente, com a citação (call e minuto) de cada uma.
+- **Transforma o que as calls não responderam em lacuna:** entra na conta com o valor mais pesado, e o CN recebe a pergunta pronta para o cliente.
+- **Mostra o que cortar:** cortes de escopo, com quantas semanas cada um economiza.
+- **Entrega a Proposta Técnica em PDF**, no template oficial do NTec (Comercial → Validação de Projeto): as 14 seções, o cronograma sprint a sprint, o checklist e a memória do dimensionamento.
+- **Calcula só o prazo**, sem preço. Os pesos supõem uma dupla com cerca de 20 horas por semana somadas e o template NTec, sem multiplicador por ferramenta e sem buffer percentual.
 
 ## 2. Onde ela entra no processo
 
-A skill roda **depois** da skill `documento-requisitos-ntec`, que transforma as reuniões com o cliente na PRD. Ela ocupa o lugar que a skill da PRD chama de *validacao-tecnica-ntec*, mas calcula só o prazo, sem preço.
-
 ```
-Reuniões (com o cliente) → PRD (skill da PRD) → Dimensionamento (esta skill) → Proposta Técnica (PDF no template) → Área de projetos (valida) → Proposta (prazo vendido)
+AT Diag (dor e ideia) → AT Aprof (protótipo e escopo) → Dimensionamento (esta skill, pelas duas transcrições) → Proposta Técnica (PDF no template) → Área de projetos (valida) → Proposta (prazo vendido)
 ```
 
 | Entrada | Status da resposta | Observação |
 |---|---|---|
-| PRD (PDF ou markdown), com ou sem o bloco "Inventário para dimensionamento" | **[OK]** | Entrada padrão. Cada fator aponta para uma seção da PRD |
-| Formulário, ficha, briefing ou transcrição, sem PRD | **[Revisar]** | "Estimativa preliminar, sem PRD". Gerar a PRD antes de fechar a proposta |
+| Transcrição na íntegra da AT Diag **e** da AT Aprof (+ link do protótipo, se tiver) | **[OK]** | Entrada padrão. Cada fator aponta para a call e o minuto |
+| Uma call só, ou só o resumo do Fathom | **[Revisar]** | "Estimativa preliminar". O resumo é texto do Fathom, não fala do cliente: não serve como citação |
+| Formulário, ficha, briefing ou texto do CN, sem transcrição | **[Revisar]** | "Estimativa preliminar, sem transcrição das calls". Mandar as transcrições antes de fechar a proposta |
 
 ## 3. Como acessar e usar
 
-- **Pelo nome:** em qualquer conversa do Claude Code, digitar `/dimensionamento-ntec` e mandar o PDF da PRD (e, se tiver, o bloco "Inventário para dimensionamento" do chat da PRD).
+- **Pelo nome:** em qualquer conversa do Claude Code, digitar `/dimensionamento-ntec` e colar as duas transcrições (Fathom, modo transcrição, na íntegra), mais o link do protótipo.
 - **Pedindo direto:** "dimensiona esse projeto", "cabe em 12 semanas?", "isso é viável?". A skill é acionada sozinha.
 - **Onde está instalada:** `~\.claude\skills\dimensionamento-ntec\` (pasta pessoal; vale para qualquer projeto).
-- **Cópia de trabalho (para editar e versionar):** `Projetos\skill-dimensionamento-ntec\`. As duas cópias não se sincronizam sozinhas.
-- **No claude.ai:** compactar a pasta em .zip e enviar em Settings → Capabilities → Skills.
-- **No GitHub:** `github.com/matheusrpgomes-sketch/skill-dimensionamento-ntec` (público). Para instalar, clonar e copiar `.claude/skills/dimensionamento-ntec` para `~/.claude/skills/`.
+- **Cópia de trabalho (para editar e versionar):** este repositório. A cópia instalada **não se atualiza sozinha**: depois de editar aqui, copiar de novo para lá.
+- **No claude.ai:** compactar a pasta `dimensionamento-ntec` em .zip e enviar em Settings → Capabilities → Skills.
+- **No GitHub:** `github.com/chgarcia0907-tech/skill-dimensionamento-V2-Inov`. Para instalar, clonar e copiar `.claude/skills/dimensionamento-ntec` para `~/.claude/skills/`.
 
 ## 4. Arquitetura (o que tem dentro)
 
@@ -59,141 +61,151 @@ Igual à skill do NCiv: um arquivo curto que coordena, e arquivos de conheciment
 
 | Arquivo | O que faz | Quando é lido |
 |---|---|---|
-| SKILL.md | Orquestrador: procedimento, regras gerais, quando parar, o entregável e a resposta curta no chat | Sempre |
-| leitura-prd.md | Onde está cada fator na PRD, tradução dos fatores de complexidade dela e o que perguntar ao CN | Sempre primeiro, quando há PRD |
-| insumos-e-perguntas.md | Caminho sem PRD: como ler formulário, ficha ou transcrição; vocabulário negócio → técnico | Quando não há PRD |
-| regua-dimensionamento.md | Pesos de cada fase (F1 a F6), faixa final, calibração e fontes | Sempre |
-| regra-fronteira-e-faixa.md | Desempate quando um fator cabe em duas linhas; tabela de cortes | Em caso de dúvida e para O que cortar |
-| scripts/calcular_faixa.py | Faz a conta (fonte da verdade dos pesos, incluindo o fator Claude Code), para o número não sair de cabeça | Sempre |
-| proposta-tecnica.md | Como preencher cada uma das 14 seções da Proposta Técnica a partir da PRD e da conta | Sempre, no fim |
-| scripts/gerar_proposta.py | Gera o PDF "[Proposta Técnica] {projeto}", recalcula a faixa e confere o checklist do template | Sempre, no fim |
-| exemplos/ | Precedentes reais anonimizados (Projetos A a D), Projetos E e F pendentes e o caso fictício PetAgenda (sem PRD, via PRD e o JSON modelo da proposta) | Para comparar com projeto parecido |
+| `SKILL.md` | Orquestrador: procedimento, regras gerais, quando parar, o entregável e a resposta curta no chat | Sempre |
+| `fatores/README.md` e `fatores/glossario.md` | Índice dos fatores, decisões em aberto (D1 a D5) e a definição única de cada termo | Sempre |
+| `fatores/F0-viabilidade.md` | Critérios que rejeitam (🚫) ou param (🚩) o projeto | Sempre, antes de tudo |
+| `fatores/F1-*.md` a `fatores/F6-*.md` | Pergunta, onde ler, o que fazer sem resposta e os pesos de cada fase | Sempre |
+| `leitura-transcricoes.md` | Como preparar a transcrição, o que conta como escopo, o inventário de jornadas, onde está cada campo do JSON nas calls e as lacunas | Sempre que houver transcrição |
+| `insumos-e-perguntas.md` | Caminho sem transcrição (formulário, ficha, briefing) e vocabulário negócio → técnico | Quando não há transcrição |
+| `regua-dimensionamento.md` | Regras de uso, faixa final, quando parar, calibração e registro das fontes | Sempre |
+| `regra-fronteira-e-faixa.md` | Desempate quando um fator cabe em duas linhas; tabela de cortes | Em caso de dúvida e para "O que cortar" |
+| `scripts/calcular_faixa.py` | Faz a conta (fonte da verdade dos pesos), para o número não sair de cabeça | Sempre |
+| `proposta-tecnica.md` | Como preencher cada uma das 14 seções da Proposta Técnica a partir das calls e da conta | Sempre, no fim |
+| `template-proposta-tecnica.md` | O template original do NTec, como o comercial recebe | Só para consulta |
+| `scripts/gerar_proposta.py` | Gera o PDF "[Proposta Técnica] {projeto}", recalcula a faixa e confere o checklist do template | Sempre, no fim |
+| `exemplos/` | Precedentes reais anonimizados (Projetos A a D, Projeto H), Projetos E e F pendentes e o caso fictício PetAgenda. Cada ficha traz no fim o JSON de entrada da régua | Para comparar com projeto parecido |
 
 ## 5. Procedimento
 
-1. **Ler a entrada.** Com PRD, seguir a leitura da seção 6 (se o inventário não veio, montar a partir do PDF). Sem PRD, ler o formulário, a ficha ou a transcrição e marcar a resposta como preliminar. Cada dado leva a origem, por exemplo *(origem: PRD 2.3)*.
-2. **Preencher os fatores** da régua. Com PRD, a rodada de perguntas ao CN cobre só o que a PRD não responde (até 5 por rodada, as que mais mexem no prazo primeiro). Sem resposta, usar o valor mais pesado e registrar em Suposições.
-3. **Rodar o script** com os fatores e obter as fases em mínimo, central e máximo.
-4. **Comparar com o precedente** mais parecido. Diferença acima de 30% precisa de explicação.
-5. **Aplicar a regra de fronteira** se precisar.
-6. **Montar a Proposta Técnica** (um JSON com as 14 seções e a memória do dimensionamento) e gerar o PDF com `gerar_proposta.py`.
-7. **Responder no chat, curto:** status, prazo em uma frase, faixa, caminho do PDF, lacunas para o CN, itens pendentes do checklist e os 2 ou 3 pontos de atenção mais graves.
+1. **Ler a entrada.** Com as duas transcrições, seguir `leitura-transcricoes.md`: preparar a transcrição (quem é cliente, o que descartar), separar o que o cliente confirmou do que é ideia solta e montar o **inventário de jornadas**. Com uma call só, ou sem transcrição, marcar como preliminar.
+2. **F0 — Viabilidade.** Responder cada critério com citação da call. 🚫 → parar aqui, sem PDF. 🚩 → seguir dimensionando, mas a proposta não vai ao cliente antes da área de projetos.
+3. **Preencher F1 a F6**, cada fator pelo seu arquivo em `fatores/`. A linha mais leve só entra com o trecho da call que a justifica; sem citação, vai a mais pesada. O que as calls não respondem vira **lacuna** (seção 11). Integrações não geram pergunta: peso fixo.
+4. **Montar o JSON e rodar o script.** Nenhum campo tem padrão: se faltar um, o script para e diz qual.
+5. **Comparar com o precedente** mais parecido. Diferença acima de 30% precisa de explicação. Comparar também com o prazo que o CN já falou na AT Aprof, se falou.
+6. **Aplicar a regra de fronteira** se precisar (no máximo 3 ajustes por projeto).
+7. **Montar a Proposta Técnica** (um JSON com as 14 seções e a memória do dimensionamento) e gerar o PDF com `gerar_proposta.py`.
+8. **Responder no chat, curto:** status, prazo em uma frase, faixa, inventário de jornadas, caminho do PDF, lacunas para o CN, itens pendentes do checklist e os 2 ou 3 pontos de atenção mais graves.
 
-## 6. Da PRD para a régua
+## 6. Das calls para a régua
 
-A PRD descreve o **produto**: perfis, módulos, superfícies (app, site, painel), integrações, fluxos de dados e o que ficou fora. A régua precisa disso traduzido em fatores. A regra principal é simples: **1 módulo = 1 fluxo**.
+As duas calls têm papéis diferentes. A **AT Diag** traz a dor, o contexto, as jornadas que o cliente descreve e o formato. A **AT Aprof** traz a validação do protótipo, o que foi confirmado ou descartado, login, lojas e, às vezes, prazo e preço.
 
-| Na PRD | Vira na régua |
+### O que conta como escopo
+
+**Só entra na conta o que o cliente confirmou.**
+
+| O que aparece na call | Entra na conta? | Para onde vai |
+|---|---|---|
+| O cliente descreve uma funcionalidade como parte do produto | Sim | Inventário |
+| O CN propõe e o cliente confirma **aquela** proposta | Sim | Inventário |
+| Telas do protótipo que o cliente aprovou na AT Aprof | Sim | Inventário e seção 14 |
+| O CN propõe e o cliente não responde ou muda de assunto | Não | Lacuna, se mexe no prazo |
+| O cliente hesita ("não sei se precisa", "talvez") | Não | Lacuna, se mexe no prazo; senão roadmap *A confirmar* |
+| O cliente descarta ("não precisa") | Não | Exclusão. Não pode virar corte |
+| Ajuste visual, textos, nomes | Não soma | Pontos para a imersão |
+| "Depois a gente vê", "numa segunda versão" | Não | Roadmap *Futuro* |
+| Prazo ou preço que o **CN** já falou ao cliente | **Nunca** | *Observações*, comparado com a faixa |
+| Data que o **cliente** exige | Sim, no F0 | `prazo_exigido_semanas` |
+
+A skill **não acrescenta escopo**: se achar que falta algo e ninguém falou disso, vai para *Pontos de atenção* ("as calls não cobrem X").
+
+### Inventário de jornadas
+
+Uma linha por **jornada** (o que alguém faz do começo ao fim no sistema, como o cliente descreveu), com quem faz, onde (app, web, painel), regra ou cálculo, integrações, dados de fora e a citação. Login e perfis (F2), lojas (F5 e F6) e offline (extra do F3) ficam fora da contagem. Variações da mesma jornada contam uma vez; jornada com mais de 8 ações diferentes conta 2.
+
+### Funcionalidades que a régua não tem como linha
+
+Encaixam nas linhas que já existem, sem peso novo:
+
+| O cliente fala de… | Linha da régua |
 |---|---|
-| Linha **Superfície** de cada módulo + 3.1 Ambientes de entrega | Formato: app mobile = app; site ou painel web = web. App + painel = dois formatos |
-| Módulo **Disponibilização do Produto** | Lojas (F6) e deploy (F5). App de saúde, finanças ou menores = app sensível |
-| **2.1 Autenticação e Perfis** | Níveis de acesso (F2). Perfil com módulo próprio ou aprovação de cadastro = grandes diferenças |
-| Cada módulo da seção 2 (menos 2.1 e Disponibilização) | 1 fluxo comum. Com RN de cálculo, clínica, legal ou de dinheiro = fluxo com RN específica |
-| **SID integrar com…** (sentido, dados, meio) | Integração: envia ou recebe = uni; os dois = bi. Serviço de mercado = com doc; sistema do cliente = sem doc (peso fixo, sem perguntar) |
-| Fluxo de dados com origem em planilha, base externa ou importação | Dependência de dados (+ chamar o núcleo de Dados) |
-| Multiempresa, offline, 3.3 Performance | Multitenancy, offline (local ou com sincronização), volume alto |
-| **4. Exclusões Explícitas** | Não somam nada. Conferir que não foram contadas e não oferecer como corte |
-| Pontos para a imersão (chat da PRD) | Não somam prazo: viram atividades da imersão (F1) |
-
-### Fatores de complexidade da PRD
-
-A PRD marca fatores que a régua não tem. Eles **encaixam nas linhas que já existem**, sem peso novo, porque ainda não há dado para calibrar pesos próprios.
-
-| Fator na PRD | Linha da régua |
-|---|---|
-| Pagamento | Integração bidirecional documentada |
-| IA (classificar, extrair, gerar, responder) | Integração unidirecional documentada (+ alerta se decide sem humano) |
-| Notificação: push ou WhatsApp automático | Integração unidirecional (bidirecional se o sistema lê a resposta) |
-| Notificação por e-mail · upload de arquivo | Template (0) |
-| Concorrência · imutabilidade ou versionamento · rotina agendada | O módulo vira fluxo com RN específica (uma vez por módulo) |
-| Tempo real por push · relatório configurável pelo usuário | Feature atípica (polling, tela fixa ou exportação = 0) |
-
-### O que a PRD não responde
-
-A PRD descreve o produto, não o projeto. Ficam de fora: disponibilidade do cliente para testar, stack ou infra exigida pelo cliente, app de referência (benchmark) e data de início (para contar as semanas off). A skill procura esses quatro na **transcrição do Fathom** das reuniões; o que não achar vira **lacuna** para o CN (seção 9).
+| Pagamento (gateway, Pix, assinatura no app) | Integração bidirecional com serviço de mercado (`bi_doc`). App pago na loja = 0 |
+| IA (classificar, extrair, gerar, responder) | Integração unidirecional com serviço de mercado (+ alerta se decide sem humano) |
+| Notificação push · WhatsApp automático | Integração unidirecional (bidirecional se o sistema lê a resposta) |
+| E-mail · upload de arquivo | Template (0) |
+| Concorrência · imutabilidade · rotina agendada | A jornada vira fluxo com RN específica (uma vez por jornada) |
+| Tempo real por push · relatório configurável pelo usuário | Feature atípica (atualização periódica, tela fixa ou exportação = 0) |
+| Migração ou carga de base existente | Dependência de dados |
 
 ### Integrações: peso fixo, sem perguntar ao CN
 
-O CN não tem como avaliar a API de outro sistema, e não há técnico para validar antes da proposta. Por isso a skill não pergunta sobre documentação: usa o sentido (uni ou bi) e **de quem é o sistema**, que a PRD já traz.
+O CN não tem como avaliar a API de outro sistema. A linha sai de perguntas que as calls respondem: a troca é automática? É login, e-mail ou upload (template)? O cliente diz que não tem API (F0)? Envia e recebe (bi) ou só um dos dois (uni)? O outro lado é **serviço de mercado** (documentação pública e sandbox que o NTec acessa sozinho)?
 
-| Sistema do outro lado | Linha da régua | O que mais sai na resposta |
+| Sistema do outro lado | Linha | O que mais sai na resposta |
 |---|---|---|
-| **Serviço de mercado** (pagamento, Pix, mapa, push, IA, WhatsApp Business, NF-e) | Com documentação | Nada |
-| **Sistema do cliente** (ERP, legado, sob medida), arquivo ou dúvida | Sem documentação | Cláusula de contrato (acesso à API até a sprint n; sem acesso, vira planilha) + plano B em "O que cortar" |
-| PRD diz explicitamente que o sistema não tem API (bidirecional) | Parado | Área de projetos avalia |
+| **Serviço de mercado** (Mercado Pago, Stripe, Google Maps, Expo Push, OpenAI, WhatsApp Business, NF-e) | Com documentação (`_doc`) | Nada |
+| **Sistema do cliente** (ERP, legado, sob medida, SaaS que depende da TI do cliente) ou dúvida | Sem documentação (`_sem_doc`) | Cláusula de contrato + plano B (planilha) em "O que cortar" |
+| O cliente diz que o sistema não tem API | F0, parado | Área de projetos avalia |
 
-## 7. Régua de dimensionamento (F1 a F6)
+## 7. F0 — Viabilidade
 
-Cada linha tem **mínimo / central / máximo** em semanas. Os pesos já consideram o time típico do NTec (uma dupla com cerca de 20 horas por semana somadas, codando com Claude Code, sprints de 2 semanas, template Next.js + Expo + MongoDB + Better Auth). Login com Google, e-mail e upload para S3 já vêm no template e não somam prazo.
+O F0 não soma semanas: decide se a skill dimensiona.
 
-### F1 — Imersão, refinamento, setup e acessos (teto 4)
+| Resultado | Critérios | O que a skill faz |
+|---|---|---|
+| 🚫 **Rejeitado** | Stack exigida fora da lista aceita (Next.js/React, Expo/React Native, Node/TypeScript, MongoDB, Postgres, Supabase, Vercel, AWS); offline com sincronização exigido em MongoDB; SLA ou sustentação além da garantia de 30 dias; infra do cliente sem acesso do NTec | Não dimensiona e não gera PDF. Responde ao CN com o critério, o motivo e o que precisaria mudar |
+| 🚩 **Parado** | Multa por atraso; ninguém do cliente nomeado para validar; feature sem referência **e** sem documentação; hardware; multitenancy com regra diferente por cliente; integração com sistema sem API; prazo exigido abaixo do otimista | Dimensiona, mas a proposta não vai ao cliente sem a área de projetos |
+
+Trocar MongoDB por Postgres ou Supabase **não** rejeita: soma como troca de stack no F1.
+
+## 8. Régua de dimensionamento (F1 a F6)
+
+Cada linha tem **mínimo / central / máximo** em semanas. Os pesos já consideram o time típico do NTec (uma dupla com cerca de 20 horas por semana somadas, sprints de 2 semanas, template Next.js + Expo + MongoDB/Prisma + Better Auth). Login por e-mail e Google, recuperação de senha, e-mail (Resend), upload para S3 e painel admin básico já vêm no template e não somam prazo.
+
+### F1 — Imersão, refinamento e setup (teto 4)
 
 | Fator | Mín | Central | Máx |
 |---|---|---|---|
 | Base (sempre) | 1,5 | 2 | 2,5 |
-| Demanda pouco detalhada (sem requisitos nem protótipo) | +0,5 | +1 | +1 |
-| Setor ou produto atípico (sem benchmark) | +0,5 | +0,5 | +1 |
-| Stack fora do template NTec | +1 | +1,5 | +2 |
+| Demanda pouco detalhada (falta a AT Aprof, jornadas não listáveis, formato não decidido, regra que o cliente não sabe descrever) | +0,5 | +1 | +1 |
+| Troca de stack aceita no F0 (ex.: MongoDB → Supabase) | +1 | +1,5 | +2 |
+| Produto atípico (sem referência) | +0,5 | +0,5 | +1 |
 
-### F2 — Infra, níveis de acesso, cadastro e login (teto 4)
+### F2 — Infra, níveis de acesso e login (teto 4)
 
 | Níveis de acesso / multitenancy | Mín | Central | Máx |
 |---|---|---|---|
-| Nenhum (sem login nem backend) | 0 | 0 | 0 |
+| Nenhum (sem login) | 0 | 0 | 0 |
 | 1 nível | 0,5 | 0,5 | 1 |
-| 2 a 6, poucas diferenças | 0,5 | 1 | 1,5 |
-| 2 a 6, grandes diferenças (telas e regras próprias, aprovação de cadastro) | 1,5 | 2 | 2,5 |
+| 2 a 5, poucas diferenças | 0,5 | 1 | 1,5 |
+| 2 a 5, grandes diferenças (telas e regras próprias, aprovação de cadastro) | 1,5 | 2 | 2,5 |
 | 6 ou mais | 2,5 | 3 | 4 |
-| Multitenancy: dados separados, não isolados | +0,5 | +0,5 | +1 |
+| Multitenancy: dados separados | +0,5 | +0,5 | +1 |
 | Multitenancy: isolamento de dados | +1 | +1,5 | +2 |
-| Multitenancy: instâncias com regras isoladas por cliente | Parado | — | — |
+| Multitenancy: regras diferentes por cliente | F0, parado | — | — |
 
 ### F3 — Desenvolvimento
 
-**Fluxo crítico** = jornada completa que, se quebrar, torna o produto inútil. Ex.: "o cidadão fotografa a espécie, o app pega a localização e o registro aparece no mapa". O núcleo é multiplicado pelo fator de formato: **Web x1,0 · WebApp/PWA x1,1 · App nativo x1,2 · +0,1 por formato extra em código separado**.
+**Fluxo** = jornada completa que o cliente descreveu. Cada fluxo é multiplicado pelo fator do **código em que existe**: **Web x1,0 · PWA x1,1 · App nativo x1,2**. Fluxo com tela em dois códigos (`compartilhado`) recebe o fator do mais pesado **+0,2 por formato extra** (app + painel web = x1,4). Integrações e extras somam depois do fator.
 
 | Item | Mín | Central | Máx |
 |---|---|---|---|
-| Cada fluxo crítico comum (CRUD, listagem, mapa com filtros, agenda) | 1 | 1,25 | 1,5 |
-| Cada fluxo com regra de negócio específica (fórmula, cálculo que não pode errar) | 2 | 3 | 4 |
-| Cada feature atípica (sem benchmark) | 1 | 1,5 | 2 |
+| Cada fluxo comum (CRUD, listagem, mapa com filtros, agenda) | 1 | 1,25 | 1,5 |
+| Cada fluxo com regra de negócio específica (fórmula, tabela, norma, concorrência, rotina agendada) | 2 | 3 | 4 |
+| Cada feature atípica (sem referência) | 1 | 1,5 | 2 |
 | Integração unidirecional com serviço de mercado | +0,5 | +0,5 | +1 |
 | Integração bidirecional com serviço de mercado | +0,5 | +1 | +1,5 |
 | Integração unidirecional com sistema do cliente | +1 | +1,5 | +2 |
-| Integração bidirecional com sistema do cliente | +1,5 | +2,5 | +3,5 |
-| Integração bidirecional que a PRD diz não ter API | Parado | — | — |
-| Dependência de dados (planilhas, CSV, tabelas externas) — chamar núcleo de Dados | +1 | +1,5 | +2 |
-| Offline com sincronização (offline só local = 0) | +1,5 | +2 | +3 |
+| Integração bidirecional com sistema do cliente | +4 | +4 | +5 |
+| Dependência de dados (migrar, limpar ou cruzar bases que já existem) — chamar o núcleo de Dados | +1 | +1,5 | +2 |
+| Offline com sincronização (offline só local = 0) — exige Postgres | +1,5 | +2 | +3 |
 | Volume de uso alto (milhares simultâneos) | +1 | +1,5 | +2 |
-
-### Fator Claude Code (desde 17/10/2026)
-
-Todos os projetos do NTec agora são codados com Claude Code. O ganho aparece no código que o time escreve, e não no que depende do cliente, de terceiros ou de revisão externa. Por isso o fator multiplica só duas partes:
-
-| O que muda | Mín | Central | Máx |
-|---|---|---|---|
-| Núcleo do F3 (fluxos e features, já com o fator de formato) | x0,6 | x0,75 | x0,9 |
-| F2 (níveis de acesso, multitenancy, login) | x0,7 | x0,85 | x1 |
-| F1, extras do F3 (integrações, offline, dados, volume), F4, F5 e F6 | x1 | x1 | x1 |
-
-> **De onde vem o x0,75:** meio-termo entre dois projetos. No Projeto B, motor de cálculo e tela completa saíram em ~1 semana de código, contra 5,1 semanas da régua antiga. Num app + painel de 8 fluxos com offline, a área de projetos espera ~12 sprints. Um x0,5 acertava o pequeno e errava o grande (20 semanas). O x0,75 acerta os dois: o ganho da ferramenta é parcialmente comido pelas ~20 h/semana da dupla e pela coordenação de projetos maiores. Ainda falta conferir com o realizado final. Projetos antigos rodam com `claude_code: false`.
 
 ### F4, F5 e F6 — Testes, deploy e lojas
 
 | Fase / fator | Mín | Central | Máx |
 |---|---|---|---|
 | F4 Testes com cliente — base (teto 4) | 1 | 1,5 | 2 |
-| F4 + regra de negócio crítica (saúde, dinheiro, legal) | +0,5 | +0,5 | +1 |
-| F4 + cliente com pouca disponibilidade para validar | +0,5 | +0,5 | +1 |
-| F5 Deploy web (infra NTec) | 0,5 | 0,5 | 1 |
+| F4 + regra de negócio crítica (o código do NTec calcula saúde, dinheiro ou prazo legal) | +0,5 | +0,5 | +1 |
+| F5 Deploy web | 0,5 | 0,5 | 1 |
 | F5 Deploy de app sem web / app junto com web | 0,5 / +0 | 0,5 / +0,5 | 1 / +0,5 |
 | F5 + infra ou regras de deploy do cliente | +1 | +1 | +2 |
 | F6 Lojas — app comum | 2 | 2,5 | 4 |
-| F6 Lojas — app sensível (saúde, finanças, infantil) | 2,5 | 3 | 6 |
+| F6 Lojas — app sensível (saúde, finanças, crianças, pagamento no app) | 2,5 | 3 | 6 |
 
-_Semanas off (férias, provas, recessos) e a garantia gratuita de 30 dias ficam fora da régua: as semanas off são somadas depois, pelo calendário._
+_Desde 20/10/2026 a régua não tem fator Claude Code nem o fator "cliente com pouca disponibilidade" (quem valida passou para o F0). Tetos de fase não cortam a soma: a fase acima do teto sai com alerta. Semanas off (férias, provas, recessos) e a garantia gratuita de 30 dias ficam fora da régua: as semanas off são somadas depois, pelo calendário._
 
-## 8. Faixa final e cortes
+## 9. Faixa final e cortes
 
 | Cenário | Conta | Para que serve |
 |---|---|---|
@@ -201,112 +213,108 @@ _Semanas off (férias, provas, recessos) e a garantia gratuita de 30 dias ficam 
 | **Provável (recomendado)** | Soma dos centrais | O valor para a proposta |
 | **Conservador (teto)** | Soma dos máximos | O que acontece se os riscos se confirmarem |
 
-Semanas são sempre arredondadas para cima. A **recomendação de venda** é o provável fechado em sprints inteiras (número par de semanas), mais as semanas off.
+Semanas são sempre arredondadas para cima. A **recomendação de venda** é o provável fechado em sprints inteiras (número par de semanas), mais as semanas off. Com lacunas, a venda mostra com "+" quanto depende delas (seção 11). Sem buffer percentual: o risco está no intervalo de cada linha.
 
 ### Cortes que mais economizam
 
 | Corte | Economia típica (central) |
 |---|---|
 | Publicar como PWA em vez de app nas lojas | F6 inteira (2,5 a 3) + fator de formato |
-| Tirar o segundo formato do MVP (só app ou só web) | ~10% do desenvolvimento + parte do deploy |
+| Tirar o segundo formato do MVP (só app ou só web) | Fluxos compartilhados de x1,4 para x1,2; os fluxos que só existem no código cortado saem junto; parte do deploy |
 | Juntar perfis de usuário | 0,5 a 1 em F2 |
-| Mover módulos não essenciais da PRD para uma fase 2 | 1,25 por fluxo comum; 3 por fluxo com regra específica |
-| Trocar integração automática por importação manual no MVP (plano B de toda integração com sistema do cliente) | 0,5 a 2,5 |
+| Mover jornadas não essenciais para uma fase 2 | 1,25 por fluxo comum e 3 por fluxo com RN específica, vezes o fator do código |
+| Trocar integração automática por importação manual no MVP (plano B de toda integração com sistema do cliente) | 0,5 a 4 |
 
-_Na dúvida entre duas linhas da régua, a skill vai sempre para a mais pesada, com um comentário de duas linhas explicando o ajuste (máximo de 3 ajustes por projeto). O histórico do NTec é vender para menos._
+_Na dúvida entre duas linhas da régua, a skill vai sempre para a mais pesada, com um comentário de duas linhas explicando o ajuste (máximo de 3 ajustes por projeto). O histórico do NTec é vender para menos. Todo corte é recalculado com o script e nunca é algo que o cliente já descartou na call._
 
-## 9. O entregável: a Proposta Técnica
+## 10. O entregável: a Proposta Técnica
 
-O dimensionamento final sai no **template "Proposta Técnica" do NTec** (Comercial → Validação de Projeto), o documento que o comercial manda para a validação técnica. O PDF "[Proposta Técnica] {projeto}" é gerado pelo `scripts/gerar_proposta.py`, que recalcula a faixa a partir dos fatores, para a proposta nunca divergir da régua.
+O dimensionamento final sai no **template "Proposta Técnica" do NTec** (Comercial → Validação de Projeto). O PDF "[Proposta Técnica] {projeto}" é gerado pelo `scripts/gerar_proposta.py`, que recalcula a faixa a partir dos fatores, para a proposta nunca divergir da régua. O template original pede PRD + protótipo; na V2-Inov, o cabeçalho e o checklist pedem as **duas transcrições** + protótipo.
 
 | Parte da proposta | O que leva |
 |---|---|
-| Caixa de status (topo) | Status, prazo recomendado e a faixa otimista / provável / conservador |
-| 1 a 3. Problema, visão geral, entidades | Tirados da Visão Geral e dos módulos da PRD |
-| 4. Perfis · 6. Regras · 8. Segurança (obrigatórias) | PRD 2.1, as RNs e itens Hardcoded, PRD 3.4. O que a PRD não traz sai como "não previsto no PRD" |
-| 5. Fluxo · 7. Arquitetura · 9. Módulos críticos | Jornada etapa por etapa (com as decisões futuras marcadas), componentes, integrações e automações |
+| Caixa de status (topo) | Status, prazo recomendado (com "+" das lacunas) e a faixa otimista / provável / conservador |
+| 1 a 3. Problema, visão geral, entidades | A dor e as jornadas contadas na AT Diag; formato e público confirmados nas calls |
+| 4. Perfis · 6. Regras · 8. Segurança (obrigatórias) | Tipos de pessoa citados, toda regra dita nas calls, dados, login e logs. O que ninguém discutiu sai como "não discutido nas calls" |
+| 5. Fluxo · 7. Arquitetura · 9. Módulos críticos | A jornada principal etapa por etapa (com as decisões futuras marcadas), componentes, integrações e automações |
 | 10. Roadmap (obrigatória) | Tudo que está na conta é Prioritário; A confirmar e Futuro nunca entram no cronograma |
-| 11. Pontos em aberto (obrigatória) | Lacunas do Fathom e da PRD e dependências externas. Nunca vazio |
+| 11. Pontos em aberto (obrigatória) | Lacunas das calls, documentos que o cliente precisa mandar, divergências e dependências externas. Nunca vazio |
 | 12. Stack | Template NTec, sempre como premissa a validar na Sprint de Refino |
 | 13. Cronograma sprint a sprint | As fases F1 a F6 (centrais) em sprints de 2 semanas, somando a recomendação; sprint que depende da seção 11 vem marcada |
 | 14. Protótipo × regras (obrigatória) | Só com protótipo recebido; sem ele, a seção sai com aviso para o comercial |
 | Checklist final | O script marca OK ou PENDENTE em cada item do template |
-| Anexo — Memória do dimensionamento | Faixa, F1 a F6 com critério, alertas, pontos de atenção, lacunas, precedente, O que cortar, suposições, fronteira e imersão |
+| Anexo — Memória do dimensionamento | Faixa, F1 a F6 com critério e citação, inventário de jornadas, alertas, pontos de atenção, lacunas, precedente, O que cortar, suposições, fronteira, imersão e observações (prazo ou preço que o CN já falou) |
 
-_O antigo bloco para colar na seção 7 do formulário Dimensionamento Tec saiu: o template de Proposta Técnica o substitui. No chat fica só o resumo curto._
+_Nada interno no corpo da proposta: as origens e citações ficam no anexo e no chat. O antigo bloco para colar no formulário Dimensionamento Tec saiu: o template de Proposta Técnica o substitui._
 
-## 10. Perguntas para o CN: Fathom primeiro, lacunas depois
+## 11. Lacunas: o que as calls não responderam
 
-Antes de perguntar qualquer coisa ao CN, a skill procura a resposta na **transcrição do Fathom** (ou no resumo) das reuniões com o cliente. Só conta o que foi **dito explicitamente**, e a resposta sai com a reunião e o trecho: *(origem: Fathom · 12/03 — "a Carla testa toda sexta")*. Dedução, silêncio ou fala vaga ("vamos ver") não contam.
+O que as duas calls não respondem vira **lacuna**. A skill dimensiona mesmo assim, com o valor mais pesado plausível, e:
 
-| Fator (o que a PRD não responde) | O que a skill procura na transcrição |
+1. **Mostra quanto da venda depende das lacunas:** *"Recomendado vender 14 semanas (7 sprints) = 12 + 2 que dependem de confirmar com o cliente (login e perfis, integrações)"*.
+2. **Devolve ao CN as Lacunas para o CN** (no chat, na seção 11 e no anexo): o fator, o que foi procurado e não achado, a pergunta pronta e o valor provisório.
+3. **Status:** lacuna em quem valida → 🚩 (F0). Lacuna que mexe na faixa → **[Revisar]** até o CN responder. Lacuna só na data de início não rebaixa o status.
+
+No máximo 5 perguntas por rodada, as que mais mexem no prazo primeiro. O CN repassa ao cliente (WhatsApp serve), a skill troca o valor e roda de novo.
+
+| Fator | Pergunta para o cliente |
 |---|---|
-| Disponibilidade do cliente | Quem testa e aprova, quantas horas, agenda ("sou plantonista", "valida toda sexta") |
-| Stack e infra | Tecnologia exigida, "nossos servidores", "a nossa TI hospeda" |
-| App de referência (benchmark) | "Tipo o…", "igual ao…", "vi um que…" |
-| Data de início | Mês ou data de início, prazo de lançamento |
+| Login | A pessoa precisa criar conta e entrar com login, ou abre o app e já usa? |
+| Pagamento | Como você quer cobrar: o app é pago na loja, tem assinatura dentro do app, ou é gratuito? |
+| Lojas | O app vai para a App Store e a Play Store, ou só para uso interno? |
+| Quem valida | Quem do seu lado vai testar e aprovar as entregas? |
+| Referência | Existe algum app ou site parecido que a gente possa usar de referência? |
+| Stack e infra | Vocês exigem alguma tecnologia, ou que o sistema fique nos servidores de vocês? |
+| Documento da regra | Você consegue mandar a planilha (ou a tabela, a norma) com as fórmulas que o sistema vai seguir? |
+| Data de início | Qual é a data prevista de início? (para contar férias, provas e recesso) |
 
-> **Não achou no Fathom = lacuna.** A skill dimensiona mesmo assim, com o valor mais pesado, e devolve ao CN as **Lacunas para o CN** (no chat, na seção 11 e no anexo da proposta): o fator, o que foi procurado, a pergunta pronta para o cliente e o valor provisório usado na conta. Lacuna que mexe na faixa (disponibilidade, stack ou benchmark) deixa o status em **Revisar** até o CN responder. Lacuna só na data de início não muda a faixa.
+Sem transcrição nenhuma, a skill usa as perguntas de `insumos-e-perguntas.md` (fluxos, regra de negócio, formato, níveis de acesso, integrações, offline, multitenancy, quem valida).
 
-Sem PRD, a skill usa a lista inteira abaixo, também procurando cada resposta na transcrição antes de perguntar:
+## 12. Calibração com projetos reais
 
-| Fator | Pergunta |
-|---|---|
-| Fluxos críticos | Quais são as 3 a 6 coisas principais que alguém faz no sistema, do começo ao fim? |
-| Regra de negócio | Tem algum cálculo ou regra que, se errar, causa prejuízo, risco à saúde ou problema legal? Já existe escrito? |
-| Formato | Vão usar pelo navegador, por um app da loja, ou os dois? Precisa estar na App Store / Play Store? |
-| Níveis de acesso | Quantos tipos de pessoa usam? Cada tipo vê telas diferentes? Alguém aprova o cadastro de outro? |
-| Integrações | Precisa conversar com outro sistema? Só puxa, só manda ou os dois? É um serviço conhecido ou um sistema próprio do cliente? |
-| Offline | Precisa funcionar sem internet? Quando a internet volta, os dados precisam subir para algum lugar? |
-| Multitenancy | Várias empresas vão usar? Cada uma tem regras próprias, ou só não pode ver os dados da outra? |
-| Disponibilidade | Quem vai testar e aprovar as entregas? Tem umas 2 horas por semana para isso? |
+A régua atual (revisão de 20/10/2026) rodada sobre os projetos do NTec. Os projetos aparecem anonimizados. Faixa = otimista / provável / conservador, em semanas.
 
-## 11. Calibração com projetos reais
+| Projeto | Formato | Vendido | Faixa da régua | Situação | Leitura |
+|---|---|---|---|---|---|
+| Projeto A | PWA | 12 (+1 off) | 9 / **12** / 16 | No prazo, finalizando | **[OK]** Provável = vendido |
+| Projeto D | App + web | 18 (+3 off) | 13 / **18** / 23 | Execução, sem atraso | **[OK]** Recomendação = vendido |
+| Projeto C | Web + app | 11 (+2 off) | 13 / **18** / 24 | Entregue com atraso (~14 sem) | **[Revisar]** Vendido abaixo do piso → atrasou |
+| Projeto B | App nativo | 12 (+1 off) | 10 / **13 → vender 14** / 20 | Execução, 45% | **[Revisar]** Vendido entre o piso e o provável; conferir em 23/11/2026 |
+| Projeto H | App nativo | Em negociação | 10 / **13 → vender 14** / 20 | Primeiro pelas transcrições | **[Revisar]** A CN falou "2 a 3 meses"; "2 meses" fica abaixo do piso |
+| Projetos E e F | ? | 34 e 38 | não calibrado | Execução | — |
 
-A régua foi rodada sobre os projetos do NTec com dados levantados no Notion (estado em 16/10/2026). Os projetos aparecem anonimizados (Projeto A a F). Faixa = otimista / provável / conservador, em semanas, **sem** o fator Claude Code (os projetos foram vendidos antes dele).
-
-| Projeto | Formato | Início → fim previsto | Vendido | Faixa da régua | Situação | Leitura |
-|---|---|---|---|---|---|---|
-| Projeto A | PWA | 20/07/2026 → 19/10/2026 | 12 (+1 off) | 9 / **12** / 16 | Finalizando, no prazo | **[OK]** |
-| Projeto D | App + web | 27/07/2026 → 23/11/2026 | 18 (+3 off) | 13 / **17→18** / 23 | Execução, 47,6%, sem atraso | **[OK]** |
-| Projeto C | Web + app | 13/04/2026 → 10/07/2026 | 11 (+2 off) | 13 / **18** / 23 | Entregue com atraso (~14 sem) | **[Revisar]** |
-| Projeto B | App nativo | 01/09/2026 → 23/11/2026 | 12 (+1 off) | 11 / **14** / 21 | Execução, 45,2% | **[Revisar]** |
-| Projeto E | ? | 20/07/2026 → 15/01 ou 15/02/2027 | 34 | não calibrado | Execução, 37% | — |
-| Projeto F | ? | 22/04/2026 → 06/01/2027 ou 25/10/2026 | 38 (+3 off) | não calibrado | Execução, 58,7% | — |
-
-- **Projeto A e Projeto D:** a recomendação da régua bate com o vendido, e os dois estão no prazo.
-- **Projeto C:** vendido abaixo do piso (11 contra 13) e atrasou. A régua ficou ~3 semanas acima do real, porque o time juntou setup e login em 2 semanas. É um viés conhecido, não corrigido com um único projeto.
-- **Projeto B:** sem o fator, vendido entre o piso e o provável. É codado com Claude Code: motor e tela saíram em ~1 semana de código. **Com o fator, a régua dá 9 / 12 / 20 e a recomendação (12) bate com o vendido.** Resultado a confirmar em 23/11/2026.
+- **Projetos A e D:** a recomendação da régua bate com o vendido, e os dois estão no prazo.
+- **Projeto C:** vendido abaixo do piso (11 contra 13) e atrasou. A régua ficou ~3 semanas acima do real, porque o time juntou setup e login em 2 semanas: viés conhecido, não corrigido com um único projeto.
+- **Projeto B:** codado com Claude Code, o motor e a tela andaram mais rápido que a régua. O fator Claude Code saiu em 20/10/2026: se o ganho for real, ele aparece nos realizados e entra pelos pesos, com dado medido.
 - **Projetos E e F:** sem ficha técnica. Por isso, todo provável acima de **26 semanas** sai com alerta de "fora da faixa calibrada".
 
-> **Todos esses projetos são anteriores à PRD.** Os fluxos foram contados a partir das tasks do Notion, e não pela regra "1 módulo = 1 fluxo". As regras de leitura da PRD ainda não foram conferidas contra um projeto real: o primeiro projeto com PRD que terminar vira o precedente para isso.
+> **Os Projetos A a D são anteriores à leitura das calls.** Os fluxos foram contados a partir das tasks do Notion. O Projeto H é o primeiro dimensionado pelas transcrições ("fluxo = jornada descrita pelo cliente"); quando ele terminar, vira o precedente para conferir essa leitura.
 
-## 12. Exemplo: PetAgenda a partir da PRD
+## 13. Exemplo: PetAgenda sem e com as calls
 
-Caso fictício: app para tutores de pets (lojas) e painel web para uma rede de 3 clínicas. A PRD traz 4 perfis, os módulos 2.2 a 2.5, pagamento pelo Mercado Pago e lembrete de vacina por push, disparado na data da próxima dose.
+Caso fictício: app para tutores de pets (lojas) e painel web para uma rede de 3 clínicas. 4 perfis (tutor, recepção, veterinário, admin da rede), pagamento pelo Mercado Pago e lembrete de vacina por push.
 
-| Fator | Valor | Origem |
+| Fator | Valor | Origem nas calls |
 |---|---|---|
-| Formatos | app + web → x1,3 | Superfícies dos módulos e 2.6 |
-| Níveis de acesso | 2 a 6, grandes diferenças | 2.1: recepção e veterinário com módulos próprios |
-| Multitenancy | dados separados | Visão Geral: cada clínica vê só os próprios dados |
-| Fluxos | 3 comuns + 1 com RN específica | 2.2, 2.4 e 2.5 comuns; 2.3 tem rotina agendada |
-| Integrações | Mercado Pago (bi, doc); push (uni, doc) | 2.2 e 2.3 + peso fixo (serviços de mercado) |
-| Demanda pouco detalhada | não | Tem PRD |
+| Formatos | app + web, com fator por fluxo | Onde cada jornada acontece |
+| Níveis de acesso | 2 a 5, grandes diferenças | AT Aprof: recepção e veterinário com telas próprias |
+| Multitenancy | dados separados | Cada clínica vê só os próprios dados, com as mesmas regras |
+| Fluxos | 3 comuns + 1 com RN específica | O lembrete é uma rotina agendada (data da próxima dose) |
+| Integrações | Mercado Pago (bi, mercado); push (uni, mercado) | Peso fixo |
+| Demanda pouco detalhada | não | As duas calls existem |
 
-|  | Sem PRD (só a call) | Com PRD |
+|  | Sem transcrição (só o relato do CN) | Com as duas calls |
 |---|---|---|
 | Imersão (F1, central) | 3 semanas (demanda sem documento) | 2 semanas |
 | Desenvolvimento | 4 fluxos comuns | 3 comuns + 1 com RN (lembrete agendado) |
-| Faixa (otim. / prov. / cons.) | 14 / 19 / 25 | 15 / 20 / 28 |
-| Recomendação de venda | 20 semanas | 20 semanas |
-| Com o fator Claude Code | — | 12 / 18 / 26 (vender 18) |
+| Faixa (otim. / prov. / cons.) | 14 / 18 / 24 | 14 / 19 / 26 |
+| Recomendação de venda | 18 semanas (9 sprints) | 20 semanas (10 sprints) |
 
-_O número quase não mudou, mas agora cada fator aponta para uma seção do anexo de contrato. A PRD também revelou o lembrete por rotina agendada, que a call não deixava claro._
+_As calls tiraram a semana extra de imersão, mas revelaram o lembrete por rotina agendada, que o relato não deixava claro e pesa mais que um fluxo comum. Arquivos: `exemplos/ficticio-petagenda.md` (sem transcrição) e `exemplos/ficticio-petagenda-proposta.md` (proposta completa)._
 
-## 13. Linha do tempo de exemplo (Projeto A)
+## 14. Linha do tempo de exemplo (Projeto A)
 
-As fases no valor central da régua, encaixadas no calendário real do projeto: início em 20/07/2026, 12 semanas de trabalho + 1 semana off entre a S4 e a S5, fim previsto em 19/10/2026. Régua sem o fator Claude Code.
+As fases no valor central da régua, encaixadas no calendário real do projeto: início em 20/07/2026, 12 semanas de trabalho + 1 semana off entre a S4 e a S5, fim previsto em 19/10/2026.
 
 | Fase | Semanas (a partir de 20/07/2026) | Duração |
 |---|---|---|
@@ -318,26 +326,25 @@ As fases no valor central da régua, encaixadas no calendário real do projeto: 
 | F4 Testes com cliente | 10,5 → 12 | 1,5 sem |
 | F5 Deploy + arredondamento | 12 → 13 | 1 sem |
 
-_Total: 13 semanas (12 de trabalho + 1 off), de 20/07/2026 a 19/10/2026._
+_Total: 13 semanas (12 de trabalho + 1 off), de 20/07/2026 a 19/10/2026. A linha de deploy inclui o arredondamento de 11,5 para 12 semanas._
 
-_A linha de deploy inclui o arredondamento de 11,5 para 12 semanas._
-
-## 14. Parar e sinalizar
+## 15. Parar e sinalizar
 
 A skill não decide sozinha nestes casos. Ela marca e devolve para a área de projetos:
 
-- **[Parado]** Multitenancy com instâncias e regras isoladas por cliente ("beira o inviável").
-- **[Parado]** Integração bidirecional que a PRD diz não ter API.
-- **[Parado]** Feature atípica sem benchmark e sem documentação (pode exigir prova de conceito).
+- **[Rejeitado]** Critério de rejeição do F0 (seção 7): não dimensiona.
+- **[Parado]** Critério de parada do F0 (seção 7), inclusive multitenancy com regra por cliente, integração sem API e prazo exigido abaixo do otimista.
+- **[Revisar]** Demanda pouco detalhada → recomendar discovery antes da proposta. O status nunca é OK.
+- **[Revisar]** Prazo que o CN já falou ao cliente abaixo do otimista: a expectativa do cliente está errada e o CN precisa corrigir antes da proposta.
 - **[Revisar]** Dependência de dados de bases soltas → chamar o núcleo de Dados.
 - **[Revisar]** Provável acima de 26 semanas (fora da faixa calibrada) → considerar quebrar em fases.
 - **[Revisar]** Cliente Enterprise ou Grande com restrição de stack ou regras de deploy próprias.
-- **[Revisar]** Divergência entre o que o CN declarou e o que aparece na PRD, nos documentos ou na call.
-- **[Revisar]** Lacuna dentro da PRD (módulo sem superfície, integração sem meio, "tempo real" sem mecanismo): a PRD precisa de revisão antes de virar anexo.
-- **[Revisar]** Estimativa sem PRD: sempre preliminar.
-- **[Revisar]** Teto de fase atingido.
+- **[Revisar]** Divergência entre as duas calls, ou entre o que o CN declarou e o que aparece na transcrição.
+- **[Revisar]** Lacuna que mexe na faixa, até o CN responder.
+- **[Revisar]** Estimativa sem as duas transcrições: sempre preliminar.
+- **[Revisar]** Teto de fase passado (F1, F2 ou F4 acima de 4 semanas): a soma é mantida, não cortada.
 
-## 15. Histórico, datas e pendências
+## 16. Histórico, decisões em aberto e pendências
 
 | Data | O que aconteceu |
 |---|---|
@@ -345,23 +352,33 @@ A skill não decide sozinha nestes casos. Ela marca e devolve para a área de pr
 | 10/07/2026 | Deploy do Projeto C, com atraso: 11 semanas vendidas, ~14 realizadas |
 | 20/07/2026 | Início do Projeto A e do Projeto E |
 | 01/09/2026 | Início do Projeto B |
-| 16/10/2026 | Leitura da skill do NCiv, do formulário Dimensionamento Tec e do levantamento no Notion; criação e calibração da skill (v1); instalação em ~/.claude/skills |
-| 16/10/2026 | v2: a PRD da skill documento-requisitos-ntec vira a entrada padrão; projetos anonimizados; publicação no GitHub |
-| 17/10/2026 | v3: integrações com peso fixo, sem perguntar ao CN; buffer de risco e negociação de prazo removidos |
-| 17/10/2026 | O que a PRD não responde vem da transcrição do Fathom; o que faltar volta ao CN como lacuna |
-| 17/10/2026 | v4: o entregável passa a ser a Proposta Técnica no template do NTec (PDF gerado pela skill) |
-| 17/10/2026 | Fator Claude Code na régua: núcleo do F3 x0,75 e F2 x0,85 (meio-termo entre o Projeto B e um projeto de ~12 sprints) |
+| 16/10/2026 | v1: criação e calibração da skill a partir da skill do NCiv, do formulário Dimensionamento Tec e do levantamento no Notion. v2: a PRD vira a entrada padrão; projetos anonimizados; publicação no GitHub |
+| 17/10/2026 | v3: integrações com peso fixo, sem perguntar ao CN; buffer de risco e negociação de prazo removidos; o que a PRD não responde vem do Fathom, e o que faltar volta ao CN como lacuna |
+| 17/10/2026 | v4: o entregável passa a ser a Proposta Técnica no template do NTec (PDF gerado pela skill); fator Claude Code na régua |
 | 19/10/2026 | Fim previsto do Projeto A — confirmar se a calibração continua valendo |
+| 20/10/2026 | Reunião "Validação Skill NTec" (aplicada em 21/10): F0 de viabilidade, um arquivo por fator em `fatores/`, JSON sem padrões, tetos que não cortam, fator Claude Code e "cliente com pouca disponibilidade" removidos, F2 em 2 a 5 / 6+, formato extra +0,2, `bi_sem_doc` com mínimo 4 |
+| 22/10/2026 | Projeto G: fator de formato por fluxo (`fluxos_por_formato`) |
+| 22/10/2026 | **V2-Inov:** a entrada padrão passa a ser a transcrição na íntegra da AT Diag e da AT Aprof; primeiro caso pelas transcrições: Projeto H. Insumos em Markdown e exemplos refeitos com a régua atual. Guia v5 |
 | 23/11/2026 | Fim previsto do Projeto B e do Projeto D — atualizar a calibração com o realizado |
+
+### Decisões em aberto (valores provisórios no script)
+
+| Código | Decisão | Provisório |
+|---|---|---|
+| D1 | "Formato extra pelo menos 1,2": +0,2 por formato extra ou x1,2 sobre o fator? | +0,2 (app + web = x1,4) |
+| D2 | Pesos que a reunião mandou aumentar (2 a 5 com grandes diferenças, isolamento, RN crítica, central e máximo de `bi_sem_doc`) | Valores atuais; `bi_sem_doc` 4 / 4 / 5 |
+| D3 | Margem de segurança explícita sobre o F3 ou o total? | Sem margem extra, com aviso |
+| D4 | Fase acima do teto: manter a soma ou parar? | Manter a soma e marcar |
+| D5 | Postgres obrigatório por causa do offline soma como troca de stack no F1? | Não soma; vira premissa da Sprint de Refino |
 
 ### Pendências
 
+- Fechar as decisões D1 a D5 com a área técnica e fazer o teste de concordância (2 CNs + Claude nos Projetos A a D).
 - Fichas técnicas de Projetos E e F, para calibrar projetos grandes (o levantamento recebido veio cortado).
-- Conteúdo da subpágina "Régua de Dimensionamento" do Notion, citada no formulário mas não incluída no PDF. Se tiver números, eles valem mais que os da skill.
-- Conferir no hand-off do Projeto D os fatores marcados como palpite (perfis, fluxos, offline).
+- Conteúdo da subpágina "Régua de Dimensionamento" do Notion, citada no formulário mas não recebida. Se tiver números, eles valem mais que os da skill.
+- Conferir no hand-off do Projeto D os fatores marcados como palpite (perfis, fluxos, offline, onde cada jornada vive).
 - Preencher as retrospectivas: hoje quase todas estão vazias, e sem elas não se sabe a causa dos atrasos.
-- Avisar o autor da skill da PRD para trocar *validacao-tecnica-ntec* por *dimensionamento-ntec*.
-- Conferir as regras de leitura da PRD ("1 módulo = 1 fluxo" e "rotina agendada → RN específica") no primeiro projeto com PRD que terminar.
-- Conferir o fator Claude Code com o realizado do Projeto B (23/11/2026) e do primeiro projeto com login que terminar (o F2 com fator ainda não foi medido).
+- Conferir a leitura das transcrições ("fluxo = jornada descrita pelo cliente", "só conta o que o cliente confirmou") quando o Projeto H terminar.
+- Conferir com o realizado do Projeto B (23/11/2026) se a régua sem fator de ferramenta ficou acima do real.
 
-> **Manutenção:** pesos mudam no `scripts/calcular_faixa.py` **e** na `regua-dimensionamento.md`, com uma linha no Registro das fontes. Quando um projeto termina, ele entra em `exemplos/` com vendido × realizado, anonimizado; o nome real fica só na pasta `privado/`, fora do GitHub.
+> **Manutenção:** pesos mudam no `scripts/calcular_faixa.py` **e** no arquivo da fase em `fatores/`, com uma linha no Registro das fontes de `regua-dimensionamento.md`. Quando um projeto termina, ele entra em `exemplos/` com vendido × realizado, anonimizado; o nome real fica só na pasta `privado/`, fora do GitHub.
