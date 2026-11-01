@@ -8,6 +8,8 @@ Definição única de cada termo usado nos arquivos F0 a F6. Se outro arquivo da
 
 **Calls** — As transcrições na íntegra do Fathom da **AT Diagnóstico** (primeira call: dor, contexto, ideia do produto) e da **AT Aprofundamento** (segunda call: protótipo, escopo, condições). São a entrada padrão da skill desde a V2-Inov (`leitura-transcricoes.md`).
 
+**Prioridade dos insumos** — Ordem em que a skill lê e desempata os insumos: **1° AT Aprof, 2° protótipo, 3° AT Diag**. Segue o refinamento do processo comercial (AT Diag → montagem do protótipo → AT Aprof): em divergência, vale o insumo de maior prioridade (`leitura-transcricoes.md`, Passo 1).
+
 **Confirmado** — O que o cliente descreveu como parte do produto, ou o que o CN propôs e o cliente aceitou com uma resposta àquela proposta ("sim", "é isso mesmo"). Hesitação ("não sei se precisa", "talvez") e silêncio não são confirmação.
 
 **Ação** — Cada coisa que o usuário faz dentro de uma jornada: cadastrar, consultar, listar, editar, desativar, aprovar, exportar.
@@ -70,7 +72,7 @@ Uma tela solta não é fluxo. (🔎 Proposta: os limites 8 e "parte pequena" pre
 
 **Lacuna** — Fator que as calls não respondem. Entra na conta com o valor mais pesado e volta para o CN como pergunta.
 
-**Citação** — Trecho literal da transcrição, com a call (AT Diag ou AT Aprof), a data e o minuto, que justifica a linha escolhida. O resumo e os *Action Items* do Fathom não são citação.
+**Citação** — Trecho literal da transcrição, com a call (AT Diag ou AT Aprof), a data e o minuto, que justifica a linha escolhida. A tela do protótipo também é citação para mapear jornadas, telas e formato, mas não para escolher a linha leve de um fator que é decisão do cliente (login, lojas, pagamento, multitenancy). Com mais de uma fonte, cita-se a de maior prioridade. O resumo e os *Action Items* do Fathom não são citação.
 
 ## Integrações e dados
 

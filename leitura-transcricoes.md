@@ -1,11 +1,12 @@
-# Leitura das transcrições — AT Diagnóstico e AT Aprofundamento
+# Leitura das transcrições — AT Diagnóstico, protótipo e AT Aprofundamento
 
-A entrada padrão desta skill são as **transcrições na íntegra do Fathom** das duas calls com o cliente:
+A entrada padrão desta skill são as **transcrições na íntegra do Fathom** das duas calls com o cliente e o **protótipo** montado entre elas. No processo comercial comum, a ordem é:
 
-- **AT Diagnóstico (AT Diag):** a primeira call. O cliente conta a dor, o contexto e a ideia do produto.
-- **AT Aprofundamento (AT Aprof):** a segunda call. Normalmente o CN mostra um protótipo, o cliente valida o fluxo, e se fecham escopo, perfis, lojas e às vezes prazo e preço.
+1. **AT Diagnóstico (AT Diag):** a primeira call. O cliente conta a dor, o contexto e a ideia do produto.
+2. **Montagem do protótipo:** o CN monta o protótipo (Lovable, Figma…) a partir da AT Diag. É a primeira vez que a ideia vira telas e fluxos.
+3. **AT Aprofundamento (AT Aprof):** a segunda call. O CN mostra o protótipo, o cliente valida o fluxo, e se fecham escopo, perfis, lojas e às vezes prazo e preço.
 
-A skill dimensiona **pelo que foi discutido nas duas calls**. Não há documento de requisitos (PRD) no meio: esta skill monta, a partir das falas, o inventário que antes vinha da PRD.
+A skill dimensiona **pelo que foi discutido nas calls e mapeado no protótipo**, seguindo a ordem de prioridade do Passo 1 (AT Aprof → protótipo → AT Diag). Não há documento de requisitos (PRD) no meio: esta skill monta, a partir das falas e das telas, o inventário que antes vinha da PRD.
 
 Este arquivo diz onde, nas calls, está cada campo do JSON do `scripts/calcular_faixa.py`. O critério completo de cada fator (pergunta, o que fazer sem resposta) está no arquivo da fase em `fatores/`; se este arquivo e `fatores/` divergirem, vale `fatores/`. **Todo campo é obrigatório:** o script não tem valor padrão e para se faltar algum.
 
@@ -13,17 +14,37 @@ Este arquivo diz onde, nas calls, está cada campo do JSON do `scripts/calcular_
 
 ## Passo 1 — O que o CN manda
 
-| Peça | Obrigatória? | Como usar |
-|---|---|---|
-| **Transcrição da AT Diag** (Fathom, modo transcrição, na íntegra) | Sim | Dor, público, jornadas que o cliente descreve, formato ("aplicativo", "site"), offline, quem vai usar |
-| **Transcrição da AT Aprof** (Fathom, modo transcrição, na íntegra) | Sim | Validação do protótipo, funcionalidades confirmadas ou descartadas, login, lojas, prazo e condições |
-| Link do protótipo (Lovable, Figma…) | Não | Seção 14 da proposta e conferência das telas que o cliente aprovou na AT Aprof |
-| Documentos que o cliente mandou (planilha, tabela, norma, protocolo) | Não | É o documento da **RN específica**. Sem ele, a regra conta do mesmo jeito, e o pedido do documento vai para *Pontos em aberto* |
-| Calls a mais (segunda AT Aprof, call de proposta) | Não | Valem como as outras. Se divergirem, vale a mais recente |
+| Prioridade | Peça | Obrigatória? | Como usar |
+|---|---|---|---|
+| **1°** | **Transcrição da AT Aprof** (Fathom, modo transcrição, na íntegra) | Sim | Validação do protótipo, funcionalidades confirmadas ou descartadas, login, lojas, prazo e condições. É a fonte mais refinada: **decide o escopo** |
+| **2°** | **Protótipo** (link do Lovable, Figma…, prints ou PDF exportado) | Não, mas fortemente recomendado | Mapa das jornadas e telas: quem faz o quê, em que ordem, em que formato. Seção 14 da proposta |
+| **3°** | **Transcrição da AT Diag** (Fathom, modo transcrição, na íntegra) | Sim | Dor, público, contexto, formato ("aplicativo", "site"), offline, quem vai usar. Preenche o que a AT Aprof e o protótipo não cobrem |
+| — | Documentos que o cliente mandou (planilha, tabela, norma, protocolo) | Não | É o documento da **RN específica**. Sem ele, a regra conta do mesmo jeito, e o pedido do documento vai para *Pontos em aberto* |
+| — | Calls a mais (segunda AT Aprof, call de proposta) | Não | Entram na posição da call que fazem as vezes: segunda AT Aprof e call de proposta ficam no 1°, acima da primeira AT Aprof. Entre calls do mesmo nível, vale a mais recente |
+
+### Ordem de prioridade dos insumos
+
+Cada etapa do processo comercial refina a anterior: a AT Diag traz a ideia, o protótipo transforma a ideia em telas e fluxos, e a AT Aprof valida esse mapa com o cliente. Por isso, **em grau de refinamento da ideia e de mapeamento dos fluxos, a AT Aprof sempre manda**. A ordem é:
+
+**1° AT Aprof → 2° protótipo → 3° AT Diag**
+
+Como aplicar:
+
+1. **Ler na ordem de prioridade.** Começar pela AT Aprof, depois o protótipo, depois a AT Diag. O inventário de jornadas (Passo 4) nasce da AT Aprof e do protótipo; a AT Diag completa o contexto (dor, público, formato, offline) e o que os dois primeiros não cobrem.
+2. **Quando dois insumos divergem, vale o de maior prioridade.** Exemplos:
+   - A AT Diag fala em 3 perfis, o protótipo mostra 2 e a AT Aprof confirma 2 → **2 perfis**.
+   - O protótipo tem a tela de histórico e, na AT Aprof, o cliente diz "isso não precisa" → **exclusão** (não entra na conta nem em *O que cortar*).
+   - A AT Diag descreve a jornada de um jeito e o protótipo a quebra de outro, sem a AT Aprof falar do assunto → **vale o protótipo**.
+   - Toda divergência vai para *Pontos de atenção*, dizendo qual insumo venceu.
+3. **O protótipo não cria escopo sozinho.** Uma tela do protótipo entra na conta se o cliente a aprovou na AT Aprof **ou** se ela detalha uma jornada que o cliente descreveu na AT Diag. Tela que não aparece em nenhuma das duas calls (o CN pôs por conta própria e o cliente não comentou) vai para roadmap *A confirmar* e, se mexe no prazo, vira lacuna.
+4. **Para a linha mais leve de um fator que é decisão do cliente** (login, lojas, pagamento, multitenancy), continua valendo a fala do cliente nas calls. O protótipo mostrar "sem tela de login" não basta para `niveis_acesso: "nenhum"`: sem a fala, é lacuna. O protótipo serve de citação para **mapear** jornadas, telas e formato, não para decidir no lugar do cliente.
+5. **Como ler o protótipo.** Prints ou PDF exportado: ler as telas direto. Só o link: tentar abrir; se não abrir (login, link privado), pedir prints ao CN uma vez. Sem acesso às telas, seguir sem o protótipo: as telas citadas na AT Aprof valem pela fala, e a seção 14 sai PENDENTE.
 
 **Só o resumo do Fathom** (Summary, Action Items, Highlights): pedir uma vez a transcrição na íntegra. O resumo é texto gerado pelo Fathom, não fala do cliente, e não serve como citação. Se o CN não tiver a íntegra, dimensionar pelo resumo e marcar ⚠️ *Estimativa preliminar*.
 
-**Só uma das duas calls:** dimensionar mesmo assim, marcar ⚠️ *Estimativa preliminar* e dizer qual call falta. Com só a AT Diag, `demanda_pouco_detalhada` é `true` (`fatores/F1-imersao-setup.md`, 1.2).
+**Só uma das duas calls:** dimensionar mesmo assim, marcar ⚠️ *Estimativa preliminar* e dizer qual call falta. Faltar a AT Aprof é o caso mais grave, porque é o insumo de maior prioridade: com só a AT Diag, `demanda_pouco_detalhada` é `true` (`fatores/F1-imersao-setup.md`, 1.2). AT Diag + protótipo, sem AT Aprof, continua assim: o protótipo ajuda a montar o inventário, mas ninguém o validou com o cliente.
+
+**Sem protótipo:** dimensionar pelas duas calls na mesma ordem (AT Aprof, depois AT Diag). Não rebaixa o status sozinho; a seção 14 e o item do checklist ficam PENDENTES.
 
 **Sem nenhuma transcrição** (só formulário, ficha, briefing ou texto do CN): caminho de `insumos-e-perguntas.md`, sempre ⚠️ *Estimativa preliminar*.
 
@@ -61,7 +82,9 @@ VIEW RECORDING - {n} mins
 | Ajuste visual (cor, nomes, ordem dos campos, textos explicativos) | Não soma | *Pontos para a imersão* |
 | "Os ajustes a gente faz no decorrer do projeto" | Não soma | Ajuste dentro do escopo, não funcionalidade nova |
 | "Depois a gente vê", "numa segunda versão" | Não | Roadmap *Futuro* |
-| As calls dizem coisas diferentes | Vale a mais recente | A divergência vai para *Pontos de atenção* |
+| Telas do protótipo que detalham uma jornada que o cliente descreveu na AT Diag, sem a AT Aprof contradizer | Sim | Inventário (vale o recorte do protótipo) |
+| Tela do protótipo que não aparece em nenhuma das calls | Não | Roadmap *A confirmar*; lacuna, se mexe no prazo |
+| A AT Aprof, o protótipo e a AT Diag dizem coisas diferentes | Vale a ordem de prioridade: AT Aprof → protótipo → AT Diag (Passo 1) | A divergência vai para *Pontos de atenção*, com o insumo que venceu |
 | **Prazo ou preço que o CN já falou para o cliente** ("dois a três meses", "uns 30 mil") | **Nunca** | *Observações*: comparar com a faixa da skill. Se o prazo falado está abaixo do otimista, vira o ponto de atenção mais grave, porque o cliente já tem essa expectativa |
 | Data ou prazo que o **cliente** exige ("precisa estar pronto até março") | Sim, no F0 | `f0.prazo_exigido_semanas` |
 
@@ -69,7 +92,7 @@ VIEW RECORDING - {n} mins
 
 ## Passo 4 — Montar o inventário a partir das calls
 
-Sem PRD, a skill monta o inventário que a área de projetos revisa. Uma linha por **jornada** (glossário, *Fluxo*):
+Sem PRD, a skill monta o inventário que a área de projetos revisa, lendo na ordem de prioridade (Passo 1): **AT Aprof primeiro, depois o protótipo, depois a AT Diag**. A coluna *Citação* traz a fonte de maior prioridade que sustenta a jornada. Uma linha por **jornada** (glossário, *Fluxo*):
 
 | Jornada | Quem faz | Onde (app, web, painel) | Regra, cálculo ou documento | Integrações | Dados de fora | Citação |
 |---|---|---|---|---|---|---|
@@ -178,9 +201,13 @@ Algumas funcionalidades citadas nas calls não têm linha própria na régua. El
 
 ## Passo 8 — Origem de cada fator
 
-A origem cita a call, o minuto e um trecho curto da fala:
+A origem cita a call, o minuto e um trecho curto da fala. Quando a fonte é o protótipo, cita a tela. Se mais de um insumo sustenta o fator, citar o de maior prioridade (AT Aprof → protótipo → AT Diag):
 
 ```
+# ilustrativos, para mostrar a prioridade:
+Perfis: 2, médico e admin (origem: AT Aprof · 21/07 4:10 — "só o médico e a gente, que cadastra") — AT Diag falava em 3, vale a AT Aprof
+Jornada "acompanhar infusão": 1 fluxo comum (origem: protótipo — tela "Infusões em andamento"; detalha AT Diag · 14/07 9:20)
+# do Projeto H:
 Formato: app nativo (origem: AT Diag · 14/07 15:04 — "tanto para a [Play Store] quanto para a App Store" / "Perfeito")
 Fluxos com RN específica: 1, calcular o soro (origem: AT Diag · 14/07 7:46 — "a pessoa jogaria o peso do paciente")
 Offline: local (origem: AT Diag · 14/07 3:02 — "tem interior que nem sinal de internet tem")

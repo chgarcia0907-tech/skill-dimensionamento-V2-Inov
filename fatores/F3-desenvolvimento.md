@@ -23,7 +23,7 @@ A unidade é a **jornada**: o que alguém faz do começo ao fim, como o cliente 
 
 | # | Passo | Onde ler |
 |---|---|---|
-| 1 | Listar as **jornadas confirmadas** nas calls (o que o cliente descreveu e o que aceitou da proposta do CN). Fora: login e perfis (F2) e publicação nas lojas (F5 e F6) | Calls; telas do protótipo aprovadas na AT Aprof |
+| 1 | Listar as **jornadas confirmadas** nas calls (o que o cliente descreveu e o que aceitou da proposta do CN). Fora: login e perfis (F2) e publicação nas lojas (F5 e F6) | Na ordem de prioridade: AT Aprof, telas do protótipo, AT Diag (`leitura-transcricoes.md`, Passo 1) |
 | 2 | Tirar a parte de **offline e sincronização** quando `offline` for `sync` ou `local`: o custo está no extra de offline (3.3), não em fluxo | Calls ("sem internet") |
 | 3 | **Juntar** o que é a mesma jornada: mesma coisa principal, mesmo código e uma parte é a continuação da outra (lista + detalhe; criar + gerenciar). Variações na mesma tela (tipos de soro, unidade de medida) são a mesma jornada. Parte pequena que só serve outra jornada (ex.: cadastrar pessoa durante a anotação) entra nela | Calls |
 | 4 | Jornada com **mais de 8 ações** (glossário) conta como **2 fluxos** | Calls |

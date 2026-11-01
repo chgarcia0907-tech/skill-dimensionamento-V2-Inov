@@ -101,6 +101,7 @@ Histórico de 17/10/2026:
 | 17/10/2026 | Venda com "+" para as lacunas do Fathom ("14 = 12 + 2 que dependem do Fathom"), igual na skill e na página |
 | 21/10/2026 | Revisão de 20/10: F0, `fatores/` por fase, JSON sem padrões, tetos sem corte, fator Claude Code e disponibilidade do cliente removidos; documentos apontando para `fatores/` |
 | 22/10/2026 | V2-Inov: cópia do repositório; entrada passa a ser a transcrição da AT Diag e da AT Aprof, sem PRD; Projeto H como primeiro caso |
+| 31/10/2026 | Prioridade dos insumos: 1° AT Aprof, 2° protótipo, 3° AT Diag (ordem de refinamento do processo comercial); em divergência vence o de maior prioridade (`leitura-transcricoes.md`, Passo 1) |
 
 ### O que foi pedido (origem)
 Criar, para o NTec, uma skill parecida com a do NCiv da Gabi Lobo, que leve em conta que somos uma **empresa júnior**, use os dados reais dos projetos e chegue a uma **faixa de semanas**. O uso deve ser **prático para CNs**, que em geral são fracos tecnicamente e mandam para a equipe de projetos prazos sem sentido.
